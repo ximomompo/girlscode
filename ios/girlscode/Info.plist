@@ -36,6 +36,26 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+  		<dict>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+      			<string>fb124395804892203</string>
+    		</array>
+  		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>124395804892203</string>
+	<key>FacebookDisplayName</key>
+	<string>CodigoNiña</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>

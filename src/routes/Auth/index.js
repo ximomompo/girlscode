@@ -1,9 +1,11 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import SVGImage from 'react-native-svg-image';
-import { LoginButton, AccessToken } from 'react-native-fbsdk';
+import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import firebase from 'react-native-firebase';
 import { MainView, Button } from '../../components/Commons';
+import { LOGO } from '../../helpers/constants';
 
 
 const styles = StyleSheet.create({
@@ -26,45 +28,75 @@ const styles = StyleSheet.create({
 });
 
 
-const AuthMain = () => (
-    <MainView style={styles.container}>
-        <SVGImage
-            style={styles.image}
-            scrollEnabled={false}
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/girlscode-6fa97.appspot.com/o/logo_girlscode.svg?alt=media&token=cddd2e7f-5023-469c-bceb-75c30772d095'}}
-        />
-        <View style={styles.actions}>
-            <LoginButton
-                publishPermissions={["publish_actions"]}
-                onLoginFinished={
-                    (error, result) => {
-                        if (error) {
-                            console.log("login has error: " + result.error);
-                        } else if (result.isCancelled) {
-                            console.log("login is cancelled.");
-                        } else {
-                            AccessToken.getCurrentAccessToken().then(
-                                (data) => {
-                                    alert(data.accessToken.toString())
-                                }
-                            )
-                        }
-                    }
+class AuthMain extends Component {
+    loginByFb = () => {
+        LoginManager.logInWithReadPermissions(['public_profile', 'email'])
+            .then((result) => {
+                if (result.isCancelled) {
+                    Alert.alert(
+                        'Cancelado',
+                        'El inicio de sesión a través de Facebook ha sido cancelado',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                } else {
+                    AccessToken.getCurrentAccessToken()
+                        .then((data) => {
+                            const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken)
+                            firebase.auth().signInWithCredential(credential)
+                                .then((response) => {
+                                    console.log('signInWithCredentialThen', response);
+                                }, (err) => {
+                                    // Promise was rejected
+                                    console.log('signInWithCredentialErr', err);
+                                });
+                        }, (error) => {
+                            Alert.alert(
+                                'Ha ocurrido un error',
+                                error,
+                                [{ text: 'OK' }],
+                                { cancelable: true },
+                            );
+                        });
                 }
-            />
-            <Button
-                title="ACCEDE POR EMAIL"
-                onPress={() => Actions.login()}
-                fullWidth
-            />
-            <Button
-                title="REGÍSTRATE"
-                onPress={() => Actions.register()}
-                fullWidth
-            />
-        </View>
-    </MainView>
-);
+            }, (error) => {
+                Alert.alert(
+                    'Ha ocurrido un error',
+                    error,
+                    [{ text: 'OK' }],
+                    { cancelable: true },
+                );
+            });
+    }
+    render() {
+        return (
+            <MainView style={styles.container}>
+                <SVGImage
+                    style={styles.image}
+                    scrollEnabled={false}
+                    source={{ uri: LOGO }}
+                />
+                <View style={styles.actions}>
+                    <Button
+                        title="ACCEDE POR FACEBOOK"
+                        onPress={() => this.loginByFb()}
+                        fullWidth
+                    />
+                    <Button
+                        title="ACCEDE POR EMAIL"
+                        onPress={() => Actions.login()}
+                        fullWidth
+                    />
+                    <Button
+                        title="REGÍSTRATE"
+                        onPress={() => Actions.register()}
+                        fullWidth
+                    />
+                </View>
+            </MainView>
+        );
+    }
+}
 
 
 export default AuthMain;

@@ -23,6 +23,9 @@ const ButtonC = (props) => {
         marginBottom: 8,
         width: (props.fullWidth) ? '100%' : 'auto',
     };
+    const newDisabledStyle = (props.noSpecialStylesDisabled)
+        ? newButtonStyle
+        : props.disabledStyle;
     return (
         <Button
             buttonStyle={newButtonStyle}
@@ -30,6 +33,7 @@ const ButtonC = (props) => {
             containerViewStyle={containerViewStyle}
             borderRadius={20}
             large
+            disabledStyle={newDisabledStyle}
             {...other}
         />
     );
@@ -38,11 +42,13 @@ const ButtonC = (props) => {
 ButtonC.PropTypes = {
     fullWidth: PropTypes.bool,
     color: PropTypes.string,
+    noSpecialStylesDisabled: PropTypes.bool,
 };
 
 ButtonC.defaultProps = {
     fullWidth: false,
     color: 'primary',
+    noSpecialStylesDisabled: false,
 };
 
 export default ButtonC;

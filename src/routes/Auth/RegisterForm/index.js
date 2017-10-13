@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
+import { StyleSheet } from 'react-native';
 // import firebase from 'react-native-firebase';
 import { Input, MainView, Button } from '../../../components/Commons';
+
+const styles = StyleSheet.create({
+    container: {
+        marginTop: 64,
+    },
+});
 
 
 class RegisterForm extends Component {
@@ -10,7 +17,7 @@ class RegisterForm extends Component {
     }
     render() {
         return (
-            <MainView>
+            <MainView style={styles.container}>
                 <Field
                     type="username"
                     name="username"

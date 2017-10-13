@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { reduxForm, Field } from 'redux-form';
 import firebase from 'react-native-firebase';
 import { Input, MainView, Button } from '../../../components/Commons';
+
+const styles = StyleSheet.create({
+    container: {
+        marginTop: 64,
+    },
+});
 
 class LoginForm extends Component {
     onSubmit = (values) => {
@@ -23,7 +29,7 @@ class LoginForm extends Component {
     }
     render() {
         return (
-            <MainView>
+            <MainView style={styles.container}>
                 <Field
                     type="email"
                     name="email"

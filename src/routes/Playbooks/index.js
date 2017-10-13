@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
 
@@ -14,6 +14,7 @@ class Playbooks extends Component {
                 <Text>
                     Playbooks
                 </Text>
+                <Icon name="rowing" />
                 <Button
                     icon={{ name: 'home', size: 32 }}
                     buttonStyle={{ backgroundColor: 'red' }}

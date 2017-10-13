@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { StyleSheet } from 'react-native';
-import { Scene, Router, Stack } from 'react-native-router-flux';
+import { View, Text } from 'react-native';
+import { Scene, Router, Stack, Tabs } from 'react-native-router-flux';
+import { TabIcon } from './components/Commons';
 import LoginForm from './routes/Auth/LoginForm';
 import RegisterForm from './routes/Auth/RegisterForm';
 import AuthMain from './routes/Auth';
@@ -27,13 +28,36 @@ const RouterComponent = props => (
                 <Scene key="register" component={RegisterForm} backTitle=" " />
             </Stack>
 
-            <Stack
+            <Tabs
                 key="playbooks"
                 initial={props.logged}
+                showLabel={false}
             >
-                <Scene key="playbooks_list" component={Playbooks} title="playbooks list" init />
-                <Scene key="playbooks_create" component={Playbooks} title="playbooks create" />
-            </Stack>
+                <Scene
+                    key="playbooks_list"
+                    component={Playbooks}
+                    title="Playbooks"
+                    init
+                    icon={TabIcon}
+                    iconName="open-book"
+                    iconType="entypo"
+                />
+                <Scene
+                    key="playbooks_create"
+                    component={Playbooks}
+                    title="Crear"
+                    icon={TabIcon}
+                    iconName="photo-camera"
+                />
+                <Scene
+                    key="profile"
+                    component={Playbooks}
+                    title="Perfil"
+                    icon={TabIcon}
+                    iconName="torso-female"
+                    iconType="foundation"
+                />
+            </Tabs>
         </Stack>
     </Router>
 );

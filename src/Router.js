@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
-import { Icon, Badge } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import IconBadge from 'react-native-icon-badge';
 import { Scene, Router, Stack, Tabs } from 'react-native-router-flux';
 import { TabIcon } from './components/Commons';
@@ -9,6 +9,7 @@ import LoginForm from './routes/Auth/LoginForm';
 import RegisterForm from './routes/Auth/RegisterForm';
 import AuthMain from './routes/Auth';
 import Playbooks from './routes/Playbooks';
+import Profile from './routes/Profile';
 import * as colors from './helpers/colors';
 
 const RouterComponent = props => (
@@ -70,7 +71,7 @@ const RouterComponent = props => (
                 />
                 <Scene
                     key="profile"
-                    component={Playbooks}
+                    component={Profile}
                     title="Perfil"
                     icon={TabIcon}
                     iconName="torso-female"
@@ -86,11 +87,3 @@ RouterComponent.propTypes = {
 };
 
 export default RouterComponent;
-
-// <View>
-//     <Icon name="bell" type="entypo" style={{ marginRight: 12 }} />
-//     <Badge
-//         value={3}
-//         textStyle={{ color: 'orange' }}
-//     />
-// </View>

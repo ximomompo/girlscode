@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
+import { Button } from '../../components/Commons';
 
-class Playbooks extends Component {
+class Profile extends Component {
     onLogout = () => {
         firebase.auth().signOut().then(() => Actions.replace('index'));
     }
@@ -12,11 +12,16 @@ class Playbooks extends Component {
         return (
             <View>
                 <Text>
-                    Playbooks
+                    Profile
                 </Text>
+                <Button
+                    title="CERRAR SESIÓN"
+                    onPress={() => this.onLogout()}
+                    fullWidth
+                />
             </View>
         );
     }
 }
 
-export default Playbooks;
+export default Profile;

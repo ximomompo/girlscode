@@ -57,10 +57,10 @@ StatusButton.propTypes = {
 
 StatusButton.defaultProps = {
     reset: false,
-    textDefault: 'GUARDAR',
-    textLoading: 'PROCESANDO',
-    textSuccess: 'GUARDADO',
-    textError: 'ERROR',
+    textDefault: 'Guardar',
+    textLoading: 'Procesando',
+    textSuccess: 'Guardado',
+    textError: 'Error',
 };
 
 function mapStateToProps(state, ownProps) {

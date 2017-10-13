@@ -10,6 +10,9 @@ const ButtonC = (props) => {
             return colors.primary;
         case 'secondary':
             return colors.secondary;
+        case 'FB': {
+            return colors.blueFb;
+        }
         default:
             return colors.primary;
         }
@@ -31,9 +34,10 @@ const ButtonC = (props) => {
             buttonStyle={newButtonStyle}
             textStyle={{ textAlign: 'center' }}
             containerViewStyle={containerViewStyle}
-            borderRadius={20}
+            borderRadius={50}
             large
             disabledStyle={newDisabledStyle}
+            fontFamily="Roboto-Medium"
             {...other}
         />
     );

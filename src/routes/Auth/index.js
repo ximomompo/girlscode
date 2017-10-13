@@ -78,17 +78,19 @@ class AuthMain extends Component {
                 />
                 <View style={styles.actions}>
                     <Button
-                        title="ACCEDE POR FACEBOOK"
+                        color="FB"
+                        title="Acceder con Facebook"
                         onPress={() => this.loginByFb()}
                         fullWidth
+                        icon={{ name: 'facebook', type: 'entypo' }}
                     />
                     <Button
-                        title="ACCEDE POR EMAIL"
+                        title="Acceder por email"
                         onPress={() => Actions.login()}
                         fullWidth
                     />
                     <Button
-                        title="REGÍSTRATE"
+                        title="Regístrate"
                         onPress={() => Actions.register()}
                         fullWidth
                     />

@@ -4,3 +4,4 @@ export const white = '#FFFFFF';
 export const black = '#000000';
 export const primary = '#EF008C';
 export const secondary = '#2DE0DD';
+export const blueFb = '#3b5998';

@@ -8,7 +8,7 @@ const TabIcon = props => (
         name={props.iconName}
         type={props.iconType}
         size={32}
-        color={(props.focused) ? colors.primary : colors.black }
+        color={(props.focused) ? colors.primary : colors.black}
     />
 );
 

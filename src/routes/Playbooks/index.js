@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
+import { View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
+import { Text } from '../../components/Commons';
 
 class Playbooks extends Component {
     onLogout = () => {

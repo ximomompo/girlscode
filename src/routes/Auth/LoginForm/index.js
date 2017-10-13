@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, StyleSheet } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { StyleSheet } from 'react-native';
 import { reduxForm, Field } from 'redux-form';
-import firebase from 'react-native-firebase';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Input, MainView, Button } from '../../../components/Commons';
+import { login } from '../../../modules/user/actions';
 
 const styles = StyleSheet.create({
     container: {
@@ -13,19 +14,7 @@ const styles = StyleSheet.create({
 
 class LoginForm extends Component {
     onSubmit = (values) => {
-        firebase.auth().signInWithEmailAndPassword(values.email, values.password)
-            .then((response) => {
-                console.log('then', response);
-                Actions.replace('playbooks_list');
-            })
-            .catch((error) => {
-                Alert.alert(
-                    'Error al acceder',
-                    error.message,
-                    [{ text: 'OK' }],
-                    { cancelable: true },
-                );
-            });
+        this.props.login(values.email, values.password);
     }
     render() {
         return (
@@ -55,4 +44,12 @@ class LoginForm extends Component {
     }
 }
 
-export default reduxForm({ form: 'login' })(LoginForm);
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+        login,
+    }, dispatch)
+);
+
+export default reduxForm({ form: 'login' })(
+    connect(null, mapDispatchToProps)(LoginForm),
+);

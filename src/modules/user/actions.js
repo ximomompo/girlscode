@@ -1,9 +1,54 @@
 import firebase from 'react-native-firebase';
 import { Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import * as types from './types';
+import { AccessToken, LoginManager } from 'react-native-fbsdk';
+// import * as types from './types';
 import * as reqStatusActions from '../requestStatus/actions';
 import { PHOTO_DEFAULT } from '../../helpers/constants';
+
+function createUser(id, data) {
+    return firebase.database().ref('users').child(id).set(data);
+}
+
+export function authByFB() {
+    LoginManager.logInWithReadPermissions(['public_profile', 'email'])
+        .then((result) => {
+            if (result.isCancelled) {
+                Alert.alert(
+                    'Cancelado',
+                    'El inicio de sesión a través de Facebook ha sido cancelado',
+                    [{ text: 'OK' }],
+                    { cancelable: true },
+                );
+            } else {
+                AccessToken.getCurrentAccessToken()
+                    .then((data) => {
+                        const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken)
+                        firebase.auth().signInWithCredential(credential)
+                            .then((response) => {
+                                console.log('signInWithCredentialThen', response);
+                            }, (err) => {
+                                // Promise was rejected
+                                console.log('signInWithCredentialErr', err);
+                            });
+                    }, (error) => {
+                        Alert.alert(
+                            'Ha ocurrido un error',
+                            error,
+                            [{ text: 'OK' }],
+                            { cancelable: true },
+                        );
+                    });
+            }
+        }, (error) => {
+            Alert.alert(
+                'Ha ocurrido un error',
+                error,
+                [{ text: 'OK' }],
+                { cancelable: true },
+            );
+        });
+}
 
 export function register(email, password, username) {
     return (dispatch) => {
@@ -23,10 +68,9 @@ export function register(email, password, username) {
                     photoURL: PHOTO_DEFAULT,
                 });
 
-                return firebase.database().ref('users').child(_user.uid).set(dataUser)
-                    .then(() => {
-                        Actions.replace('playbooks_list');
-                    });
+                return createUser(_user.uid, dataUser).then(() => {
+                    Actions.replace('playbooks_list');
+                });
             })
             .catch((error) => {
                 Alert.alert(
@@ -40,22 +84,22 @@ export function register(email, password, username) {
     };
 }
 
-export function login(params) {
+export function login(email, password) {
     return (dispatch) => {
-        const domain = 'quests';
-        const path = '/entity/quests';
-        const request = axios.get(path, { params });
+        const domain = 'login';
         dispatch(reqStatusActions.setLoading(domain));
-        return request.then((res) => {
-            dispatch({
-                type: types.FETCH_QUESTS,
-                payload: res.data,
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => {
+                Actions.replace('playbooks_list');
+            })
+            .catch((error) => {
+                Alert.alert(
+                    'Error al acceder',
+                    error.message,
+                    [{ text: 'OK' }],
+                    { cancelable: true },
+                );
+                dispatch(reqStatusActions.setError(error, domain));
             });
-            dispatch(reqStatusActions.setSuccess(res, domain));
-        }).catch((error) => {
-            logException(error);
-            const dataError = (error.response) ? error.response.data : error;
-            dispatch(reqStatusActions.setError(dataError, domain));
-        });
     };
 }

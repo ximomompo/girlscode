@@ -27,8 +27,8 @@ const RouterComponent = props => (
                 navTransparent
             >
                 <Scene key="index" component={AuthMain} init />
-                <Scene key="login" component={LoginForm} backTitle=" " />
-                <Scene key="register" component={RegisterForm} backTitle=" " />
+                <Scene key="login" component={LoginForm} backTitle=" " title="Acceder" />
+                <Scene key="register" component={RegisterForm} backTitle=" " title="Registro" />
             </Stack>
 
             <Tabs

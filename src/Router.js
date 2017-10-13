@@ -19,11 +19,8 @@ const RouterComponent = props => (
         >
             <Stack
                 key="auth"
-                navigationBarStyle={{
-                    backgroundColor: colors.white,
-                    borderBottomColor: colors.white,
-                }}
                 initial={!props.logged}
+                navTransparent
             >
                 <Scene key="index" component={AuthMain} init />
                 <Scene key="login" component={LoginForm} backTitle=" " />

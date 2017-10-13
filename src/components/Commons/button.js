@@ -1,11 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-native-elements';
-// import * as colors from '../../helpers/colors';
+import * as colors from '../../helpers/colors';
 
 const ButtonC = (props) => {
-    const { buttonStyle, ...other } = props;
+    const bgColor = () => {
+        switch (props.color) {
+        case 'primary':
+            return colors.primary;
+        case 'secondary':
+            return colors.secondary;
+        default:
+            return colors.primary;
+        }
+    };
+    const { buttonStyle, color, ...other } = props;
     const newButtonStyle = Object.assign({}, props.buttonStyle, {
+        backgroundColor: bgColor(),
     });
     const containerViewStyle = {
         marginTop: 8,
@@ -26,10 +37,12 @@ const ButtonC = (props) => {
 
 ButtonC.PropTypes = {
     fullWidth: PropTypes.bool,
+    color: PropTypes.string,
 };
 
 ButtonC.defaultProps = {
     fullWidth: false,
+    color: 'primary',
 };
 
 export default ButtonC;

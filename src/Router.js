@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
+import { Icon, Badge } from 'react-native-elements';
+import IconBadge from 'react-native-icon-badge';
 import { Scene, Router, Stack, Tabs } from 'react-native-router-flux';
 import { TabIcon } from './components/Commons';
 import LoginForm from './routes/Auth/LoginForm';
@@ -32,6 +34,23 @@ const RouterComponent = props => (
                 key="playbooks"
                 initial={props.logged}
                 showLabel={false}
+                renderRightButton={() => (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <IconBadge
+                            MainElement={<Icon name="bell" type="entypo" style={{ marginRight: 12 }} />}
+                            BadgeElement={
+                                <Text style={{ color: '#FFFFFF', fontSize: 11 }}>{1}</Text>
+                            }
+                            IconBadgeStyle={{
+                                top: 'auto',
+                                bottom: 0,
+                                minWidth: 18,
+                                height: 18,
+                                right: 4,
+                            }}
+                        />
+                    </View>
+                )}
             >
                 <Scene
                     key="playbooks_list"
@@ -67,3 +86,11 @@ RouterComponent.propTypes = {
 };
 
 export default RouterComponent;
+
+// <View>
+//     <Icon name="bell" type="entypo" style={{ marginRight: 12 }} />
+//     <Badge
+//         value={3}
+//         textStyle={{ color: 'orange' }}
+//     />
+// </View>

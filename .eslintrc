@@ -1,0 +1,28 @@
+{
+    extends: "airbnb",
+    plugins: [ 'react', 'react-native' ],
+    parser: "babel-eslint",
+    parserOptions: {
+        ecmaVersion: 6,
+        sourceType: "module"
+    },
+    ecmaFeatures: {
+        jsx: true
+    },
+    # devel: true,
+    env: {
+        browser: true,
+        node: true,
+        es6: true,
+        mocha: true
+    },
+    rules: {
+        react/jsx-filename-extension: [1, { "extensions": [".js", ".jsx"] }],
+        indent: ["error", 4],
+        react/jsx-indent: [1, 4],
+        react/jsx-indent-props: [1, 4],
+        react/react-in-jsx-scope: [1],
+        react/prop-types: 0,
+        jsx-a11y/href-no-hash: "off",
+    }
+}

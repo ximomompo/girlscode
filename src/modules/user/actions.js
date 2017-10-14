@@ -7,47 +7,58 @@ import * as reqStatusActions from '../requestStatus/actions';
 import { PHOTO_DEFAULT } from '../../helpers/constants';
 
 function createUser(id, data) {
-    return firebase.database().ref('users').child(id).set(data);
+    return firebase.database().ref('users').child(id).update(data);
+}
+
+function launchError(title, message, domain, dispatch) {
+    Alert.alert(
+        title,
+        message,
+        [{ text: 'OK' }],
+        { cancelable: true },
+    );
+    dispatch(reqStatusActions.setError(message, domain));
 }
 
 export function authByFB() {
-    LoginManager.logInWithReadPermissions(['public_profile', 'email'])
-        .then((result) => {
-            if (result.isCancelled) {
-                Alert.alert(
-                    'Cancelado',
-                    'El inicio de sesión a través de Facebook ha sido cancelado',
-                    [{ text: 'OK' }],
-                    { cancelable: true },
-                );
-            } else {
-                AccessToken.getCurrentAccessToken()
-                    .then((data) => {
-                        const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken)
-                        firebase.auth().signInWithCredential(credential)
-                            .then((response) => {
-                                console.log('signInWithCredentialThen', response);
-                            }, (err) => {
-                                // Promise was rejected
-                                console.log('signInWithCredentialErr', err);
-                            });
-                    }, (error) => {
-                        Alert.alert(
-                            'Ha ocurrido un error',
-                            error,
-                            [{ text: 'OK' }],
-                            { cancelable: true },
-                        );
-                    });
-            }
-        }, (error) => {
-            Alert.alert(
-                'Ha ocurrido un error',
-                error,
-                [{ text: 'OK' }],
-                { cancelable: true },
-            );
-        });
+    return (dispatch) => {
+        const domain = 'authByFB';
+        return LoginManager.logInWithReadPermissions(['public_profile', 'email'])
+            .then((result) => {
+                if (result.isCancelled) {
+                    launchError(
+                        'Cancelado',
+                        'El inicio de sesión a través de Facebook ha sido cancelado',
+                        domain,
+                        dispatch,
+                    );
+                } else {
+                    dispatch(reqStatusActions.setLoading(domain));
+                    AccessToken.getCurrentAccessToken()
+                        .then((data) => {
+                            const credential = firebase.auth.FacebookAuthProvider
+                                .credential(data.accessToken);
+
+                            firebase.auth().signInWithCredential(credential)
+                                .then((_user) => {
+                                    _user.updateProfile({
+                                        email: _user.providerData.email,
+                                    });
+                                    return createUser(_user.uid, _user.providerData[0]).then(() => {
+                                        dispatch(reqStatusActions.setReset(domain));
+                                        Actions.replace('playbooks_list');
+                                    });
+                                }, (err) => {
+                                    launchError('Ha ocurrido un error', err, domain, dispatch);
+                                });
+                        }, (error) => {
+                            launchError('Ha ocurrido un error', error, domain, dispatch);
+                        });
+                }
+            }, (error) => {
+                launchError('Ha ocurrido un error', error, domain, dispatch);
+            });
+    };
 }
 
 export function register(email, password, username) {
@@ -58,7 +69,6 @@ export function register(email, password, username) {
             .then((_user) => {
                 const dataUser = {
                     displayName: username,
-                    username,
                     email,
                     photoURL: PHOTO_DEFAULT,
                 };
@@ -69,6 +79,7 @@ export function register(email, password, username) {
                 });
 
                 return createUser(_user.uid, dataUser).then(() => {
+                    dispatch(reqStatusActions.setReset(domain));
                     Actions.replace('playbooks_list');
                 });
             })
@@ -90,6 +101,7 @@ export function login(email, password) {
         dispatch(reqStatusActions.setLoading(domain));
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
+                dispatch(reqStatusActions.setReset(domain));
                 Actions.replace('playbooks_list');
             })
             .catch((error) => {

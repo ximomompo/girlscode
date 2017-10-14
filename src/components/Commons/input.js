@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     container: {
         borderWidth: 2,
         borderColor: colors.gray2,
-        borderRadius: 16,
+        borderRadius: 50,
         margin: 8,
         paddingTop: 4,
         paddingBottom: 4,
@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     },
     input: {
         borderBottomWidth: 0,
-        fontSize: 14,
+        fontSize: 16,
+        fontFamily: 'Roboto-Medium',
     },
 });
 

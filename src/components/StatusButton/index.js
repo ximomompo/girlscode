@@ -1,5 +1,4 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from '../Commons';
@@ -13,17 +12,19 @@ const StatusButton = (props) => {
         />
     );
     switch (props.requestStatus) {
-    case 'loading':
+    case 'loading': {
+        const { icon, ...other } = props;
         return (
             <Button
                 title={props.textLoading}
-                loading
-                activityIndicatorStyle={{ position: 'absolute', left: 12 }}
                 disabled
                 noSpecialStylesDisabled
-                {...props}
+                loading
+                activityIndicatorStyle={{ position: 'absolute', left: 8, top: 30 }}
+                {...other}
             />
         );
+    }
     case 'success':
         return (
             <Button

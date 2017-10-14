@@ -1,12 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import SVGImage from 'react-native-svg-image';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { MainView, Button } from '../../components/Commons';
+import StatusButton from '../../components/StatusButton';
 import { LOGO } from '../../helpers/constants';
-import { authByFb } from '../../modules/user/actions';
+import { authByFB } from '../../modules/user/actions';
 
 
 const styles = StyleSheet.create({
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
 });
 
 
-const AuthMain = () => (
+const AuthMain = props => (
     <MainView style={styles.container}>
         <SVGImage
             style={styles.image}
@@ -37,10 +39,11 @@ const AuthMain = () => (
             source={{ uri: LOGO }}
         />
         <View style={styles.actions}>
-            <Button
+            <StatusButton
+                domain="authByFB"
                 color="FB"
-                title="Acceder con Facebook"
-                onPress={() => this.props.authByFb()}
+                textDefault="Acceder con Facebook"
+                onPress={() => props.authByFB()}
                 fullWidth
                 icon={{ name: 'facebook', type: 'entypo', style: { fontSize: 24, position: 'absolute', left: 24 } }}
             />
@@ -58,9 +61,13 @@ const AuthMain = () => (
     </MainView>
 );
 
+AuthMain.propTypes = {
+    authByFB: PropTypes.func.isRequired,
+};
+
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
-        authByFb,
+        authByFB,
     }, dispatch)
 );
 

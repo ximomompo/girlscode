@@ -38,12 +38,12 @@
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
-  		<dict>
-    		<key>CFBundleURLSchemes</key>
-    		<array>
-      			<string>fb124395804892203</string>
-    		</array>
-  		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb124395804892203</string>
+			</array>
+		</dict>
 	</array>
 	<key>FacebookAppID</key>
 	<string>124395804892203</string>
@@ -71,6 +71,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Your message to user when the camera is accessed for the first time</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Your message to user when the photo library is accessed for the first time</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Black.ttf</string>

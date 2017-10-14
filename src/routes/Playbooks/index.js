@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, CameraRoll } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import firebase from 'react-native-firebase';
-import { Text } from '../../components/Commons';
+import { MainView, Button } from '../../components/Commons';
 
 class Playbooks extends Component {
-    onLogout = () => {
-        firebase.auth().signOut().then(() => Actions.replace('index'));
+    getPhotos = () => {
+        CameraRoll.getPhotos({
+            first: 20,
+            assetType: 'All'
+        }).then(r => console.log('photos', r));
     }
     render() {
         return (
-            <View>
-                <Text>
-                    Playbooks
-                </Text>
-            </View>
+            <MainView>
+                <Button
+                    title="Abrir galería"
+                    onPress={this.getPhotos()}
+                    fullWidth
+                />
+            </MainView>
         );
     }
 }

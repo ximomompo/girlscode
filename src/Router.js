@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import IconBadge from 'react-native-icon-badge';
-import { Scene, Router, Stack, Tabs } from 'react-native-router-flux';
+import { Scene, Router, Stack, Tabs, Actions } from 'react-native-router-flux';
 import { TabIcon } from './components/Commons';
 import LoginForm from './routes/Auth/LoginForm';
 import RegisterForm from './routes/Auth/RegisterForm';
 import AuthMain from './routes/Auth';
 import Playbooks from './routes/Playbooks';
 import Profile from './routes/Profile';
+import Create from './routes/Create';
+import Make from './routes/Create/Make';
 import * as colors from './helpers/colors';
 
 const RouterComponent = props => (
@@ -35,6 +37,7 @@ const RouterComponent = props => (
                 key="playbooks"
                 initial={props.logged}
                 showLabel={false}
+                swipeEnabled
                 renderRightButton={() => (
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                         <IconBadge
@@ -61,14 +64,35 @@ const RouterComponent = props => (
                     icon={TabIcon}
                     iconName="open-book"
                     iconType="entypo"
+                    direction="leftToRight"
                 />
-                <Scene
+                <Stack
                     key="playbooks_create"
-                    component={Playbooks}
-                    title="Crear"
                     icon={TabIcon}
                     iconName="photo-camera"
-                />
+                    navTransparent
+                    type="replace"
+                    hideTabBar
+                    renderRightButton={() => {}}
+                    renderLeftButton={() => (
+                        <Icon
+                            name="circle-with-cross"
+                            type="entypo"
+                            style={{ marginLeft: 12 }}
+                            onPress={() => Actions.pop()}
+                        />
+                    )}
+                >
+                    <Scene
+                        key="creator_init"
+                        component={Create}
+                        init
+                    />
+                    <Scene
+                        key="creator_make"
+                        component={Make}
+                    />
+                </Stack>
                 <Scene
                     key="profile"
                     component={Profile}

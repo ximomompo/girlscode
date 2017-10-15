@@ -45,6 +45,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
     },
+    bottom: {
+        flex: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
 });
 
 class Create extends Component {
@@ -52,6 +58,8 @@ class Create extends Component {
         super(props);
         this.state = {
             capture: null,
+            cameraType: Camera.constants.Type.back,
+            cameraTypeId: 'back',
         };
     }
     takePicture() {
@@ -63,6 +71,19 @@ class Create extends Component {
                 console.log('capture', data);
             })
             .catch(err => console.error(err));
+    }
+    switchCameraType = () => {
+        if (this.state.cameraTypeId === 'back') {
+            this.setState({
+                cameraType: Camera.constants.Type.front,
+                cameraTypeId: 'front',
+            });
+        } else {
+            this.setState({
+                cameraType: Camera.constants.Type.back,
+                cameraTypeId: 'back',
+            });
+        }
     }
 
     render() {
@@ -95,6 +116,7 @@ class Create extends Component {
                     ref={(cam) => { this.camera = cam; }}
                     style={styles.preview}
                     aspect={Camera.constants.Aspect.fill}
+                    type={this.state.cameraType}
                 >
                     <View style={styles.top}>
                         <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
@@ -107,9 +129,28 @@ class Create extends Component {
                             />
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.capture}>
-                        <TouchableOpacity onPress={this.takePicture.bind(this)}>
-                            <View style={styles.inside} />
+                    <View style={styles.bottom}>
+                        <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
+                            <Icon
+                                name="cross"
+                                type="entypo"
+                                color={colors.white}
+                                style={styles.iconLeft}
+                                iconStyle={{ fontSize: 32 }}
+                            />
+                        </TouchableOpacity>
+                        <View style={styles.capture}>
+                            <TouchableOpacity onPress={this.takePicture.bind(this)}>
+                                <View style={styles.inside} />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity onPress={() => this.switchCameraType()}>
+                            <Icon
+                                name="cycle"
+                                type="entypo"
+                                color={colors.white}
+                                iconStyle={{ fontSize: 32 }}
+                            />
                         </TouchableOpacity>
                     </View>
                 </Camera>

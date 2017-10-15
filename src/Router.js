@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import IconBadge from 'react-native-icon-badge';
-import { Scene, Router, Stack, Tabs, Actions } from 'react-native-router-flux';
+import { Scene, Router, Stack, Tabs, Actions, Modal } from 'react-native-router-flux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { TabIcon } from './components/Commons';
 import LoginForm from './routes/Auth/LoginForm';
 import RegisterForm from './routes/Auth/RegisterForm';
@@ -12,7 +14,22 @@ import Playbooks from './routes/Playbooks';
 import Profile from './routes/Profile';
 import Create from './routes/Create';
 import Make from './routes/Create/Make';
+import Gallery from './routes/Create/Gallery';
 import * as colors from './helpers/colors';
+import { clearImage } from './modules/gallery/actions';
+
+const styles = StyleSheet.create({
+    text: {
+        fontSize: 16,
+        color: colors.primary,
+    },
+    iconLeft: {
+        marginLeft: 12,
+    },
+    iconRight: {
+        marginRight: 12,
+    },
+});
 
 const RouterComponent = props => (
     <Router
@@ -74,23 +91,26 @@ const RouterComponent = props => (
                     type="replace"
                     hideTabBar
                     renderRightButton={() => {}}
-                    renderLeftButton={() => (
-                        <Icon
-                            name="circle-with-cross"
-                            type="entypo"
-                            style={{ marginLeft: 12 }}
-                            onPress={() => Actions.pop()}
-                        />
-                    )}
                 >
                     <Scene
                         key="creator_init"
                         component={Create}
-                        init
+                        initial
+                        renderLeftButton={() => (
+                            <Icon
+                                name="cross"
+                                type="entypo"
+                                style={{ marginLeft: 12 }}
+                                onPress={() => {
+                                    Actions.reset('playbooks');
+                                }}
+                            />
+                        )}
                     />
                     <Scene
                         key="creator_make"
                         component={Make}
+                        hideNavBar
                     />
                 </Stack>
                 <Scene
@@ -102,6 +122,32 @@ const RouterComponent = props => (
                     iconType="foundation"
                 />
             </Tabs>
+            <Scene
+                key="gallery"
+                title="Galería"
+                renderLeftButton={() => (
+                    <TouchableOpacity
+                        onPress={() => {
+                            props.clearImage();
+                            Actions.pop();
+                        }}
+                    >
+                        <Text style={[styles.text, styles.iconLeft]}>
+                            Cancelar
+                        </Text>
+                    </TouchableOpacity>
+                )}
+                renderRightButton={() => (
+                    <TouchableOpacity onPress={Actions.pop}>
+                        <Text style={[styles.text, styles.iconRight]}>OK</Text>
+                    </TouchableOpacity>
+                )}
+            >
+                <Modal
+                    key="gallery_modal"
+                    component={Gallery}
+                />
+            </Scene>
         </Stack>
     </Router>
 );
@@ -110,4 +156,10 @@ RouterComponent.propTypes = {
     logged: PropTypes.bool.isRequired,
 };
 
-export default RouterComponent;
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+        clearImage,
+    }, dispatch)
+);
+
+export default connect(null, mapDispatchToProps)(RouterComponent);

@@ -1,50 +1,124 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
-import { Text, Button, MainView } from '../../../components/Commons';
+import Camera from 'react-native-camera';
+import { Icon } from 'react-native-elements';
+import { Text } from '../../../components/Commons';
+import * as colors from '../../../helpers/colors';
+
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
+        flex: 1,
+        flexDirection: 'row',
     },
-    text: {
-        marginBottom: 24,
+    preview: {
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    title: {
-        textAlign: 'center',
-        fontFamily: 'Roboto-Black',
-        fontSize: 28,
-        marginTop: 8,
-        marginBottom: 8,
+    capture: {
+        flex: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        borderRadius: 40,
+        width: 80,
+        height: 80,
+        padding: 10,
+        margin: 40,
     },
-    aux: {
-        textAlign: 'center',
-        fontSize: 16,
-        marginTop: 8,
-        marginBottom: 8,
+    inside: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: colors.white,
     },
-    button: {
-        marginTop: 8,
-        marginBottom: 8,
+    top: {
+        flex: 0,
+        width: '100%',
+        paddingTop: 28,
+        paddingLeft: 16,
+        paddingRight: 16,
+    },
+    iconLeft: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
     },
 });
 
 class Create extends Component {
-    onLogout = () => {
-        firebase.auth().signOut().then(() => Actions.replace('index'));
+    constructor(props) {
+        super(props);
+        this.state = {
+            capture: null,
+        };
     }
+    takePicture() {
+        const options = {};
+        // options.location = ...
+        this.camera.capture({ metadata: options })
+            .then((data) => {
+                this.setState({ capture: data });
+                console.log('capture', data);
+            })
+            .catch(err => console.error(err));
+    }
+
     render() {
+        if (this.state.capture) {
+            return (
+                <View style={styles.container}>
+                    <Image
+                        style={{ width: '100%', height: '100%' }}
+                        source={{ uri: this.state.capture.mediaUri }}
+                    >
+                        <View style={styles.top}>
+                            <TouchableOpacity onPress={() => this.setState({ capture: null })}>
+                                <Icon
+                                    name="cross"
+                                    type="entypo"
+                                    color={colors.white}
+                                    style={styles.iconLeft}
+                                    iconStyle={{ fontSize: 32 }}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.capture}>[CAPTURE]</Text>
+                    </Image>
+                </View>
+            );
+        }
         return (
-            <MainView style={styles.container}>
-                <Button
-                    title="Abrir galería"
-                    onPress={() => Actions.creator_make()}
-                    fullWidth
-                />
-            </MainView>
+            <View style={styles.container}>
+                <Camera
+                    ref={(cam) => { this.camera = cam; }}
+                    style={styles.preview}
+                    aspect={Camera.constants.Aspect.fill}
+                >
+                    <View style={styles.top}>
+                        <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
+                            <Icon
+                                name="cross"
+                                type="entypo"
+                                color={colors.white}
+                                style={styles.iconLeft}
+                                iconStyle={{ fontSize: 32 }}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.capture}>
+                        <TouchableOpacity onPress={this.takePicture.bind(this)}>
+                            <View style={styles.inside} />
+                        </TouchableOpacity>
+                    </View>
+                </Camera>
+            </View>
         );
     }
 }
+const mapStateToProps = state => ({
+    gallery: state.gallery,
+});
 
-export default Create;
+export default connect(mapStateToProps)(Create);

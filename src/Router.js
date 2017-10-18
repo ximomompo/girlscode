@@ -54,7 +54,6 @@ const RouterComponent = props => (
                 key="playbooks"
                 initial={props.logged}
                 showLabel={false}
-                swipeEnabled
                 renderRightButton={() => (
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                         <IconBadge

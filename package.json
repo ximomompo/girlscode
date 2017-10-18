@@ -14,6 +14,7 @@
 		"react-native": "0.48.4",
 		"react-native-camera": "^0.10.0",
 		"react-native-camera-roll-picker": "^1.2.2",
+		"react-native-easy-gestures": "^1.0.6",
 		"react-native-elements": "^0.17.0",
 		"react-native-fbsdk": "^0.6.3",
 		"react-native-firebase": "^3.0.0-alpha.5",

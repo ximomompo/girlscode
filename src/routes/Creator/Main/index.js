@@ -10,14 +10,37 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            playbook: {},
+            publishScenes: null,
         };
     }
     componentWillMount() {
         firebase.database().ref('building_playbooks').child(this.props.pbKey)
+            .child('scenes')
+            .orderByChild('finished_at')
+            .startAt(1)
             .once('value', (snap) => {
-                this.setState({ playbook: snap.val() });
+                this.setState({ publishScenes: snap.val() });
             });
+    }
+    openErrorScene = () => {
+        Actions.make_scene({
+            sceneRef: `building_playbooks/${this.props.pbKey}/error_scene`,
+            pbKey: this.props.pbKey,
+            specialScene: true,
+        });
+    }
+    openScene = (sceneKey) => {
+        Actions.make_scene({
+            sceneRef: `building_playbooks/${this.props.pbKey}/scenes/${sceneKey}`,
+            pbKey: this.props.pbKey,
+        });
+    }
+    openDoneScene = () => {
+        Actions.make_scene({
+            sceneRef: `building_playbooks/${this.props.pbKey}/done_scene`,
+            pbKey: this.props.pbKey,
+            specialScene: true,
+        });
     }
     newScene = () => {
         const data = {
@@ -39,21 +62,16 @@ class Main extends Component {
             .child(this.props.pbKey)
             .child('scenes')
             .push(data).key;
-        Actions.make_scene({
-            sceneKey,
-            pbKey: this.props.pbKey,
-        });
-    }
-    openScene = () => {
-        this.newScene();
+
+        this.openScene(sceneKey);
     }
     renderScenes = () => {
-        if (this.state.playbook.scenes) {
-            return Object.keys(this.state.playbook.scenes)
+        if (this.state.publishScenes) {
+            return Object.keys(this.state.publishScenes)
                 .map(sceneKey => (
                     <Scene
                         key={sceneKey}
-                        onPress={() => Actions.make_scene({ sceneKey, pbKey: this.props.pbKey })}
+                        onPress={() => this.openScene(sceneKey)}
                     />
                 ));
         }
@@ -62,14 +80,14 @@ class Main extends Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.container}>
-                <TouchableHighlight onPress={() => Actions.make_scene()}>
+                <TouchableHighlight onPress={() => this.openErrorScene()}>
                     <View style={[styles.sceneBasic, styles.sceneSizeSm]} />
                 </TouchableHighlight>
                 <View style={styles.middleWay}>
                     {this.renderScenes()}
                     <Scene onPress={() => this.newScene()} />
                 </View>
-                <TouchableHighlight onPress={() => Actions.make_scene()}>
+                <TouchableHighlight onPress={() => this.openDoneScene()}>
                     <View style={[styles.sceneBasic, styles.sceneSizeSm]} />
                 </TouchableHighlight>
             </ScrollView>

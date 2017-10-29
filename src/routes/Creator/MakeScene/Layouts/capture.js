@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-// import firebase from 'react-native-firebase';
 import Camera from 'react-native-camera';
 import { Icon } from 'react-native-elements';
 import IconAbsolute from './components/IconAbsolute';
@@ -50,7 +48,7 @@ class LayoutCapture extends Component {
                 >
                     <IconAbsolute
                         position="TopLeft"
-                        onPress={() => Actions.main_creator({ pbKey: this.props.pbKey })}
+                        onPress={() => this.props.goToMain()}
                     >
                         <Icon
                             name="cross"
@@ -60,7 +58,7 @@ class LayoutCapture extends Component {
                         />
                     </IconAbsolute>
                     <View style={styles.bottom}>
-                        <TouchableOpacity onPress={() => Actions.gallery()}>
+                        <TouchableOpacity>
                             <Icon
                                 name="picture-o"
                                 type="font-awesome"
@@ -92,6 +90,8 @@ class LayoutCapture extends Component {
 LayoutCapture.propsTypes = {
     setCapture: PropTypes.func.isRequired,
     goToLayout: PropTypes.func.isRequired,
+    goToMain: PropTypes.func.isRequired,
+    sceneRef: PropTypes.func.isRequired,
 };
 
 export default LayoutCapture;

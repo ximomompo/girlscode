@@ -29,6 +29,19 @@ class LayoutText extends Component {
 
     setColorText = (value) => {
         this.setState({ colorText: value });
+        this.props.sceneRef.child('colorText').set(value);
+    }
+
+    setStyleGestures = (stylesGestures) => {
+        const data = {
+            left: stylesGestures.left,
+            top: stylesGestures.top,
+            transform: {
+                rotate: stylesGestures.transform[1].rotate,
+                scale: stylesGestures.transform[0].scale,
+            },
+        };
+        this.props.sceneRef.child('position').set(data);
     }
 
     switchOpenText = () => {
@@ -82,27 +95,11 @@ class LayoutText extends Component {
             >
                 <Gestures
                     onStart={(event, stylesGestures) => {
-                        const data = {
-                            left: stylesGestures.left,
-                            top: stylesGestures.top,
-                            transform: {
-                                rotate: stylesGestures.transform[1].rotate,
-                                scale: stylesGestures.transform[0].scale,
-                            },
-                        };
-                        this.props.sceneRef.child('position').set(data);
+                        this.setStyleGestures(stylesGestures);
                         Keyboard.dismiss();
                     }}
                     onRelease={(event, stylesGestures) => {
-                        const data = {
-                            left: stylesGestures.left,
-                            top: stylesGestures.top,
-                            transform: {
-                                rotate: stylesGestures.transform[1].rotate,
-                                scale: stylesGestures.transform[0].scale,
-                            },
-                        };
-                        this.props.sceneRef.child('position').set(data);
+                        this.setStyleGestures(stylesGestures);
                     }}
                 >
                     <View style={styles.containerGestures}>
@@ -143,11 +140,22 @@ class LayoutText extends Component {
                 <IconAbsolute
                     position="BottomRight"
                     onPress={() => {
-                        this.setText(this.state.text);
-                        this.props.goToLayout('form');
+                        if (this.props.specialScene) {
+                            this.props.finishScene({
+                                text: this.state.text,
+                            });
+                        } else {
+                            this.setText(this.state.text);
+                            this.props.goToLayout('form');
+                        }
                     }}
                 >
-                    <Text style={styles.iconText}>Añadir pregunta</Text>
+                    <Text style={styles.iconText}>
+                        {(this.props.specialScene)
+                            ? 'Listo'
+                            : 'Añadir pregunta'
+                        }
+                    </Text>
                 </IconAbsolute>
                 <Image
                     style={styles.imageBackground}
@@ -166,6 +174,7 @@ LayoutText.propsTypes = {
         image: PropTypes.string.isRequired,
     }).isRequired,
     sceneRef: PropTypes.string.isRequired,
+    finishScene: PropTypes.func.isRequired,
 };
 
 export default LayoutText;

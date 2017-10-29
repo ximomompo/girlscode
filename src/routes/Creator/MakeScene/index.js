@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
 import Layouts from './Layouts';
 
@@ -10,14 +10,11 @@ class MakeScene extends Component {
         this.state = {
             layout: 'capture',
             scene: {},
-            sceneRef: firebase.database().ref('building_playbooks')
-                .child(this.props.pbKey)
-                .child('scenes')
-                .child(this.props.sceneKey),
+            dbRef: firebase.database().ref(this.props.sceneRef),
         };
     }
     componentWillMount() {
-        this.state.sceneRef
+        this.state.dbRef
             .on('value', (snap) => {
                 this.setState({ scene: snap.val() });
             });
@@ -27,30 +24,47 @@ class MakeScene extends Component {
         this.setState({ layout: value });
     }
 
+    goToMain = () => {
+        Actions.main_creator({ pbKey: this.props.pbKey });
+    }
+
+    finishScene = (params) => {
+        this.state.dbRef.update(Object.assign(params, {
+            finished_at: firebase.database.ServerValue.TIMESTAMP,
+        })).then(() => {
+            // Subir imagen
+            this.goToMain();
+        });
+    }
+
     render() {
         switch (this.state.layout) {
         case 'text':
             return (
                 <Layouts.Text
                     goToLayout={this.goToLayout}
+                    finishScene={this.finishScene}
                     scene={this.state.scene}
-                    sceneRef={this.state.sceneRef}
+                    sceneRef={this.state.dbRef}
+                    specialScene={this.props.specialScene}
                 />
             );
         case 'form':
             return (
                 <Layouts.Form
                     goToLayout={this.goToLayout}
+                    finishScene={this.finishScene}
                     scene={this.state.scene}
-                    sceneRef={this.state.sceneRef}
+                    sceneRef={this.state.dbRef}
                 />
             );
         default:
             return (
                 <Layouts.Capture
                     goToLayout={this.goToLayout}
+                    goToMain={this.goToMain}
                     scene={this.state.scene}
-                    sceneRef={this.state.sceneRef}
+                    sceneRef={this.state.dbRef}
                 />
             );
         }
@@ -59,12 +73,13 @@ class MakeScene extends Component {
 
 MakeScene.propTypes = {
     pbKey: PropTypes.string.isRequired,
-    sceneKey: PropTypes.string.isRequired,
+    sceneRef: PropTypes.string.isRequired,
+    specialScene: PropTypes.bool,
+};
+
+MakeScene.defaultProps = {
+    specialScene: false,
 };
 
 
-const mapStateToProps = state => ({
-    gallery: state.gallery,
-});
-
-export default connect(mapStateToProps)(MakeScene);
+export default MakeScene;

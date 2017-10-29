@@ -15,8 +15,27 @@ import * as colors from '../../../../helpers/colors';
 import styles from '../styles';
 
 class LayoutForm extends Component {
-    setText = (value) => {
-        this.props.sceneRef.child('question').set(value);
+    constructor(props) {
+        super(props);
+        this.state = {
+            question: 'Escribe aquí tu pregunta',
+        };
+    }
+
+    componentWillMount() {
+        // Iniciar anwers con 2 preguntas por defecto
+        this.props.sceneRef.child('answers').once('value', (snap) => {
+            if (!snap.val()) {
+                snap.ref.push({
+                    text: 'Respuesta',
+                    correct: false,
+                });
+                snap.ref.push({
+                    text: 'Respuesta',
+                    correct: false,
+                });
+            }
+        });
     }
 
     addAnswer = () => {
@@ -33,17 +52,6 @@ class LayoutForm extends Component {
                 paddingTop: 80,
             }]}
         >
-            <IconAbsolute
-                position="TopLeft"
-                onPress={() => this.props.goToLayout('capture')}
-            >
-                <Icon
-                    name="cross"
-                    type="entypo"
-                    color={colors.white}
-                    iconStyle={{ fontSize: 32 }}
-                />
-            </IconAbsolute>
             <Icon
                 name="question-circle-o"
                 type="font-awesome"
@@ -55,8 +63,8 @@ class LayoutForm extends Component {
                 style={[styles.textInput, styles.textInputQuestion]}
                 multiline
                 autoFocus
-                onChangeText={question => this.setText(question)}
-                value={this.props.scene.question}
+                onChangeText={question => this.setState({ question })}
+                value={this.state.question}
             />
             {Object.keys(this.props.scene.answers).map(answerKey => (
                 <Answer
@@ -90,8 +98,10 @@ class LayoutForm extends Component {
                     />
                 </IconAbsolute>
                 <IconAbsolute
-                    position="TopLeft"
-                    onPress={() => this.props.goToLayout('capture')}
+                    position="TopRight"
+                    onPress={() => this.props.finishScene({
+                        question: this.state.question,
+                    })}
                 >
                     <Text style={styles.iconText}>Listo</Text>
                 </IconAbsolute>
@@ -107,6 +117,7 @@ class LayoutForm extends Component {
 
 LayoutForm.propsTypes = {
     goToLayout: PropTypes.func.isRequired,
+    finishScene: PropTypes.func.isRequired,
     scene: PropTypes.shape({
         question: PropTypes.string.isRequired,
         answers: PropTypes.arrayOf().isRequired,

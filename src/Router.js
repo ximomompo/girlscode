@@ -12,9 +12,10 @@ import RegisterForm from './routes/Auth/RegisterForm';
 import AuthMain from './routes/Auth';
 import Playbooks from './routes/Playbooks';
 import Profile from './routes/Profile';
-import Create from './routes/Create';
-import Make from './routes/Create/Make';
-import Gallery from './routes/Create/Gallery';
+import OnboardingCreator from './routes/Creator';
+import Main from './routes/Creator/Main';
+import Make from './routes/Creator/MakeScene';
+import Gallery from './routes/Gallery';
 import * as colors from './helpers/colors';
 import { clearImage } from './modules/gallery/actions';
 
@@ -92,24 +93,40 @@ const RouterComponent = props => (
                     renderRightButton={() => {}}
                 >
                     <Scene
-                        key="creator_init"
-                        component={Create}
-                        initial
+                        key="onboarding_creator"
+                        component={OnboardingCreator}
+                        init
                         renderLeftButton={() => (
                             <Icon
                                 name="cross"
                                 type="entypo"
                                 style={{ marginLeft: 12 }}
-                                onPress={() => {
-                                    Actions.reset('playbooks');
-                                }}
+                                onPress={() => Actions.reset('playbooks')}
                             />
                         )}
                     />
                     <Scene
-                        key="creator_make"
+                        key="main_creator"
+                        component={Main}
+                        renderLeftButton={() => (
+                            <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
+                                <Text style={{ marginLeft: 12 }}>Cancelar</Text>
+                            </TouchableOpacity>
+                        )}
+                        renderRightButton={() => (
+                            <TouchableOpacity onPress={() => Actions.publish_playbook()}>
+                                <Text style={{ marginRight: 12 }}>Publicar</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <Scene
+                        key="make_scene"
                         component={Make}
                         hideNavBar
+                    />
+                    <Scene
+                        key="publish_playbook"
+                        component={Make}
                     />
                 </Stack>
                 <Scene

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CameraRollPicker from 'react-native-camera-roll-picker';
-import { Modal } from '../../../components/Commons';
-import { setImage } from '../../../modules/gallery/actions';
+import { setImage } from '../../modules/gallery/actions';
 
 class Gallery extends Component {
     getSelectedImages = (images, current) => {

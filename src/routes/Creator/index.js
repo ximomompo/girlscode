@@ -31,8 +31,13 @@ const styles = StyleSheet.create({
 });
 
 class Create extends Component {
-    onLogout = () => {
-        firebase.auth().signOut().then(() => Actions.replace('index'));
+    newPlaybook = () => {
+        const data = {
+            owner_id: firebase.auth().currentUser.uid,
+            created_at: firebase.database.ServerValue.TIMESTAMP,
+        };
+        const key = firebase.database().ref('building_playbooks').push(data).key;
+        Actions.main_creator({ pbKey: key });
     }
     render() {
         return (
@@ -43,7 +48,7 @@ class Create extends Component {
                 </View>
                 <Button
                     title="Empezar"
-                    onPress={() => Actions.creator_make()}
+                    onPress={() => this.newPlaybook()}
                     fullWidth
                     style={styles.button}
                 />

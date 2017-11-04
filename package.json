@@ -18,7 +18,7 @@
 		"react-native-easy-gestures": "^1.0.6",
 		"react-native-elements": "^0.17.0",
 		"react-native-fbsdk": "^0.6.3",
-		"react-native-firebase": "^3.0.0-alpha.5",
+		"react-native-firebase": "^3.0.6",
 		"react-native-icon-badge": "^1.1.3",
 		"react-native-keyboard-aware-scroll-view": "^0.3.0",
 		"react-native-router-flux": "^4.0.0-beta.22",

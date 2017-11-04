@@ -5,9 +5,11 @@ import {
     Image,
     TouchableOpacity,
     TextInput,
+    FlatList,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from 'react-native-elements';
+import firebase from 'react-native-firebase';
 import Answer from './components/Answer';
 import IconAbsolute from './components/IconAbsolute';
 import { Text } from '../../../../components/Commons';
@@ -18,13 +20,14 @@ class LayoutForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            question: 'Escribe aquí tu pregunta',
+            question: props.scene.question,
+            answers: [],
         };
     }
 
     componentWillMount() {
         // Iniciar anwers con 2 preguntas por defecto
-        this.props.sceneRef.child('answers').once('value', (snap) => {
+        this.props.sceneRef.child('answers').orderByChild('created_at').on('value', (snap) => {
             if (!snap.val()) {
                 snap.ref.push({
                     text: 'Respuesta',
@@ -35,52 +38,70 @@ class LayoutForm extends Component {
                     correct: false,
                 });
             }
+            const answers = [];
+            snap.forEach((answer) => {
+                answers.push({
+                    id: answer.key,
+                    ...answer.val(),
+                });
+            });
+            this.setState({ answers });
         });
+    }
+
+    setQuestionText = (value) => {
+        this.setState({ question: value }, () => this.props.sceneRef.child('question').set(value));
     }
 
     addAnswer = () => {
         this.props.sceneRef.child('answers').push({
             text: 'Respuesta',
             correct: false,
-        });
+            created_at: firebase.database.ServerValue.TIMESTAMP,
+        }).then(() => this.scrollView.scrollToEnd());
     }
 
     renderForm = () => (
-        <KeyboardAwareScrollView
-            contentContainerStyle={[styles.containerText, {
-                justifyContent: 'flex-start',
-                paddingTop: 80,
-            }]}
-        >
-            <Icon
-                name="question-circle-o"
-                type="font-awesome"
-                color={colors.white}
-                iconStyle={{ fontSize: 46 }}
-            />
-            <TextInput
-                ref={(c) => { this.textInputQ = c; }}
-                style={[styles.textInput, styles.textInputQuestion]}
-                multiline
-                autoFocus
-                onChangeText={question => this.setState({ question })}
-                value={this.state.question}
-            />
-            {Object.keys(this.props.scene.answers).map(answerKey => (
-                <Answer
-                    key={answerKey}
-                    answerKey={answerKey}
-                    answer={this.props.scene.answers[answerKey]}
-                    sceneRef={this.props.sceneRef}
-                />
-            ))}
-            <TouchableOpacity
-                style={styles.addQuestion}
-                onPress={() => this.addAnswer()}
+        <View style={{ width: '100%' }}>
+            <KeyboardAwareScrollView
+                ref={(ref) => { this.scrollView = ref; }}
+                contentContainerStyle={{
+                    padding: 20,
+                    paddingTop: 80,
+                }}
             >
-                <Text style={styles.addQuestionText}>Añadir respuesta</Text>
-            </TouchableOpacity>
-        </KeyboardAwareScrollView>
+                <Icon
+                    name="question-circle-o"
+                    type="font-awesome"
+                    color={colors.white}
+                    iconStyle={styles.mainIconForm}
+                />
+                <TextInput
+                    ref={(c) => { this.textInputQ = c; }}
+                    style={[styles.textInput, styles.textInputQuestion]}
+                    multiline
+                    autoFocus
+                    onChangeText={question => this.setQuestionText(question)}
+                    value={this.state.question}
+                />
+                <FlatList
+                    data={this.state.answers}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <Answer
+                            answer={item}
+                            sceneRef={this.props.sceneRef}
+                        />
+                    )}
+                />
+                <TouchableOpacity
+                    style={styles.addQuestion}
+                    onPress={() => this.addAnswer()}
+                >
+                    <Text style={styles.addQuestionText}>Añadir respuesta</Text>
+                </TouchableOpacity>
+            </KeyboardAwareScrollView>
+        </View>
     );
 
     render() {
@@ -94,7 +115,7 @@ class LayoutForm extends Component {
                         name="cross"
                         type="entypo"
                         color={colors.white}
-                        iconStyle={{ fontSize: 32 }}
+                        iconStyle={[styles.shadowDefault, { fontSize: 32 }]}
                     />
                 </IconAbsolute>
                 <IconAbsolute
@@ -103,7 +124,7 @@ class LayoutForm extends Component {
                         question: this.state.question,
                     })}
                 >
-                    <Text style={styles.iconText}>Listo</Text>
+                    <Text style={[styles.shadowDefault, styles.iconText]}>Listo</Text>
                 </IconAbsolute>
                 <Image
                     style={styles.imageBackground}
@@ -127,3 +148,9 @@ LayoutForm.propsTypes = {
 };
 
 export default LayoutForm;
+
+/**
+{_.orderBy(Object.keys(this.props.scene.answers), 'created_at').map(answerKey => (
+
+))}
+*/

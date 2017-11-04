@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -424,6 +423,7 @@
 		7C3EE2461F9136EB0022CB6C /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		7C42475B1F92837A00B69A09 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		7CB7D8E61F7DD17B00443D01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7CEC0BEF1FADEA2C00312C30 /* RNFirebaseUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RNFirebaseUtil.h; path = "../node_modules/react-native-firebase/ios/RNFirebase/RNFirebaseUtil.h"; sourceTree = "<group>"; };
 		81600B97307F88995C70CCE5 /* Pods-girlscodeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-girlscodeTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-girlscodeTests/Pods-girlscodeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		847D1FD119F2D983AB1F848B /* libPods-girlscode-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-girlscode-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -632,6 +632,7 @@
 		1F3B15E00C7807619F9DCEAB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7CEC0BEF1FADEA2C00312C30 /* RNFirebaseUtil.h */,
 				7C3EE2461F9136EB0022CB6C /* FBSDKShareKit.framework */,
 				7C3EE2441F9136DE0022CB6C /* FBSDKLoginKit.framework */,
 				7C3EE2421F9136CA0022CB6C /* FBSDKCoreKit.framework */,

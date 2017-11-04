@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableHighlight, View, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
 import Scene from './Scene';
@@ -10,7 +10,9 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            publishScenes: null,
+            publishScenes: {},
+            doneScene: {},
+            errorScene: {},
         };
     }
     componentWillMount() {
@@ -20,6 +22,18 @@ class Main extends Component {
             .startAt(1)
             .once('value', (snap) => {
                 this.setState({ publishScenes: snap.val() });
+            });
+
+        firebase.database().ref('building_playbooks').child(this.props.pbKey)
+            .child('done_scene')
+            .once('value', (snap) => {
+                this.setState({ doneScene: snap.val() });
+            });
+
+        firebase.database().ref('building_playbooks').child(this.props.pbKey)
+            .child('error_scene')
+            .once('value', (snap) => {
+                this.setState({ errorScene: snap.val() });
             });
     }
     openErrorScene = () => {
@@ -33,6 +47,7 @@ class Main extends Component {
         Actions.make_scene({
             sceneRef: `building_playbooks/${this.props.pbKey}/scenes/${sceneKey}`,
             pbKey: this.props.pbKey,
+            initLayout: 'form',
         });
     }
     openDoneScene = () => {
@@ -72,6 +87,7 @@ class Main extends Component {
                     <Scene
                         key={sceneKey}
                         onPress={() => this.openScene(sceneKey)}
+                        scene={this.state.publishScenes[sceneKey]}
                     />
                 ));
         }
@@ -80,16 +96,20 @@ class Main extends Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.container}>
-                <TouchableHighlight onPress={() => this.openErrorScene()}>
-                    <View style={[styles.sceneBasic, styles.sceneSizeSm]} />
-                </TouchableHighlight>
+                <Scene
+                    size="sm"
+                    onPress={() => this.openErrorScene()}
+                    scene={this.state.errorScene}
+                />
                 <View style={styles.middleWay}>
                     {this.renderScenes()}
                     <Scene onPress={() => this.newScene()} />
                 </View>
-                <TouchableHighlight onPress={() => this.openDoneScene()}>
-                    <View style={[styles.sceneBasic, styles.sceneSizeSm]} />
-                </TouchableHighlight>
+                <Scene
+                    size="sm"
+                    onPress={() => this.openDoneScene()}
+                    scene={this.state.doneScene}
+                />
             </ScrollView>
         );
     }

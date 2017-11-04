@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
@@ -8,15 +9,18 @@ class MakeScene extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            layout: 'capture',
+            layout: props.initLayout,
             scene: {},
-            dbRef: firebase.database().ref(this.props.sceneRef),
+            loaded: false,
         };
     }
     componentWillMount() {
-        this.state.dbRef
+        this.dbRef
             .on('value', (snap) => {
-                this.setState({ scene: snap.val() });
+                this.setState({
+                    loaded: true,
+                    scene: snap.val(),
+                });
             });
     }
 
@@ -29,15 +33,17 @@ class MakeScene extends Component {
     }
 
     finishScene = (params) => {
-        this.state.dbRef.update(Object.assign(params, {
+        this.dbRef.update(Object.assign(params, {
             finished_at: firebase.database.ServerValue.TIMESTAMP,
         })).then(() => {
             // Subir imagen
             this.goToMain();
         });
     }
+    dbRef = firebase.database().ref(this.props.sceneRef);
 
     render() {
+        if (!this.state.loaded) return <View><Text>Cargando</Text></View>;
         switch (this.state.layout) {
         case 'text':
             return (
@@ -45,7 +51,7 @@ class MakeScene extends Component {
                     goToLayout={this.goToLayout}
                     finishScene={this.finishScene}
                     scene={this.state.scene}
-                    sceneRef={this.state.dbRef}
+                    sceneRef={this.dbRef}
                     specialScene={this.props.specialScene}
                 />
             );
@@ -55,7 +61,7 @@ class MakeScene extends Component {
                     goToLayout={this.goToLayout}
                     finishScene={this.finishScene}
                     scene={this.state.scene}
-                    sceneRef={this.state.dbRef}
+                    sceneRef={this.dbRef}
                 />
             );
         default:
@@ -64,7 +70,7 @@ class MakeScene extends Component {
                     goToLayout={this.goToLayout}
                     goToMain={this.goToMain}
                     scene={this.state.scene}
-                    sceneRef={this.state.dbRef}
+                    sceneRef={this.dbRef}
                 />
             );
         }
@@ -75,10 +81,12 @@ MakeScene.propTypes = {
     pbKey: PropTypes.string.isRequired,
     sceneRef: PropTypes.string.isRequired,
     specialScene: PropTypes.bool,
+    initLayout: PropTypes.oneOf(['capture', 'form', 'text']),
 };
 
 MakeScene.defaultProps = {
     specialScene: false,
+    initLayout: 'capture',
 };
 
 

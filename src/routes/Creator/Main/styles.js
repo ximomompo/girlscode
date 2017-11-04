@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import * as colors from '../../../helpers/colors';
-import * as fonts from '../../../helpers/fonts';
+// import * as fonts from '../../../helpers/fonts';
 
 export default StyleSheet.create({
     container: {
@@ -16,21 +16,26 @@ export default StyleSheet.create({
         backgroundColor: colors.white,
         borderColor: colors.gray1,
         borderStyle: 'solid',
+        marginBottom: 16,
     },
-    sceneSizeMd: {
+    sceneSize_md: {
         borderRadius: 8,
         width: 80,
-        height: 80,
+        height: 132,
         borderWidth: 8,
     },
-    sceneSizeSm: {
+    sceneSize_sm: {
         borderRadius: 8,
         width: 64,
-        height: 64,
+        height: 102,
         borderWidth: 6,
         margin: 8,
     },
     middleWay: {
         flexDirection: 'column',
+    },
+    thumbnail: {
+        width: '100%',
+        height: '100%',
     },
 });

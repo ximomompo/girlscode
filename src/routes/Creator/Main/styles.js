@@ -8,7 +8,7 @@ export default StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         flexDirection: 'column',
-        marginTop: 80,
+        marginTop: 24,
     },
     sceneBasic: {
         backgroundColor: colors.white,

@@ -36,10 +36,14 @@ class MakeScene extends Component {
         this.dbRef.update(Object.assign(params, {
             finished_at: firebase.database.ServerValue.TIMESTAMP,
         })).then(() => {
+            this.bpRef.child('numScenes').once('value', (snap) => {
+                snap.ref.set(snap.val() + 1);
+            });
             // Subir imagen
             this.goToMain();
         });
     }
+    bpRef = firebase.database().ref('building_playbooks').child(this.props.pbKey);
     dbRef = firebase.database().ref(this.props.sceneRef);
 
     render() {

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import IconBadge from 'react-native-icon-badge';
 import { Scene, Router, Stack, Tabs, Actions, Modal } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import firebase from 'react-native-firebase';
 import { TabIcon } from './components/Commons';
 import LoginForm from './routes/Auth/LoginForm';
 import RegisterForm from './routes/Auth/RegisterForm';
@@ -32,141 +33,177 @@ const styles = StyleSheet.create({
     },
 });
 
-const RouterComponent = props => (
-    <Router
-        sceneStyle={{ backgroundColor: colors.white }}
-    >
-        <Stack
-            key="root"
-            hideNavBar
-            init
-        >
-            <Stack
-                key="auth"
-                initial={!props.logged}
-                navTransparent
+class RouterComponent extends Component {
+    pusblishPLaybook = (key) => {
+        firebase.database().ref('building_playbooks').child(key)
+            .once('value', (snap) => {
+                if (!snap.child('done_scene').child('finished_at').val()) {
+                    Alert.alert(
+                        'No existe escena final',
+                        'Para publicar es necesario que tengas una escena final',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                } else if (!snap.child('error_scene').child('finished_at').val()) {
+                    Alert.alert(
+                        'No existe escena de fallo',
+                        'Para publicar es necesario que tengas una escena de fallo',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                } else if (snap.child('numScenes').val() < 3) {
+                    Alert.alert(
+                        'Pocas de escenas',
+                        'El número de escenas debe ser de al menos 3',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                } else {
+                    Actions.publish_playbook();
+                }
+            });
+    }
+    render() {
+        return (
+            <Router
+                sceneStyle={{ backgroundColor: colors.white }}
             >
-                <Scene key="index" component={AuthMain} init />
-                <Scene key="login" component={LoginForm} backTitle=" " title="Acceder" />
-                <Scene key="register" component={RegisterForm} backTitle=" " title="Registro" />
-            </Stack>
-
-            <Tabs
-                key="playbooks"
-                initial={props.logged}
-                showLabel={false}
-                renderRightButton={() => (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                        <IconBadge
-                            MainElement={<Icon name="bell" type="entypo" style={{ marginRight: 12 }} />}
-                            BadgeElement={
-                                <Text style={{ color: '#FFFFFF', fontSize: 11 }}>{1}</Text>
-                            }
-                            IconBadgeStyle={{
-                                top: 'auto',
-                                bottom: 0,
-                                minWidth: 18,
-                                height: 18,
-                                right: 4,
-                            }}
-                        />
-                    </View>
-                )}
-            >
-                <Scene
-                    key="playbooks_list"
-                    component={Playbooks}
-                    title="Playbooks"
-                    init
-                    icon={TabIcon}
-                    iconName="open-book"
-                    iconType="entypo"
-                    direction="leftToRight"
-                />
                 <Stack
-                    key="playbooks_create"
-                    icon={TabIcon}
-                    iconName="photo-camera"
-                    navTransparent
-                    type="replace"
-                    hideTabBar
-                    renderRightButton={() => {}}
+                    key="root"
+                    hideNavBar
+                    init
                 >
-                    <Scene
-                        key="onboarding_creator"
-                        component={OnboardingCreator}
-                        init
-                        renderLeftButton={() => (
-                            <Icon
-                                name="cross"
-                                type="entypo"
-                                style={{ marginLeft: 12 }}
-                                onPress={() => Actions.reset('playbooks')}
-                            />
+                    <Stack
+                        key="auth"
+                        initial={!this.props.logged}
+                        navTransparent
+                    >
+                        <Scene key="index" component={AuthMain} init />
+                        <Scene key="login" component={LoginForm} backTitle=" " title="Acceder" />
+                        <Scene key="register" component={RegisterForm} backTitle=" " title="Registro" />
+                    </Stack>
+
+                    <Tabs
+                        key="playbooks"
+                        initial={this.props.logged}
+                        showLabel={false}
+                        renderRightButton={() => (
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <IconBadge
+                                    MainElement={<Icon name="bell" type="entypo" style={{ marginRight: 12 }} />}
+                                    BadgeElement={
+                                        <Text style={{ color: '#FFFFFF', fontSize: 11 }}>{1}</Text>
+                                    }
+                                    IconBadgeStyle={{
+                                        top: 'auto',
+                                        bottom: 0,
+                                        minWidth: 18,
+                                        height: 18,
+                                        right: 4,
+                                    }}
+                                />
+                            </View>
                         )}
-                    />
+                    >
+                        <Scene
+                            key="playbooks_list"
+                            component={Playbooks}
+                            title="Playbooks"
+                            init
+                            icon={TabIcon}
+                            iconName="open-book"
+                            iconType="entypo"
+                            direction="leftToRight"
+                        />
+                        <Stack
+                            key="playbooks_create"
+                            icon={TabIcon}
+                            iconName="photo-camera"
+                            navTransparent
+                            type="replace"
+                            hideTabBar
+                            renderRightButton={() => {}}
+                        >
+                            <Scene
+                                key="onboarding_creator"
+                                component={OnboardingCreator}
+                                init
+                                renderLeftButton={() => (
+                                    <Icon
+                                        name="cross"
+                                        type="entypo"
+                                        style={{ marginLeft: 12 }}
+                                        onPress={() => Actions.reset('playbooks')}
+                                    />
+                                )}
+                            />
+                            <Scene
+                                key="main_creator"
+                                component={Main}
+                                navTransparent={false}
+                                renderLeftButton={() => (
+                                    <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
+                                        <Text style={{ marginLeft: 12 }}>Cancelar</Text>
+                                    </TouchableOpacity>
+                                )}
+                                renderRightButton={props => (
+                                    <TouchableOpacity
+                                        onPress={() => this.pusblishPLaybook(props.pbKey)}
+                                    >
+                                        <Text style={{ marginRight: 12 }}>Publicar</Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                            <Scene
+                                key="make_scene"
+                                component={Make}
+                                hideNavBar
+                            />
+                            <Scene
+                                key="publish_playbook"
+                                component={Make}
+                            />
+                        </Stack>
+                        <Scene
+                            key="profile"
+                            component={Profile}
+                            title="Perfil"
+                            icon={TabIcon}
+                            iconName="torso-female"
+                            iconType="foundation"
+                        />
+                    </Tabs>
                     <Scene
-                        key="main_creator"
-                        component={Main}
+                        key="gallery"
+                        title="Galería"
                         renderLeftButton={() => (
-                            <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
-                                <Text style={{ marginLeft: 12 }}>Cancelar</Text>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.clearImage();
+                                    Actions.pop();
+                                }}
+                            >
+                                <Text style={[styles.text, styles.iconLeft]}>
+                                    Cancelar
+                                </Text>
                             </TouchableOpacity>
                         )}
                         renderRightButton={() => (
-                            <TouchableOpacity onPress={() => Actions.publish_playbook()}>
-                                <Text style={{ marginRight: 12 }}>Publicar</Text>
+                            <TouchableOpacity onPress={Actions.pop}>
+                                <Text style={[styles.text, styles.iconRight]}>OK</Text>
                             </TouchableOpacity>
                         )}
-                    />
-                    <Scene
-                        key="make_scene"
-                        component={Make}
-                        hideNavBar
-                    />
-                    <Scene
-                        key="publish_playbook"
-                        component={Make}
-                    />
-                </Stack>
-                <Scene
-                    key="profile"
-                    component={Profile}
-                    title="Perfil"
-                    icon={TabIcon}
-                    iconName="torso-female"
-                    iconType="foundation"
-                />
-            </Tabs>
-            <Scene
-                key="gallery"
-                title="Galería"
-                renderLeftButton={() => (
-                    <TouchableOpacity
-                        onPress={() => {
-                            props.clearImage();
-                            Actions.pop();
-                        }}
                     >
-                        <Text style={[styles.text, styles.iconLeft]}>
-                            Cancelar
-                        </Text>
-                    </TouchableOpacity>
-                )}
-                renderRightButton={() => (
-                    <TouchableOpacity onPress={Actions.pop}>
-                        <Text style={[styles.text, styles.iconRight]}>OK</Text>
-                    </TouchableOpacity>
-                )}
-            >
-                <Modal
-                    key="gallery_modal"
-                    component={Gallery}
-                />
-            </Scene>
-        </Stack>
-    </Router>
-);
+                        <Modal
+                            key="gallery_modal"
+                            component={Gallery}
+                        />
+                    </Scene>
+                </Stack>
+            </Router>
+        );
+    }
+}
 
 RouterComponent.propTypes = {
     logged: PropTypes.bool.isRequired,

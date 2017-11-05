@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     TextInput,
     FlatList,
+    Alert,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from 'react-native-elements';
@@ -59,6 +60,36 @@ class LayoutForm extends Component {
             correct: false,
             created_at: firebase.database.ServerValue.TIMESTAMP,
         }).then(() => this.scrollView.scrollToEnd());
+    }
+
+    /**
+    * Comprobar el número de respuestas correctas.
+    */
+    done = () => {
+        this.props.sceneRef.child('answers')
+            .orderByChild('correct')
+            .equalTo(true)
+            .once('value', (snap) => {
+                if (snap.numChildren() === 0) {
+                    Alert.alert(
+                        'No hay respuesta correctas',
+                        'Debes marcar al menos 1 respuesta correcta',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                } else if (snap.numChildren() === this.state.answers.length) {
+                    Alert.alert(
+                        'Todas las respuestas son correctas',
+                        'No pueden ser todas las respuestas correctas',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                } else {
+                    this.props.finishScene({
+                        question: this.state.question,
+                    });
+                }
+            });
     }
 
     renderForm = () => (
@@ -120,9 +151,7 @@ class LayoutForm extends Component {
                 </IconAbsolute>
                 <IconAbsolute
                     position="TopRight"
-                    onPress={() => this.props.finishScene({
-                        question: this.state.question,
-                    })}
+                    onPress={() => this.done()}
                 >
                     <Text style={[styles.shadowDefault, styles.iconText]}>Listo</Text>
                 </IconAbsolute>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import { View, Dimensions, Text, TouchableHighlight } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
 import Scene from './Scene';
@@ -10,7 +11,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            publishScenes: {},
+            publishScenes: [],
             doneScene: {},
             errorScene: {},
         };
@@ -21,7 +22,14 @@ class Main extends Component {
             .orderByChild('finished_at')
             .startAt(1)
             .once('value', (snap) => {
-                this.setState({ publishScenes: snap.val() });
+                const publishScenes = [];
+                snap.forEach((scene) => {
+                    publishScenes.push({
+                        id: scene.key,
+                        ...scene.val(),
+                    });
+                });
+                this.setState({ publishScenes });
             });
 
         firebase.database().ref('building_playbooks').child(this.props.pbKey)
@@ -47,7 +55,6 @@ class Main extends Component {
         Actions.make_scene({
             sceneRef: `building_playbooks/${this.props.pbKey}/scenes/${sceneKey}`,
             pbKey: this.props.pbKey,
-            initLayout: 'form',
         });
     }
     openDoneScene = () => {
@@ -95,22 +102,48 @@ class Main extends Component {
     }
     render() {
         return (
-            <ScrollView contentContainerStyle={styles.container}>
-                <Scene
-                    size="sm"
-                    onPress={() => this.openErrorScene()}
-                    scene={this.state.errorScene}
-                />
-                <View style={styles.middleWay}>
-                    {this.renderScenes()}
-                    <Scene onPress={() => this.newScene()} />
+            <View style={styles.container}>
+                <View style={{
+                    flex: 0,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                }}
+                >
+                    <Scene
+                        size="sm"
+                        onPress={() => this.openErrorScene()}
+                        scene={this.state.errorScene}
+                    />
+                    <Scene
+                        size="sm"
+                        onPress={() => this.openDoneScene()}
+                        scene={this.state.doneScene}
+                    />
                 </View>
-                <Scene
-                    size="sm"
-                    onPress={() => this.openDoneScene()}
-                    scene={this.state.doneScene}
+                <Carousel
+                    ref={(c) => { this.carousel = c; }}
+                    data={this.state.publishScenes}
+                    renderItem={({ item }) => (
+                        <Scene
+                            key={item.id}
+                            onPress={() => this.openScene(item.id)}
+                            scene={item}
+                        />
+                    )}
+                    sliderWidth={Dimensions.get('window').width}
+                    sliderHeight={Dimensions.get('window').height}
+                    itemWidth={160}
+                    itemHeight={264}
+                    firstItem={this.state.publishScenes.length - 1}
                 />
-            </ScrollView>
+                <TouchableHighlight
+                    style={styles.bottomContainer}
+                    onPress={() => this.newScene()}
+                >
+                    <Text style={styles.bottomText}>Nueva escena</Text>
+                </TouchableHighlight>
+            </View>
         );
     }
 }
@@ -120,3 +153,33 @@ Main.propsTypes = {
 };
 
 export default Main;
+
+// <Scene onPress={() => this.newScene()} />
+/**
+<View style={styles.container}>
+
+    {(this.state.publishScenes.length > 0)
+        ? (
+            <Carousel
+                ref={(c) => { this.carousel = c; }}
+                data={this.state.publishScenes}
+                renderItem={({ item }) => (
+                    <Scene
+                        key={item.id}
+                        onPress={() => this.openScene(item.id)}
+                        scene={item}
+                    />
+                )}
+                sliderWidth={500}
+                itemWidth={200}
+            />
+        ) : null
+    }
+
+</View>
+<Scene
+    key={item.id}
+    onPress={() => this.openScene(item.id)}
+    scene={item}
+/>
+*/

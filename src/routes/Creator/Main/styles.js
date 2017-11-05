@@ -1,16 +1,14 @@
 import { StyleSheet } from 'react-native';
 import * as colors from '../../../helpers/colors';
-// import * as fonts from '../../../helpers/fonts';
+import * as fonts from '../../../helpers/fonts';
 
 export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'space-between',
-        flexDirection: 'row',
+        flexDirection: 'column',
         marginTop: 80,
-        marginRight: 8,
-        marginLeft: 8,
     },
     sceneBasic: {
         backgroundColor: colors.white,
@@ -20,8 +18,8 @@ export default StyleSheet.create({
     },
     sceneSize_md: {
         borderRadius: 8,
-        width: 80,
-        height: 132,
+        width: 160,
+        height: 264,
         borderWidth: 8,
     },
     sceneSize_sm: {
@@ -37,5 +35,18 @@ export default StyleSheet.create({
     thumbnail: {
         width: '100%',
         height: '100%',
+    },
+    bottomContainer: {
+        width: '100%',
+    },
+    bottomText: {
+        backgroundColor: colors.primary,
+        height: 52,
+        width: '100%',
+        textAlign: 'center',
+        color: colors.white,
+        paddingTop: 16,
+        fontFamily: fonts.medium,
+        fontSize: 16,
     },
 });

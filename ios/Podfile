@@ -19,7 +19,7 @@ target 'girlscode' do
   # pod 'Firebase/DynamicLinks'
   # pod 'Firebase/Messaging'
   # pod 'Firebase/RemoteConfig'
-  # pod 'Firebase/Storage'
+  pod 'Firebase/Storage'
 
   pod "Yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
   pod 'React', :path => '../node_modules/react-native', :subspecs => [

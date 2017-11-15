@@ -7,7 +7,20 @@ import * as reqStatusActions from '../requestStatus/actions';
 import { PHOTO_DEFAULT } from '../../helpers/constants';
 
 function createUser(id, data) {
-    return firebase.database().ref('users').child(id).update(data);
+    return firebase.database().ref('users').child(id).update(data)
+        .then(() => {
+            firebase.database().ref('categories').once('value', (snapCat) => {
+                snapCat.forEach((snapCatChild) => {
+                    const dataCat = Object.assign({}, snapCatChild.val(), {
+                        points: 0,
+                    });
+                    firebase.database().ref('users_categories')
+                        .child(id)
+                        .child(snapCatChild.key)
+                        .set(dataCat);
+                });
+            });
+        });
 }
 
 function launchError(title, message, domain, dispatch) {
@@ -73,14 +86,14 @@ export function register(email, password, username) {
                     photoURL: PHOTO_DEFAULT,
                 };
 
-                _user.updateProfile({
+                return _user.updateProfile({
                     displayName: username,
                     photoURL: PHOTO_DEFAULT,
-                });
-
-                return createUser(_user.uid, dataUser).then(() => {
-                    dispatch(reqStatusActions.setReset(domain));
-                    Actions.replace('playbooks_list');
+                }).then(() => {
+                    createUser(_user.uid, dataUser).then(() => {
+                        dispatch(reqStatusActions.setReset(domain));
+                        Actions.reset('playbooks');
+                    });
                 });
             })
             .catch((error) => {

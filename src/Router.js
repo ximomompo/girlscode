@@ -20,6 +20,7 @@ import Publish from './routes/Creator/Publish';
 import Gallery from './routes/Gallery';
 import * as colors from './helpers/colors';
 import { clearImage } from './modules/gallery/actions';
+import { VALUE_SCENE_PUBLISHED } from './helpers/constants';
 
 const styles = StyleSheet.create({
     text: {
@@ -36,7 +37,6 @@ const styles = StyleSheet.create({
 
 class RouterComponent extends Component {
     onPublishPb = (key) => {
-        // Validar que existe title y category
         const uploadFile = (sceneKey, image) => (
             new Promise((resolve, reject) => {
                 const task = firebase.storage().ref('playbooks')
@@ -54,65 +54,115 @@ class RouterComponent extends Component {
                 });
             })
         );
-        firebase.database().ref('building_playbooks')
-            .child(key)
-            .once('value', (snap) => {
-                // subir imagenes
-                const uploadImagesPromises = [];
-                snap.ref.child('scenes')
+
+        const uploadScenes = () => (
+            new Promise((resolve, reject) => (
+                firebase.database().ref('building_playbooks')
+                    .child(key)
+                    .child('scenes')
                     .orderByChild('finished_at')
                     .startAt(1)
                     .once('value', (snapScenes) => {
                         const uploadImagesPromisesS = [];
-                        snapScenes.forEach((snapScene) => {
+                        return snapScenes.forEach((snapScene) => {
                             uploadImagesPromisesS.push(
                                 uploadFile(snapScene.key, snapScene.val().image).then((res) => {
                                     snapScene.ref.child('imageURL').set(res);
                                 }),
                             );
-                            Promise.all(uploadImagesPromisesS).then(() => {
-                                console.log('sacabo');
-                            });
+                            return Promise.all(uploadImagesPromisesS)
+                                .then(() => resolve())
+                                .catch(() => reject());
                         });
+                    })
+            ))
+        );
+        firebase.database().ref('building_playbooks')
+            .child(key)
+            .once('value', (snap) => {
+                if (!snap.val().title) {
+                    return Alert.alert(
+                        'Título necesario',
+                        'Debes añadir escribir un título para tu playbook',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                }
+
+                if (!snap.val().category) {
+                    return Alert.alert(
+                        'Categoría necesaria',
+                        'Debes asignar una categoría a tu playbook',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
+                    );
+                }
+                snap.ref.child('publishing').set(true);
+                // subir imagenes
+                const uploadImagesPromises = [];
+
+                uploadImagesPromises.push(uploadScenes());
+
+                uploadImagesPromises.push(
+                    uploadFile('done', snap.val().done_scene.image).then((res) => {
+                        snap.ref.child('done_scene').child('imageURL').set(res);
+                    }),
+                );
+
+                uploadImagesPromises.push(
+                    uploadFile('error', snap.val().error_scene.image).then((res) => {
+                        snap.ref.child('error_scene').child('imageURL').set(res);
+                    }),
+                );
+
+                return Promise.all(uploadImagesPromises).then(() => {
+                    const data = Object.assign({}, snap.val(), {
+                        publish_at: firebase.database.ServerValue.TIMESTAMP,
                     });
+                    // migrar de building_playbooks to publish_playbooks
+                    firebase.database().ref('publish_playbooks')
+                        .child(key)
+                        .set(data)
+                        .then(() => {
+                            const categoryKey = snap.val().category.id;
+                            // eliminar todos los building_playbooks del propietario
+                            snap.ref.child('publishing').set(false);
+                            snap.ref.off();
+                            Actions.reset('playbooks');
 
-                snap.ref.child('done_scene').once('value', (snapDone) => {
-                    uploadImagesPromises.push(
-                        uploadFile('done', snapDone.val().image).then((res) => {
-                            snapDone.ref.child('imageURL').set(res);
-                        }),
+                            firebase.database().ref('users_categories')
+                                .child(firebase.auth().currentUser.uid)
+                                .child(categoryKey)
+                                .once('value', (snapUserCat) => {
+                                    const points = VALUE_SCENE_PUBLISHED * snap.val().numScenes;
+                                    snapUserCat.ref.child('points').set(snapUserCat.val().points + points);
+                                    snapUserCat.ref.child('logs').push({
+                                        points,
+                                        created_at: firebase.database.ServerValue.TIMESTAMP,
+                                        type: 'published',
+                                        playbook_key: key,
+                                    });
+                                });
+
+                            firebase.database().ref('building_playbooks')
+                                .orderByChild('owner_id')
+                                .equalTo(firebase.auth().currentUser.uid)
+                                .once('value', (snapBP) => {
+                                    snapBP.forEach((snapBPChild) => {
+                                        snapBPChild.ref.remove();
+                                    });
+                                });
+                        });
+                }).catch(() => {
+                    Alert.alert(
+                        'Error al publicar',
+                        'Ha ocurrido un error al publicar',
+                        [{ text: 'OK' }],
+                        { cancelable: true },
                     );
+                    snap.ref.child('publishing').set(false);
                 });
-
-                snap.ref.child('error_scene').once('value', (snapError) => {
-                    uploadImagesPromises.push(
-                        uploadFile('done', snapError.val().image).then((res) => {
-                            snapError.ref.child('imageURL').set(res);
-                        }),
-                    );
-                });
-
-                Promise.all(uploadImagesPromises).then(() => {
-                    console.log('imagenes subidas');
-                });
-                // setear publish_at y title
-                /* const data = Object.assing({}, snap.val(), {
-                    title: this.state.title,
-                    category: this.state.category,
-                    publish_at: firebase.database.ServerValue.TIMESTAMP,
-                }); */
-                // migrar de building_playbooks to publish_playbooks
-                /* firebase.database().ref('publish_playbooks')
-                    .child(this.props.pbKey)
-                    .set(data);
-                */
             });
-        // eliminar todos los building_playbooks del propietario
-        /* firebase.database().ref('building_playbooks')
-            .orderByChild('owner_id')
-            .equalTo(firebase.auth().currentUser.id)
-            .remove();
-        */
     }
     checkToPusblishPb = (key) => {
         firebase.database().ref('building_playbooks').child(key)
@@ -139,7 +189,7 @@ class RouterComponent extends Component {
                         { cancelable: true },
                     );
                 } else {
-                    Actions.publish_playbook();
+                    Actions.publish_playbook({ pbKey: key });
                 }
             });
     }
@@ -205,24 +255,6 @@ class RouterComponent extends Component {
                             renderRightButton={() => {}}
                         >
                             <Scene
-                                key="publish_playbook"
-                                component={Publish}
-                                title="Publicar"
-                                navTransparent={false}
-                                renderLeftButton={() => (
-                                    <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
-                                        <Text style={{ marginLeft: 12 }}>Cancelar</Text>
-                                    </TouchableOpacity>
-                                )}
-                                renderRightButton={props => (
-                                    <TouchableOpacity
-                                        onPress={() => this.onPublishPb('-Ky5TrzWUPPPLvkK5KSc')}
-                                    >
-                                        <Text style={{ marginRight: 12 }}>Publicar</Text>
-                                    </TouchableOpacity>
-                                )}
-                            />
-                            <Scene
                                 key="onboarding_creator"
                                 component={OnboardingCreator}
                                 renderLeftButton={() => (
@@ -233,6 +265,7 @@ class RouterComponent extends Component {
                                         onPress={() => Actions.reset('playbooks')}
                                     />
                                 )}
+                                moreno="morena"
                             />
                             <Scene
                                 key="main_creator"
@@ -255,6 +288,24 @@ class RouterComponent extends Component {
                                 key="make_scene"
                                 component={Make}
                                 hideNavBar
+                            />
+                            <Scene
+                                key="publish_playbook"
+                                component={Publish}
+                                title="Publicar"
+                                navTransparent={false}
+                                renderLeftButton={() => (
+                                    <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
+                                        <Text style={{ marginLeft: 12 }}>Cancelar</Text>
+                                    </TouchableOpacity>
+                                )}
+                                renderRightButton={props => (
+                                    <TouchableOpacity
+                                        onPress={() => this.onPublishPb(props.pbKey)}
+                                    >
+                                        <Text style={{ marginRight: 12 }}>Publicar</Text>
+                                    </TouchableOpacity>
+                                )}
                             />
                         </Stack>
                         <Scene

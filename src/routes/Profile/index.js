@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
 
 class Profile extends Component {
     onLogout = () => {
-        firebase.auth().signOut().then(() => Actions.replace('index'));
+        Actions.reset('auth');
+        firebase.auth().signOut();
     }
     render() {
         return (

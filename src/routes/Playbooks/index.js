@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     },
     hastags: {
         color: colors.blue,
-    }
+    },
 });
 
 class Playbooks extends Component {

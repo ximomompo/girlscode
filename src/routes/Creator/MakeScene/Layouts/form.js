@@ -85,6 +85,7 @@ class LayoutForm extends Component {
                         { cancelable: true },
                     );
                 } else {
+                    this.props.sceneRef.child('answers').off();
                     this.props.finishScene({
                         question: this.state.question,
                     });

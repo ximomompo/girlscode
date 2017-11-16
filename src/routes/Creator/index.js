@@ -8,7 +8,8 @@ const schemeScene = {
     image: false,
     text: 'Escribe aquí...',
     created_at: firebase.database.ServerValue.TIMESTAMP,
-    position: {
+    styles: {
+        color: 'white',
         left: 0,
         top: 0,
         transform: {

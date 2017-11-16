@@ -19,15 +19,15 @@ class Main extends Component {
     componentWillMount() {
         firebase.database().ref('building_playbooks').child(this.props.pbKey)
             .child('scenes')
-            .orderByChild('finished_at')
-            .startAt(1)
             .once('value', (snap) => {
                 const publishScenes = [];
                 snap.forEach((scene) => {
-                    publishScenes.push({
-                        id: scene.key,
-                        ...scene.val(),
-                    });
+                    if (scene.val().finished_at) {
+                        publishScenes.push({
+                            id: scene.key,
+                            ...scene.val(),
+                        });
+                    }
                 });
                 this.setState({ publishScenes });
             });
@@ -71,7 +71,8 @@ class Main extends Component {
             question: 'Escribe aquí tu pregunta',
             answers: false,
             created_at: firebase.database.ServerValue.TIMESTAMP,
-            position: {
+            styles: {
+                color: '#FFFFFF',
                 left: 0,
                 top: 0,
                 transform: {

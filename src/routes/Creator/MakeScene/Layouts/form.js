@@ -179,8 +179,3 @@ LayoutForm.propsTypes = {
 
 export default LayoutForm;
 
-/**
-{_.orderBy(Object.keys(this.props.scene.answers), 'created_at').map(answerKey => (
-
-))}
-*/

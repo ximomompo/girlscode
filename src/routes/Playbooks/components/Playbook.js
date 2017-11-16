@@ -7,7 +7,6 @@ import Moment from 'react-moment';
 import { Icon } from 'react-native-elements';
 import styles from '../styles';
 
-
 Moment.globalLocale = 'es';
 
 class Playbook extends Component {
@@ -15,7 +14,6 @@ class Playbook extends Component {
 
     }
     render() {
-        console.log('keyy', this.props);
         return (
             <TouchableOpacity style={styles.card} onPress={() => Actions.play({ pbKey: this.props.pbKey })}>
                 <View style={styles.header}>

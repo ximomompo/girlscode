@@ -19,7 +19,7 @@ class LayoutText extends Component {
         this.state = {
             text: 'Escribe aquí...',
             openText: true,
-            colorText: 'white',
+            colorText: '#FFFFFF',
         };
     }
 
@@ -29,11 +29,12 @@ class LayoutText extends Component {
 
     setColorText = (value) => {
         this.setState({ colorText: value });
-        this.props.sceneRef.child('colorText').set(value);
+        this.props.sceneRef.child('styles').child('color').set(value);
     }
 
     setStyleGestures = (stylesGestures) => {
         const data = {
+            color: this.state.colorText,
             left: stylesGestures.left,
             top: stylesGestures.top,
             transform: {
@@ -41,7 +42,7 @@ class LayoutText extends Component {
                 scale: stylesGestures.transform[0].scale,
             },
         };
-        this.props.sceneRef.child('position').set(data);
+        this.props.sceneRef.child('styles').set(data);
     }
 
     switchOpenText = () => {

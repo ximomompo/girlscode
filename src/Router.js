@@ -61,16 +61,18 @@ class RouterComponent extends Component {
                 firebase.database().ref('building_playbooks')
                     .child(key)
                     .child('scenes')
-                    .orderByChild('finished_at')
-                    .startAt(1)
                     .once('value', (snapScenes) => {
                         const uploadImagesPromisesS = [];
                         return snapScenes.forEach((snapScene) => {
-                            uploadImagesPromisesS.push(
-                                uploadFile(snapScene.key, snapScene.val().image).then((res) => {
-                                    snapScene.ref.child('imageURL').set(res);
-                                }),
-                            );
+                            if (snapScene.val().finished_at) {
+                                uploadImagesPromisesS.push(
+                                    uploadFile(snapScene.key, snapScene.val().image).then((res) => {
+                                        snapScene.ref.child('imageURL').set(res);
+                                    }),
+                                );
+                            } else {
+                                uploadImagesPromisesS.push(snapScene.ref.remove());
+                            }
                             return Promise.all(uploadImagesPromisesS)
                                 .then(() => resolve())
                                 .catch(() => reject());
@@ -190,7 +192,6 @@ class RouterComponent extends Component {
                                 playbook_key: key,
                             });
                         });
-
                 }).catch(() => {
                     Alert.alert(
                         'Error al publicar',
@@ -355,7 +356,7 @@ class RouterComponent extends Component {
                             iconType="foundation"
                         />
                     </Tabs>
-                    <Scene
+                    <Modal
                         key="play"
                         hideNavBar
                         component={Play}

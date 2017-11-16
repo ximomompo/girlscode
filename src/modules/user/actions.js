@@ -9,16 +9,17 @@ import { PHOTO_DEFAULT } from '../../helpers/constants';
 function createUser(id, data) {
     return firebase.database().ref('users').child(id).update(data)
         .then(() => {
-            firebase.database().ref('categories').once('value', (snapCat) => {
-                snapCat.forEach((snapCatChild) => {
-                    const dataCat = Object.assign({}, snapCatChild.val(), {
-                        points: 0,
+            firebase.database().ref('user_categories').child(id).once('value', (snapUC) => {
+                if (!snapUC.exist()) {
+                    firebase.database().ref('categories').once('value', (snapCat) => {
+                        snapCat.forEach((snapCatChild) => {
+                            const dataCat = Object.assign({}, snapCatChild.val(), {
+                                points: 0,
+                            });
+                            snapUC.ref.child(snapCatChild.key).set(dataCat);
+                        });
                     });
-                    firebase.database().ref('users_categories')
-                        .child(id)
-                        .child(snapCatChild.key)
-                        .set(dataCat);
-                });
+                }
             });
         });
 }

@@ -17,6 +17,7 @@ import OnboardingCreator from './routes/Creator';
 import Main from './routes/Creator/Main';
 import Make from './routes/Creator/MakeScene';
 import Publish from './routes/Creator/Publish';
+import Play from './routes/Play';
 import Gallery from './routes/Gallery';
 import * as colors from './helpers/colors';
 import { clearImage } from './modules/gallery/actions';
@@ -116,43 +117,80 @@ class RouterComponent extends Component {
                 );
 
                 return Promise.all(uploadImagesPromises).then(() => {
-                    const data = Object.assign({}, snap.val(), {
-                        publish_at: firebase.database.ServerValue.TIMESTAMP,
-                    });
                     // migrar de building_playbooks to publish_playbooks
-                    firebase.database().ref('publish_playbooks')
-                        .child(key)
-                        .set(data)
-                        .then(() => {
-                            const categoryKey = snap.val().category.id;
-                            // eliminar todos los building_playbooks del propietario
-                            snap.ref.child('publishing').set(false);
-                            snap.ref.off();
-                            Actions.reset('playbooks');
-
-                            firebase.database().ref('users_categories')
-                                .child(firebase.auth().currentUser.uid)
-                                .child(categoryKey)
-                                .once('value', (snapUserCat) => {
-                                    const points = VALUE_SCENE_PUBLISHED * snap.val().numScenes;
-                                    snapUserCat.ref.child('points').set(snapUserCat.val().points + points);
-                                    snapUserCat.ref.child('logs').push({
-                                        points,
-                                        created_at: firebase.database.ServerValue.TIMESTAMP,
-                                        type: 'published',
-                                        playbook_key: key,
-                                    });
-                                });
-
-                            firebase.database().ref('building_playbooks')
-                                .orderByChild('owner_id')
-                                .equalTo(firebase.auth().currentUser.uid)
-                                .once('value', (snapBP) => {
-                                    snapBP.forEach((snapBPChild) => {
-                                        snapBPChild.ref.remove();
-                                    });
-                                });
+                    snap.ref.once('value', (snapCopy) => {
+                        const data = Object.assign({}, snapCopy.val(), {
+                            publish_at: firebase.database.ServerValue.TIMESTAMP,
                         });
+                        firebase.database().ref('publish_playbooks')
+                            .child(key)
+                            .set(data);
+                    });
+
+                    const categoryKey = snap.val().category.id;
+                    const numScenes = snap.val().numScenes;
+                    const dataTimeline = {
+                        type: 'playbook',
+                        created_at: firebase.database.ServerValue.TIMESTAMP,
+                        key,
+                        status: 'pristine',
+                        owner_id: firebase.auth().currentUser.uid,
+                        meta: {
+                            title: snap.val().title,
+                            name: firebase.auth().currentUser.displayName,
+                            photoURL: firebase.auth().currentUser.photoURL,
+                            category: snap.val().category,
+                            percentage: 0,
+                        },
+                    };
+                            
+                    // Añadir el playbook al usuario logueado y redirigir.
+                    firebase.database().ref('users_timeline')
+                        .child(firebase.auth().currentUser.uid)
+                        .push(dataTimeline)
+                        .then(() => {
+                            snap.ref.child('publishing').set(false).then(() => {
+                                Actions.reset('playbooks');
+                                // eliminar todos los building_playbooks del propietario
+                                firebase.database().ref('building_playbooks')
+                                    .orderByChild('owner_id')
+                                    .equalTo(firebase.auth().currentUser.uid)
+                                    .once('value', (snapBP) => {
+                                        snapBP.forEach((snapBPChild) => {
+                                            snapBPChild.ref.remove();
+                                        });
+                                        snap.ref.off();
+                                    });
+                            });
+                        });
+
+                    // Añadir el playbook a todos los timelines de los usuarios.
+                    firebase.database().ref('users')
+                        .once('value', (snapUsers) => {
+                            snapUsers.forEach((snapUserChild) => {
+                                if (snapUserChild.key !== firebase.auth().currentUser.uid) {
+                                    firebase.database().ref('users_timeline')
+                                        .child(snapUserChild.key)
+                                        .push(dataTimeline);
+                                }
+                            });
+                        });
+                    
+                    // Actualizar los puntos de categoria del usuario.
+                    firebase.database().ref('users_categories')
+                        .child(firebase.auth().currentUser.uid)
+                        .child(categoryKey)
+                        .once('value', (snapUserCat) => {
+                            const points = VALUE_SCENE_PUBLISHED * numScenes;
+                            snapUserCat.ref.child('points').set(snapUserCat.val().points + points);
+                            snapUserCat.ref.child('logs').push({
+                                points,
+                                created_at: firebase.database.ServerValue.TIMESTAMP,
+                                type: 'published',
+                                playbook_key: key,
+                            });
+                        });
+
                 }).catch(() => {
                     Alert.alert(
                         'Error al publicar',
@@ -317,6 +355,11 @@ class RouterComponent extends Component {
                             iconType="foundation"
                         />
                     </Tabs>
+                    <Scene
+                        key="play"
+                        hideNavBar
+                        component={Play}
+                    />
                     <Scene
                         key="gallery"
                         title="Galería"

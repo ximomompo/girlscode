@@ -6,6 +6,7 @@ import firebase from 'react-native-firebase';
 import CategoryItem from './components/CategoryItem';
 import { MainView } from '../../../components/Commons';
 import { VALUE_SCENE_PUBLISHED } from '../../../helpers/constants';
+import styles from './styles';
 
 class Publish extends Component {
     constructor(props) {
@@ -64,25 +65,22 @@ class Publish extends Component {
                     textStyle={{ color: '#FFF' }}
                 />
                 <TextInput
-                    style={{ width: '100%', height: 40, borderColor: '#000000', borderWidth: 1 }}
+                    style={styles.textInput}
                     onChangeText={title => this.setTitle(title)}
                     value={this.state.title}
+                    placeholder="Añade un título"
                 />
                 <View style={{ width: '100%', height: this.state.categories.length * 56, marginTop: 32 }}>
                     <FlatList
-                        style={{
-                            width: '100%',
-                            borderWidth: 1,
-                            borderColor: 'black',
-                            borderRadius: 8,
-                        }}
+                        style={styles.containerCategories}
+                        extraData={this.state}
                         data={this.state.categories}
                         keyExtractor={item => item.id}
                         renderItem={({ item }) => (
                             <CategoryItem
                                 item={item}
                                 setCategory={this.setCategory}
-                                selectedCategory={this.state.category}
+                                selected={(this.state.category === item.name)}
                             />
                         )}
                     />

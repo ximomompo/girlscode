@@ -8,7 +8,7 @@ const Answer = props => (
         style={styles.answerContainer}
         onPress={() => props.callback(props.correct)}
     >
-        <Text style={[styles.textInput, styles.textInputAnswer]}>
+        <Text style={styles.textInputAnswer}>
             {props.text}
         </Text>
     </TouchableOpacity>

@@ -3,11 +3,18 @@ import { Icon } from 'react-native-elements';
 import _ from 'lodash';
 import { View, Image, Text, FlatList, TouchableHighlight } from 'react-native';
 import firebase from 'react-native-firebase';
+import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { Actions } from 'react-native-router-flux';
+import { Button } from '../../components/Commons';
 import Answer from './components/Answer';
+import { VALUE_SCENE_PLAYED } from '../../helpers/constants';
 import IconAbsolute from '../Creator/MakeScene/Layouts/components/IconAbsolute';
 import styles from './styles';
 
+const slideAnimation = new SlideAnimation({
+    slideFrom: 'bottom',
+  });
 
 const defaultStylesText = {
     left: 0,
@@ -33,6 +40,8 @@ class Play extends Component {
             lastScene: false,
             images: [],
             loadImages: false,
+            category: {},
+            pointsValue: 0,
         };
     }
     componentWillMount() {
@@ -59,13 +68,15 @@ class Play extends Component {
                     scenes: orderedScenes,
                     doneScene: snapPb.val().done_scene,
                     errorScene: snapPb.val().error_scene,
+                    category: snapPb.val().category,
                     currentScene: orderedScenes[0],
+                    pointsValue: snapPb.val().numScenes * VALUE_SCENE_PLAYED,
                     images,
                 });
 
                 Promise.all(preloadImages).then(() => {
                     this.setState({ loadImages: true });
-                })
+                });
             });
     }
     onNextScreen = () => {
@@ -98,12 +109,11 @@ class Play extends Component {
     }
     onDone = () => {
         if (this.state.lastScene === 'done') {
-
+            this.popupDialog.show();
         }
         if (this.state.lastScene === 'error') {
-            
+            Actions.reset('playbooks');
         }
-        Actions.reset('playbooks');
     }
     setCurrentScene = (scene) => {
         this.setState({ currentScene: scene });
@@ -126,7 +136,7 @@ class Play extends Component {
         return Object.assign({}, dataStyles, {
             transform: [
                 { rotate: stylesScene.transform.rotate },
-                { scale: stylesScene.transform.scale },
+                { scale: stylesScene.transform.scale * 0.95 },
             ],
         });
     }
@@ -200,7 +210,15 @@ class Play extends Component {
         ))
     );
     render() {
-        if (this.state.scenes.length === 0 || !this.state.loadImages) return null;
+        if (this.state.scenes.length === 0 || !this.state.loadImages) {
+            return (
+                <Spinner
+                    visible
+                    textContent="Cargando..."
+                    textStyle={{ color: '#FFF' }}
+                />
+            );
+        }
         return (
             <View style={styles.container}>
                 <IconAbsolute
@@ -216,6 +234,27 @@ class Play extends Component {
                 </IconAbsolute>
                 {this.renderContent()}
                 {this.renderImages()}
+                <PopupDialog
+                    width={0.7}
+                    ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+                    dialogAnimation={slideAnimation}
+                >
+                    <View style={{ padding: 20, width: '100%', height: '100%', flex: 0, justifyContent: 'center', alignItems: 'center' }}>
+                        <Image
+                            style={{ width: 80, height: 80 }}
+                            source={{ uri: this.state.category.icon }}
+                        />
+                        <Text>¡Has finalizado este playbook!</Text>
+                        <Text style={styles.points}>+{this.state.pointsValue} ptos</Text>
+                        <Text style={styles.pointsAux}>en Derecho sexuales</Text>
+                        <Button
+                            style={{ marginTop: 16 }}
+                            title="OK!"
+                            onPress={() => Actions.reset('playbooks')}
+                            fullWidth
+                        />
+                    </View>
+                </PopupDialog>
                 <Image
                     style={styles.imageBackground}
                     source={{

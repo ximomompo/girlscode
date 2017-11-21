@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from 'react-native-snap-carousel';
-import { View, Dimensions, Text, TouchableHighlight } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { View, Dimensions, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
+import * as colors from '../../../helpers/colors';
 import Scene from './Scene';
 import styles from './styles';
 
@@ -88,18 +90,44 @@ class Main extends Component {
 
         this.openScene(sceneKey);
     }
-    renderScenes = () => {
-        if (this.state.publishScenes) {
-            return Object.keys(this.state.publishScenes)
-                .map(sceneKey => (
-                    <Scene
-                        key={sceneKey}
-                        onPress={() => this.openScene(sceneKey)}
-                        scene={this.state.publishScenes[sceneKey]}
-                    />
-                ));
+    renderCarousel = () => {
+        if (this.state.publishScenes.length === 0) {
+            return (
+                <View style={{ width: '100%', flex: 0, justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity
+                        onPress={() => this.newScene()}
+                        style={[styles.sceneBasic, styles.sceneSize_md, styles.defaultScene]}
+                    >
+                        <Icon
+                            name="picture-o"
+                            type="font-awesome"
+                            color={colors.gray1}
+                            style={styles.iconDefaultScene}
+                            iconStyle={{ fontSize: 64 }}
+                        />
+                        <Text style={styles.textDefaultScene}>Añadir primera escena</Text>
+                    </TouchableOpacity>
+                </View>
+            );
         }
-        return null;
+        return (
+            <Carousel
+                ref={(c) => { this.carousel = c; }}
+                data={this.state.publishScenes}
+                renderItem={({ item }) => (
+                    <Scene
+                        key={item.id}
+                        onPress={() => this.openScene(item.id)}
+                        scene={item}
+                    />
+                )}
+                sliderWidth={Dimensions.get('window').width}
+                sliderHeight={Dimensions.get('window').height}
+                itemWidth={160}
+                itemHeight={264}
+                firstItem={this.state.publishScenes.length - 1}
+            />
+        );
     }
     render() {
         return (
@@ -115,29 +143,20 @@ class Main extends Component {
                         size="sm"
                         onPress={() => this.openErrorScene()}
                         scene={this.state.errorScene}
+                        color={colors.red}
+                        textDefault="Escena fallo"
+                        icon="times"
                     />
                     <Scene
                         size="sm"
                         onPress={() => this.openDoneScene()}
                         scene={this.state.doneScene}
+                        color={colors.green}
+                        textDefault="Escena final"
+                        icon="check"
                     />
                 </View>
-                <Carousel
-                    ref={(c) => { this.carousel = c; }}
-                    data={this.state.publishScenes}
-                    renderItem={({ item }) => (
-                        <Scene
-                            key={item.id}
-                            onPress={() => this.openScene(item.id)}
-                            scene={item}
-                        />
-                    )}
-                    sliderWidth={Dimensions.get('window').width}
-                    sliderHeight={Dimensions.get('window').height}
-                    itemWidth={160}
-                    itemHeight={264}
-                    firstItem={this.state.publishScenes.length - 1}
-                />
+                {this.renderCarousel()}
                 <TouchableHighlight
                     style={styles.bottomContainer}
                     onPress={() => this.newScene()}

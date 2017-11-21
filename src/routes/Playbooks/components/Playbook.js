@@ -4,7 +4,7 @@ import { View, Image, Text, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import 'moment/locale/es';
 import Moment from 'react-moment';
-import { Icon } from 'react-native-elements';
+import { Icon, colors } from 'react-native-elements';
 import styles from '../styles';
 
 Moment.globalLocale = 'es';
@@ -15,7 +15,7 @@ class Playbook extends Component {
     }
     render() {
         return (
-            <TouchableOpacity style={styles.card} onPress={() => Actions.play({ pbKey: this.props.pbKey })}>
+            <TouchableOpacity style={styles.card} onPress={() => Actions.reset('play', { pbKey: this.props.pbKey })}>
                 <View style={styles.header}>
                     <View style={styles.media}>
                         <Image
@@ -29,17 +29,23 @@ class Playbook extends Component {
                             <Text style={styles.location}>
                                 creado por {this.props.meta.name}
                             </Text>
+                            <View style={styles.plays}>
+                                <Icon size={8} name="play" type="font-awesome" color="black" />
+                                <Text style={styles.playsText}>12 reproducciones</Text>
+                            </View>
                         </View>
                     </View>
                     <View style={styles.progress}>
-                        <Icon name="clock-o" type="font-awesome" />
-                        <Text>{this.props.meta.percentage} %</Text>
+                        <Icon size={16} name="share-alt" type="font-awesome" color="gray" />
                     </View>
                 </View>
                 <View style={styles.footer}>
-                    <Moment unix fromNow element={Text}>{this.props.created_at / 1000}</Moment>
-                    <Text style={styles.hastags}>{this.props.meta.category.name}</Text>
-                    <Icon name="share-alt" type="font-awesome" color="black" />
+                    <Image
+                        style={{ width: 32, height: 32 }}
+                        source={{ uri: this.props.meta.category.icon }}
+                    />
+                    <Text style={[styles.category, { color: this.props.meta.category.color }]}>{this.props.meta.category.name}</Text>
+                    <Moment style={styles.time} unix fromNow element={Text}>{this.props.created_at / 1000}</Moment>
                 </View>
             </TouchableOpacity>
         );
@@ -62,3 +68,8 @@ Playbook.propTypes = {
 };
 
 export default Playbook;
+
+/**
+ * <Icon name="clock-o" type="font-awesome" />
+                        <Text>{this.props.meta.percentage} %</Text>
+ */

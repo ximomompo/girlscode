@@ -12,6 +12,13 @@ export default StyleSheet.create({
         alignSelf: 'flex-start',
         alignContent: 'flex-start',
         borderRadius: 2,
+        marginBottom: 16,
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.2,
     },
     header: {
         justifyContent: 'space-between',
@@ -35,7 +42,9 @@ export default StyleSheet.create({
         marginRight: 10,
     },
     progress: {
-
+        position: 'absolute',
+        top: 8,
+        right: 12,
         alignItems: 'center',
     },
     name: {
@@ -45,7 +54,7 @@ export default StyleSheet.create({
     },
     location: {
         fontFamily: fonts.thin,
-        fontSize: 14,
+        fontSize: 12,
         color: colors.gray,
     },
     image: {
@@ -53,12 +62,35 @@ export default StyleSheet.create({
         height: 180,
     },
     footer: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         width: '100%',
         flexDirection: 'row',
         padding: 10,
+        alignItems: 'center',
     },
-    hastags: {
-        color: colors.blue,
+    category: {
+        marginLeft: 4,
+        fontFamily: fonts.light,
+        fontSize: 13,
+    },
+    share: {
+        fontSize: 12,
+    },
+    plays: {
+        flexDirection: 'row',
+        flex: 0,
+        width: '100%',
+    },
+    playsText: {
+        fontSize: 10,
+        marginLeft: 4,
+        marginTop: 2,
+    },
+    time: {
+        fontSize: 10,
+        position: 'absolute',
+        bottom: 8,
+        right: 12,
+        color: colors.gray2,
     },
 });

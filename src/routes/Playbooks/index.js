@@ -9,6 +9,7 @@ class Playbooks extends Component {
         super(props);
         this.state = {
             cards: [],
+            visible: true,
         };
     }
     componentWillMount() {

@@ -360,6 +360,7 @@ class RouterComponent extends Component {
                         key="play"
                         hideNavBar
                         component={Play}
+                        duration={0}
                     />
                     <Scene
                         key="gallery"

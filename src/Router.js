@@ -123,6 +123,7 @@ class RouterComponent extends Component {
                     snap.ref.once('value', (snapCopy) => {
                         const data = Object.assign({}, snapCopy.val(), {
                             publish_at: firebase.database.ServerValue.TIMESTAMP,
+                            numPlays: 0,
                         });
                         firebase.database().ref('publish_playbooks')
                             .child(key)
@@ -149,7 +150,8 @@ class RouterComponent extends Component {
                     // Añadir el playbook al usuario logueado y redirigir.
                     firebase.database().ref('users_timeline')
                         .child(firebase.auth().currentUser.uid)
-                        .push(dataTimeline)
+                        .child(key)
+                        .set(dataTimeline)
                         .then(() => {
                             snap.ref.child('publishing').set(false).then(() => {
                                 Actions.reset('playbooks');

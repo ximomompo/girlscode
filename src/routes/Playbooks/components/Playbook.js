@@ -4,18 +4,38 @@ import { View, Image, Text, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import 'moment/locale/es';
 import Moment from 'react-moment';
-import { Icon, colors } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
+import firebase from 'react-native-firebase';
 import styles from '../styles';
 
 Moment.globalLocale = 'es';
 
 class Playbook extends Component {
-    onPlay = () => {
-
+    constructor(props) {
+        super(props);
+        this.state = {
+            numPlays: null,
+        };
+    }
+    componentWillMount() {
+        firebase.database().ref('publish_playbooks')
+            .child(this.props.pbKey)
+            .child('numPlays')
+            .once('value', (snapNumVals) => {
+                this.setState({
+                    numPlays: snapNumVals.val(),
+                });
+            });
     }
     render() {
         return (
-            <TouchableOpacity style={styles.card} onPress={() => Actions.reset('play', { pbKey: this.props.pbKey })}>
+            <TouchableOpacity
+                style={styles.card}
+                onPress={() => Actions.reset('play', {
+                    pbKey: this.props.pbKey,
+                    statusPb: this.props.status,
+                })}
+            >
                 <View style={styles.header}>
                     <View style={styles.media}>
                         <Image
@@ -31,7 +51,10 @@ class Playbook extends Component {
                             </Text>
                             <View style={styles.plays}>
                                 <Icon size={8} name="play" type="font-awesome" color="black" />
-                                <Text style={styles.playsText}>12 reproducciones</Text>
+                                {(this.state.numPlays)
+                                    ? <Text style={styles.playsText}>{this.state.numPlays} reproducciones</Text>
+                                    : null
+                                }
                             </View>
                         </View>
                     </View>

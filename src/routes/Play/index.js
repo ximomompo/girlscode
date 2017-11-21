@@ -14,7 +14,7 @@ import styles from './styles';
 
 const slideAnimation = new SlideAnimation({
     slideFrom: 'bottom',
-  });
+});
 
 const defaultStylesText = {
     left: 0,
@@ -74,10 +74,18 @@ class Play extends Component {
                     images,
                 });
 
+                snapPb.ref.child('numPlays').set(snapPb.val().numPlays + 1);
+
                 Promise.all(preloadImages).then(() => {
                     this.setState({ loadImages: true });
                 });
             });
+
+        firebase.database().ref('users_timeline')
+            .child(firebase.auth().currentUser.uid)
+            .child(this.props.pbKey)
+            .child('status')
+            .set('dirty');
     }
     onNextScreen = () => {
         const indexScene = this.state.indexScene + 1;
@@ -109,7 +117,27 @@ class Play extends Component {
     }
     onDone = () => {
         if (this.state.lastScene === 'done') {
-            this.popupDialog.show();
+            if (this.props.statusPb !== 'completed') {
+                firebase.database().ref('users_timeline')
+                    .child(firebase.auth().currentUser.uid)
+                    .child(this.props.pbKey)
+                    .child('status')
+                    .set('completed');
+
+                firebase.database().ref('users_categories')
+                    .child(firebase.auth().currentUser.uid)
+                    .child(this.state.category.id)
+                    .child('logs')
+                    .push({
+                        points: this.state.pointsValue,
+                        created_at: firebase.database.ServerValue.TIMESTAMP,
+                        type: 'played',
+                        playbook_key: this.props.pbKey,
+                    });
+                this.popupDialog.show();
+            } else {
+                Actions.reset('playbooks');
+            }
         }
         if (this.state.lastScene === 'error') {
             Actions.reset('playbooks');

@@ -6,6 +6,8 @@ import 'moment/locale/es';
 import Moment from 'react-moment';
 import { Icon } from 'react-native-elements';
 import firebase from 'react-native-firebase';
+import StarRating from 'react-native-star-rating';
+import { yellow } from '../../../helpers/colors';
 import styles from '../styles';
 
 Moment.globalLocale = 'es';
@@ -15,15 +17,19 @@ class Playbook extends Component {
         super(props);
         this.state = {
             numPlays: null,
+            averageReview: null,
         };
     }
     componentWillMount() {
         firebase.database().ref('publish_playbooks')
             .child(this.props.pbKey)
-            .child('numPlays')
-            .once('value', (snapNumVals) => {
+            .once('value', (snap) => {
+                const { numPlays, averageReview } = snap.val();
+                console.log('pbKey', this.props.pbKey);
+                console.log('moreno', numPlays);
                 this.setState({
-                    numPlays: snapNumVals.val(),
+                    numPlays,
+                    averageReview,
                 });
             });
     }
@@ -49,13 +55,24 @@ class Playbook extends Component {
                             <Text style={styles.location}>
                                 creado por {this.props.meta.name}
                             </Text>
-                            <View style={styles.plays}>
-                                <Icon size={8} name="play" type="font-awesome" color="black" />
-                                {(this.state.numPlays)
-                                    ? <Text style={styles.playsText}>{this.state.numPlays} reproducciones</Text>
-                                    : null
-                                }
-                            </View>
+                            {(this.state.numPlays)
+                                ? (
+                                    <View style={styles.plays}>
+                                        <Icon size={8} name="play" type="font-awesome" color="black" />
+                                        <Text style={styles.playsText}>{this.state.numPlays} reproducciones</Text>
+                                    </View>
+                                ) : null
+                            }
+                            {(this.state.averageReview)
+                                ? <StarRating
+                                    disabled
+                                    maxStars={5}
+                                    rating={this.state.averageReview}
+                                    starColor={yellow}
+                                    starSize={20}
+                                />
+                                : null
+                            }
                         </View>
                     </View>
                     <View style={styles.progress}>

@@ -21,7 +21,7 @@ import Play from './routes/Play';
 import Gallery from './routes/Gallery';
 import * as colors from './helpers/colors';
 import { clearImage } from './modules/gallery/actions';
-import { VALUE_SCENE_PUBLISHED } from './helpers/constants';
+import { publishPlaybook } from './helpers/functions';
 
 const styles = StyleSheet.create({
     text: {
@@ -38,171 +38,18 @@ const styles = StyleSheet.create({
 
 class RouterComponent extends Component {
     onPublishPb = (key) => {
-        const uploadFile = (sceneKey, image) => (
-            new Promise((resolve, reject) => {
-                const task = firebase.storage().ref('playbooks')
-                    .child(key)
-                    .child(sceneKey)
-                    .put(image);
-
-                task.on('state_changed', (snapFile) => {
-                    // console.log('state', snapFile.state);
-                }, (error) => {
-                    console.log('error', error);
-                    reject(error);
-                }, (res) => {
-                    resolve(res.downloadURL);
-                });
-            })
-        );
-
-        const uploadScenes = () => (
-            new Promise((resolve, reject) => (
-                firebase.database().ref('building_playbooks')
-                    .child(key)
-                    .child('scenes')
-                    .once('value', (snapScenes) => {
-                        const uploadImagesPromisesS = [];
-                        return snapScenes.forEach((snapScene) => {
-                            if (snapScene.val().finished_at) {
-                                uploadImagesPromisesS.push(
-                                    uploadFile(snapScene.key, snapScene.val().image).then((res) => {
-                                        snapScene.ref.child('imageURL').set(res);
-                                    }),
-                                );
-                            } else {
-                                uploadImagesPromisesS.push(snapScene.ref.remove());
-                            }
-                            return Promise.all(uploadImagesPromisesS)
-                                .then(() => resolve())
-                                .catch(() => reject());
-                        });
-                    })
-            ))
-        );
-        firebase.database().ref('building_playbooks')
-            .child(key)
-            .once('value', (snap) => {
-                if (!snap.val().title) {
-                    return Alert.alert(
-                        'Título necesario',
-                        'Debes añadir escribir un título para tu playbook',
-                        [{ text: 'OK' }],
-                        { cancelable: true },
-                    );
-                }
-
-                if (!snap.val().category) {
-                    return Alert.alert(
-                        'Categoría necesaria',
-                        'Debes asignar una categoría a tu playbook',
-                        [{ text: 'OK' }],
-                        { cancelable: true },
-                    );
-                }
-                snap.ref.child('publishing').set(true);
-                // subir imagenes
-                const uploadImagesPromises = [];
-
-                uploadImagesPromises.push(uploadScenes());
-
-                uploadImagesPromises.push(
-                    uploadFile('done', snap.val().done_scene.image).then((res) => {
-                        snap.ref.child('done_scene').child('imageURL').set(res);
-                    }),
-                );
-
-                uploadImagesPromises.push(
-                    uploadFile('error', snap.val().error_scene.image).then((res) => {
-                        snap.ref.child('error_scene').child('imageURL').set(res);
-                    }),
-                );
-
-                return Promise.all(uploadImagesPromises).then(() => {
-                    // migrar de building_playbooks to publish_playbooks
-                    snap.ref.once('value', (snapCopy) => {
-                        const data = Object.assign({}, snapCopy.val(), {
-                            publish_at: firebase.database.ServerValue.TIMESTAMP,
-                            numPlays: 0,
-                        });
-                        firebase.database().ref('publish_playbooks')
-                            .child(key)
-                            .set(data);
-                    });
-
-                    const categoryKey = snap.val().category.id;
-                    const numScenes = snap.val().numScenes;
-                    const dataTimeline = {
-                        type: 'playbook',
-                        created_at: firebase.database.ServerValue.TIMESTAMP,
-                        key,
-                        status: 'pristine',
-                        owner_id: firebase.auth().currentUser.uid,
-                        meta: {
-                            title: snap.val().title,
-                            name: firebase.auth().currentUser.displayName,
-                            photoURL: firebase.auth().currentUser.photoURL,
-                            category: snap.val().category,
-                            percentage: 0,
-                        },
-                    };
-                            
-                    // Añadir el playbook al usuario logueado y redirigir.
-                    firebase.database().ref('users_timeline')
-                        .child(firebase.auth().currentUser.uid)
-                        .child(key)
-                        .set(dataTimeline)
-                        .then(() => {
-                            snap.ref.child('publishing').set(false).then(() => {
-                                Actions.reset('playbooks');
-                                // eliminar todos los building_playbooks del propietario
-                                firebase.database().ref('building_playbooks')
-                                    .orderByChild('owner_id')
-                                    .equalTo(firebase.auth().currentUser.uid)
-                                    .once('value', (snapBP) => {
-                                        snapBP.forEach((snapBPChild) => {
-                                            snapBPChild.ref.remove();
-                                        });
-                                        snap.ref.off();
-                                    });
-                            });
-                        });
-
-                    // Añadir el playbook a todos los timelines de los usuarios.
-                    firebase.database().ref('users')
-                        .once('value', (snapUsers) => {
-                            snapUsers.forEach((snapUserChild) => {
-                                if (snapUserChild.key !== firebase.auth().currentUser.uid) {
-                                    firebase.database().ref('users_timeline')
-                                        .child(snapUserChild.key)
-                                        .push(dataTimeline);
-                                }
-                            });
-                        });
-                    
-                    // Actualizar los puntos de categoria del usuario.
-                    firebase.database().ref('users_categories')
-                        .child(firebase.auth().currentUser.uid)
-                        .child(categoryKey)
-                        .once('value', (snapUserCat) => {
-                            const points = VALUE_SCENE_PUBLISHED * numScenes;
-                            snapUserCat.ref.child('points').set(snapUserCat.val().points + points);
-                            snapUserCat.ref.child('logs').push({
-                                points,
-                                created_at: firebase.database.ServerValue.TIMESTAMP,
-                                type: 'published',
-                                playbook_key: key,
-                            });
-                        });
-                }).catch(() => {
+        publishPlaybook(key)
+            .then(() => Actions.reset('playbooks'))
+            .catch((error) => {
+                if (error.type === 'alert') {
                     Alert.alert(
-                        'Error al publicar',
-                        'Ha ocurrido un error al publicar',
+                        error.title,
+                        error.message,
                         [{ text: 'OK' }],
                         { cancelable: true },
                     );
-                    snap.ref.child('publishing').set(false);
-                });
+                }
+                console.log('error', error);
             });
     }
     checkToPusblishPb = (key) => {

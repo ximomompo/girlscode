@@ -6,8 +6,9 @@ import firebase from 'react-native-firebase';
 import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Actions } from 'react-native-router-flux';
-import { Button } from '../../components/Commons';
+import StarRating from 'react-native-star-rating';
 import Answer from './components/Answer';
+import { yellow } from '../../helpers/colors';
 import { VALUE_SCENE_PLAYED } from '../../helpers/constants';
 import IconAbsolute from '../Creator/MakeScene/Layouts/components/IconAbsolute';
 import styles from './styles';
@@ -42,6 +43,7 @@ class Play extends Component {
             loadImages: false,
             category: {},
             pointsValue: 0,
+            starCount: 0,
         };
     }
     componentWillMount() {
@@ -114,6 +116,13 @@ class Play extends Component {
                 lastScene: 'error',
             });
         }
+    }
+    onStarRatingPress(rating) {
+        this.setState({
+            starCount: rating,
+        });
+        // firebase.database().ref('publish_playbooks');
+        Actions.reset('playbooks');
     }
     onDone = () => {
         if (this.state.lastScene === 'done') {
@@ -275,11 +284,12 @@ class Play extends Component {
                         <Text>¡Has finalizado este playbook!</Text>
                         <Text style={styles.points}>+{this.state.pointsValue} ptos</Text>
                         <Text style={styles.pointsAux}>en Derecho sexuales</Text>
-                        <Button
-                            style={{ marginTop: 16 }}
-                            title="OK!"
-                            onPress={() => Actions.reset('playbooks')}
-                            fullWidth
+                        <StarRating
+                            disabled={false}
+                            maxStars={5}
+                            rating={this.state.starCount}
+                            selectedStar={rating => this.onStarRatingPress(rating)}
+                            starColor={yellow}
                         />
                     </View>
                 </PopupDialog>

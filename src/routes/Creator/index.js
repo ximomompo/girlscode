@@ -59,7 +59,9 @@ class Create extends Component {
             .limitToLast(1)
             .once('value', (snap) => {
                 snap.forEach((snapChild) => {
-                    this.setState({ lastPlaybookKey: snapChild.key });
+                    if (!snapChild.val().finished_at) {
+                        this.setState({ lastPlaybookKey: snapChild.key });
+                    }
                 });
             });
     }

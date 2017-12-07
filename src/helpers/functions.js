@@ -23,6 +23,41 @@ const uploadFile = (path, image) => (
     })
 );
 
+const uploadScenes = snapPb => (
+    new Promise((res) => {
+        const promises = [];
+        snapPb.child('scenes').forEach((snapScene) => {
+            if (snapScene.val().finished_at) {
+                promises.push(
+                    uploadFile(`playbooks/${snapPb.key}/${snapScene.key}`, snapScene.val().image)
+                        .then(pathImage => (
+                            new Promise((resolve) => {
+                                snapScene.ref.child('imageURL').set(pathImage).then(() => {
+                                    resolve();
+                                });
+                            })
+                        )),
+                );
+                if (snapScene.val().errorScene) {
+                    promises.push(
+                        uploadFile(`playbooks/${snapPb.key}/${snapScene.key}_error`, snapScene.val().errorScene.image)
+                            .then(pathImage => (
+                                new Promise((resolve) => {
+                                    snapScene.ref.child('errorScene').child('imageURL').set(pathImage).then(() => {
+                                        resolve();
+                                    });
+                                })
+                            )),
+                    );
+                }
+            }
+        });
+        return Promise.all(promises).then(() => {
+            res();
+        });
+    })
+)
+
 export const getFormattedStylesText = (styles) => {
     if (!styles) return DEFAULT_STYLES_SCENE;
     const dataStyles = {
@@ -84,30 +119,8 @@ export const publishPlaybook = async (key) => {
     await snap.ref.child('publishing').set(true);
             
     // subir imagenes
-    await snap.child('scenes').forEach(async (snapScene) => {
-        if (snapScene.val().finished_at) {
-            try {
-                const pathImage = await uploadFile(snapScene.key, snapScene.val().image);
-                await snapScene.ref.child('imageURL').set(pathImage);
-            } catch (error) {
-                console.log(`UPLOAD FAIL: image scene ${snapScene.key}`);
-            }
-        }
-    });
-
-    try {
-        const pathImage = await uploadFile('done', snap.val().done_scene.image);
-        await snap.ref.child('done_scene').child('imageURL').set(pathImage);
-    } catch (error) {
-        console.log('UPLOAD FAIL: image done scene', error);
-    }
-
-    try {
-        const pathImage = await uploadFile('error', snap.val().error_scene.image);
-        await snap.ref.child('error_scene').child('imageURL').set(pathImage);
-    } catch (error) {
-        console.log('UPLOAD FAIL: image error scene', error);
-    }
+    // const promises = [];
+    await uploadScenes(snap);
 
     // migrar de building_playbooks to publish_playbooks
     const snapCopy = await snap.ref.once('value');

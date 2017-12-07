@@ -87,6 +87,7 @@ class LayoutForm extends Component {
                 } else {
                     this.props.sceneRef.child('answers').off();
                     this.props.finishScene({
+                        finalScene: false,
                         question: this.state.question,
                     });
                 }

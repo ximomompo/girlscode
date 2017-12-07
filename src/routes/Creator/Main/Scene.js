@@ -8,7 +8,13 @@ import { getFormattedStylesText } from '../../../helpers/functions';
 
 const Scene = props => (
     <TouchableHighlight onPress={props.onPress}>
-        <View style={[styles.sceneBasic, styles[`sceneSize_${props.size}`], { borderColor: props.color }]}>
+        <View style={[
+            styles.sceneBasic,
+            styles[`sceneSize_${props.size}`],
+            { borderColor: props.color },
+            props.style,
+        ]}
+        >
             {(props.scene.image)
                 ? [
                     <View key="text" style={styles.containerText}>
@@ -16,7 +22,8 @@ const Scene = props => (
                             styles.textDefault,
                             getFormattedStylesText(props.styles),
                             { paddingTop: 44, display: 'none' },
-                        ]}>
+                        ]}
+                        >
                             {props.scene.text}
                         </Text>
                     </View>,

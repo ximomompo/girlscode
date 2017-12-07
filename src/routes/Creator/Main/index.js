@@ -6,7 +6,7 @@ import { View, Dimensions, Text, TouchableHighlight, TouchableOpacity } from 're
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
 import * as colors from '../../../helpers/colors';
-import Scene from './Scene';
+import ContainerScene from './ContainerScene';
 import styles from './styles';
 
 class Main extends Component {
@@ -14,8 +14,6 @@ class Main extends Component {
         super(props);
         this.state = {
             publishScenes: [],
-            doneScene: {},
-            errorScene: {},
         };
     }
     componentWillMount() {
@@ -33,22 +31,10 @@ class Main extends Component {
                 });
                 this.setState({ publishScenes });
             });
-
-        firebase.database().ref('building_playbooks').child(this.props.pbKey)
-            .child('done_scene')
-            .once('value', (snap) => {
-                this.setState({ doneScene: snap.val() });
-            });
-
-        firebase.database().ref('building_playbooks').child(this.props.pbKey)
-            .child('error_scene')
-            .once('value', (snap) => {
-                this.setState({ errorScene: snap.val() });
-            });
     }
-    openErrorScene = () => {
+    openErrorScene = (sceneKey) => {
         Actions.make_scene({
-            sceneRef: `building_playbooks/${this.props.pbKey}/error_scene`,
+            sceneRef: `building_playbooks/${this.props.pbKey}/scenes/${sceneKey}/errorScene`,
             pbKey: this.props.pbKey,
             specialScene: true,
         });
@@ -57,13 +43,6 @@ class Main extends Component {
         Actions.make_scene({
             sceneRef: `building_playbooks/${this.props.pbKey}/scenes/${sceneKey}`,
             pbKey: this.props.pbKey,
-        });
-    }
-    openDoneScene = () => {
-        Actions.make_scene({
-            sceneRef: `building_playbooks/${this.props.pbKey}/done_scene`,
-            pbKey: this.props.pbKey,
-            specialScene: true,
         });
     }
     newScene = () => {
@@ -80,6 +59,19 @@ class Main extends Component {
                 transform: {
                     rotate: '0deg',
                     scale: 1,
+                },
+            },
+            errorScene: {
+                text: 'Escribe aquí...',
+                image: false,
+                styles: {
+                    color: '#FFFFFF',
+                    left: 0,
+                    top: 0,
+                    transform: {
+                        rotate: '0deg',
+                        scale: 1,
+                    },
                 },
             },
         };
@@ -115,16 +107,17 @@ class Main extends Component {
                 ref={(c) => { this.carousel = c; }}
                 data={this.state.publishScenes}
                 renderItem={({ item }) => (
-                    <Scene
+                    <ContainerScene
                         key={item.id}
-                        onPress={() => this.openScene(item.id)}
+                        onOpenMainScene={() => this.openScene(item.id)}
+                        onOpenErrorScene={() => this.openErrorScene(item.id)}
                         scene={item}
                     />
                 )}
                 sliderWidth={Dimensions.get('window').width}
                 sliderHeight={Dimensions.get('window').height}
                 itemWidth={160}
-                itemHeight={264}
+                itemHeight={300}
                 firstItem={this.state.publishScenes.length - 1}
             />
         );
@@ -132,30 +125,6 @@ class Main extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{
-                    flex: 0,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                }}
-                >
-                    <Scene
-                        size="sm"
-                        onPress={() => this.openErrorScene()}
-                        scene={this.state.errorScene}
-                        color={colors.red}
-                        textDefault="Escena fallo"
-                        icon="times"
-                    />
-                    <Scene
-                        size="sm"
-                        onPress={() => this.openDoneScene()}
-                        scene={this.state.doneScene}
-                        color={colors.green}
-                        textDefault="Escena final"
-                        icon="check"
-                    />
-                </View>
                 {this.renderCarousel()}
                 <TouchableHighlight
                     style={styles.bottomContainer}

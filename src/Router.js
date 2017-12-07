@@ -14,11 +14,8 @@ import AuthMain from './routes/Auth';
 import Playbooks from './routes/Playbooks';
 import Profile from './routes/Profile';
 import OnboardingCreator from './routes/Creator';
-import Main from './routes/Creator/Main';
-import Make from './routes/Creator/MakeScene';
-import Publish from './routes/Creator/Publish';
+import MainCreator from './routes/Creator/New';
 import Play from './routes/Play';
-import Gallery from './routes/Gallery';
 import * as colors from './helpers/colors';
 import { clearImage } from './modules/gallery/actions';
 import { publishPlaybook } from './helpers/functions';
@@ -55,21 +52,7 @@ class RouterComponent extends Component {
     checkToPusblishPb = (key) => {
         firebase.database().ref('building_playbooks').child(key)
             .once('value', (snap) => {
-                if (!snap.child('done_scene').child('finished_at').val()) {
-                    Alert.alert(
-                        'No existe escena final',
-                        'Para publicar es necesario que tengas una escena final',
-                        [{ text: 'OK' }],
-                        { cancelable: true },
-                    );
-                } else if (!snap.child('error_scene').child('finished_at').val()) {
-                    Alert.alert(
-                        'No existe escena de fallo',
-                        'Para publicar es necesario que tengas una escena de fallo',
-                        [{ text: 'OK' }],
-                        { cancelable: true },
-                    );
-                } else if (snap.child('numScenes').val() < 3) {
+                if (snap.child('numScenes').val() <= 0) {
                     Alert.alert(
                         'Pocas de escenas',
                         'El número de escenas debe ser de al menos 3',
@@ -140,60 +123,15 @@ class RouterComponent extends Component {
                             navTransparent
                             type="replace"
                             hideTabBar
-                            renderRightButton={() => {}}
+                            headerMode="none"
                         >
                             <Scene
                                 key="onboarding_creator"
                                 component={OnboardingCreator}
-                                renderLeftButton={() => (
-                                    <Icon
-                                        name="cross"
-                                        type="entypo"
-                                        style={{ marginLeft: 12 }}
-                                        onPress={() => Actions.reset('playbooks')}
-                                    />
-                                )}
-                                moreno="morena"
                             />
                             <Scene
                                 key="main_creator"
-                                component={Main}
-                                navTransparent={false}
-                                renderLeftButton={() => (
-                                    <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
-                                        <Text style={{ marginLeft: 12 }}>Cancelar</Text>
-                                    </TouchableOpacity>
-                                )}
-                                renderRightButton={props => (
-                                    <TouchableOpacity
-                                        onPress={() => this.checkToPusblishPb(props.pbKey)}
-                                    >
-                                        <Text style={{ marginRight: 12 }}>Publicar</Text>
-                                    </TouchableOpacity>
-                                )}
-                            />
-                            <Scene
-                                key="make_scene"
-                                component={Make}
-                                hideNavBar
-                            />
-                            <Scene
-                                key="publish_playbook"
-                                component={Publish}
-                                title="Publicar"
-                                navTransparent={false}
-                                renderLeftButton={() => (
-                                    <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
-                                        <Text style={{ marginLeft: 12 }}>Cancelar</Text>
-                                    </TouchableOpacity>
-                                )}
-                                renderRightButton={props => (
-                                    <TouchableOpacity
-                                        onPress={() => this.onPublishPb(props.pbKey)}
-                                    >
-                                        <Text style={{ marginRight: 12 }}>Publicar</Text>
-                                    </TouchableOpacity>
-                                )}
+                                component={MainCreator}
                             />
                         </Stack>
                         <Scene
@@ -211,32 +149,6 @@ class RouterComponent extends Component {
                         component={Play}
                         duration={0}
                     />
-                    <Scene
-                        key="gallery"
-                        title="Galería"
-                        renderLeftButton={() => (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.clearImage();
-                                    Actions.pop();
-                                }}
-                            >
-                                <Text style={[styles.text, styles.iconLeft]}>
-                                    Cancelar
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-                        renderRightButton={() => (
-                            <TouchableOpacity onPress={Actions.pop}>
-                                <Text style={[styles.text, styles.iconRight]}>OK</Text>
-                            </TouchableOpacity>
-                        )}
-                    >
-                        <Modal
-                            key="gallery_modal"
-                            component={Gallery}
-                        />
-                    </Scene>
                 </Stack>
             </Router>
         );

@@ -32,8 +32,6 @@ class Play extends Component {
         super(props);
         this.state = {
             scenes: [],
-            doneScene: null,
-            errorScene: null,
             indexScene: 0,
             content: 'text',
             currentScene: null,
@@ -55,21 +53,19 @@ class Play extends Component {
                 const preloadImages = [];
                 snapPb.child('scenes').forEach((snapScenes) => {
                     const imageURL = snapScenes.val().imageURL;
+                    if (snapScenes.val().errorScene) {
+                        const imageErrorURL = snapScenes.val().errorScene.imageURL;
+                        preloadImages.push(Image.prefetch(imageErrorURL));
+                        images.push(imageErrorURL);
+                    }
                     preloadImages.push(Image.prefetch(imageURL));
                     images.push(imageURL);
                     scenes.push(snapScenes.val());
                 });
-                preloadImages.push(Image.prefetch(snapPb.val().done_scene.imageURL));
-                images.push(snapPb.val().done_scene.imageURL);
-
-                preloadImages.push(Image.prefetch(snapPb.val().error_scene.imageURL));
-                images.push(snapPb.val().error_scene.imageURL);
 
                 const orderedScenes = _.sortBy(scenes, ['finished_at']);
                 this.setState({
                     scenes: orderedScenes,
-                    doneScene: snapPb.val().done_scene,
-                    errorScene: snapPb.val().error_scene,
                     category: snapPb.val().category,
                     currentScene: orderedScenes[0],
                     pointsValue: snapPb.val().numScenes * VALUE_SCENE_PLAYED,
@@ -91,27 +87,19 @@ class Play extends Component {
     }
     onNextScreen = () => {
         const indexScene = this.state.indexScene + 1;
-        if (indexScene >= this.state.scenes.length) {
-            this.setState({
-                indexScene,
-                currentScene: this.state.doneScene,
-                content: 'text',
-                lastScene: 'done',
-            });
-        } else {
-            this.setState({
-                indexScene,
-                currentScene: this.state.scenes[indexScene],
-                content: 'text',
-            });
-        }
+        this.setState({
+            indexScene,
+            currentScene: this.state.scenes[indexScene],
+            content: 'text',
+            lastScene: (this.state.scenes[indexScene].finalScene) ? 'done' : null,
+        });
     }
     onRespondAnswer = (correct) => {
         if (correct) {
             this.onNextScreen();
         } else {
             this.setState({
-                currentScene: this.state.errorScene,
+                currentScene: this.state.scenes[this.state.indexScene].errorScene,
                 content: 'text',
                 lastScene: 'error',
             });

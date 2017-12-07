@@ -158,6 +158,21 @@ class LayoutText extends Component {
                         }
                     </Text>
                 </IconAbsolute>
+                {(!this.props.specialScene)
+                    ? (
+                        <IconAbsolute
+                            position="BottomLeft"
+                            onPress={() => this.props.finishScene({
+                                finalScene: true,
+                                errorScene: null,
+                            })}
+                        >
+                            <Text style={styles.iconText}>
+                                Escena final
+                            </Text>
+                        </IconAbsolute>
+                    ) : null
+                }
                 <Image
                     style={styles.imageBackground}
                     source={{ uri: this.props.scene.image.toString() }}

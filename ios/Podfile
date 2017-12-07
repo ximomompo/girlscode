@@ -28,6 +28,10 @@ target 'girlscode' do
     # Add any other subspecs you want to use in your project
   ]
 
+  # react-native-image-crop-picker
+  pod 'RSKImageCropper'
+  pod 'QBImagePickerController'
+
   #Also add this at the very bottom of your Podfile
 
   post_install do |installer|

@@ -65,7 +65,7 @@ class Profile extends Component {
                         source={{ uri: firebase.auth().currentUser.photoURL }}
                     />
                     <Text style={styles.name}>{firebase.auth().currentUser.displayName}</Text>
-                    <Text style={styles.email}>{firebase.auth().currentUser.email}</Text>
+                    <Text style={styles.email}>{firebase.auth().currentUser.email}as</Text>
                     <TextInput
                         style={styles.shortBioInput}
                         onChangeText={shortBio => this.setShortBio(shortBio)}

@@ -5,18 +5,7 @@ import firebase from 'react-native-firebase';
 import { Text, Button, MainView } from '../../components/Commons';
 
 const schemeScene = {
-    image: false,
-    text: 'Escribe aquí...',
     created_at: firebase.database.ServerValue.TIMESTAMP,
-    styles: {
-        color: 'white',
-        left: 0,
-        top: 0,
-        transform: {
-            rotate: '0deg',
-            scale: 1,
-        },
-    },
 };
 
 const styles = StyleSheet.create({
@@ -65,14 +54,20 @@ class Create extends Component {
                 });
             });
     }
-    newPlaybook = () => {
+    newPlaybook = async () => {
         const data = {
             owner_id: firebase.auth().currentUser.uid,
             created_at: firebase.database.ServerValue.TIMESTAMP,
-            error_scene: Object.assign({}, schemeScene),
-            done_scene: Object.assign({}, schemeScene),
         };
-        const key = firebase.database().ref('building_playbooks').push(data).key;
+        const dataChapter = {
+            number: 1,
+            created_at: firebase.database.ServerValue.TIMESTAMP,
+        };
+        const key = await firebase.database().ref('building_playbooks').push(data).key;
+        await firebase.database().ref('building_playbooks')
+            .child(key)
+            .child('chapters')
+            .push(dataChapter);
         Actions.main_creator({ pbKey: key });
     }
     renderLoadLastPlaybook = () => {
@@ -92,9 +87,9 @@ class Create extends Component {
         return (
             <MainView style={styles.container}>
                 <View style={styles.text}>
-                    <Text style={styles.title}>Lorem Ipsum</Text>
+                    <Text style={styles.title}>Empezar a crear playbook</Text>
                     <Text style={styles.aux}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Bienvenid@ al creador de Playbooks de CodigoNiña
                     </Text>
                 </View>
                 <Button

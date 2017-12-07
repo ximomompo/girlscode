@@ -56,48 +56,10 @@ const uploadScenes = snapPb => (
             res();
         });
     })
-)
+);
 
-export const getFormattedStylesText = (styles) => {
-    if (!styles) return DEFAULT_STYLES_SCENE;
-    const dataStyles = {
-        left: styles.left || DEFAULT_STYLES_SCENE.left,
-        top: styles.top || DEFAULT_STYLES_SCENE.top,
-        color: styles.color || DEFAULT_STYLES_SCENE.color,
-    };
-    if (!styles.transform) {
-        return Object.assign({}, dataStyles, {
-            transform: [
-                { rotate: '0deg' },
-                { scale: 1 },
-            ],
-        });
-    }
-    return Object.assign({}, dataStyles, {
-        transform: [
-            { rotate: styles.transform.rotate },
-            { scale: styles.transform.scale },
-        ],
-    });
-};
 export const publishPlaybook = async (key) => {
     const snap = await firebase.database().ref('building_playbooks').child(key).once('value');
-
-    if (!snap.val().title) {
-        throw new Error({
-            type: 'alert',
-            title: 'Título necesario',
-            message: 'Debes añadir escribir un título para tu playbook',
-        });
-    }
-
-    if (!snap.val().category) {
-        throw new Error({
-            type: 'alert',
-            title: 'Categoría necesaria',
-            message: 'Debes asignar una categoría a tu playbook',
-        });
-    }
 
     const categoryKey = snap.val().category.id;
     const numScenes = snap.val().numScenes;
@@ -116,12 +78,6 @@ export const publishPlaybook = async (key) => {
         },
     };
 
-    await snap.ref.child('publishing').set(true);
-            
-    // subir imagenes
-    // const promises = [];
-    await uploadScenes(snap);
-
     // migrar de building_playbooks to publish_playbooks
     const snapCopy = await snap.ref.once('value');
     const dataCopy = Object.assign({}, snapCopy.val(), {
@@ -138,16 +94,6 @@ export const publishPlaybook = async (key) => {
         .set(dataTimeline);
 
     await snap.ref.child('publishing').set(false);
-
-    // eliminar todos los building_playbooks del propietario
-    // await firebase.database().ref('building_playbooks')
-    //     .orderByChild('owner_id')
-    //     .equalTo(firebase.auth().currentUser.uid)
-    //     .once('value', (snapBP) => {
-    //         snapBP.forEach((snapBPChild) => {
-    //             snapBPChild.ref.remove();
-    //         });
-    //     });
 
     // Añadir el playbook a todos los timelines de los usuarios.
     firebase.database().ref('users')

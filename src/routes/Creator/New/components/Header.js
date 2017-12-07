@@ -68,6 +68,13 @@ class Header extends Component {
                         message: `Debes añadir un texto a tu pregunta del capítulo ${index + 1}`,
                     });
                 }
+                if (!question.errorText) {
+                    errorsChapters.push({
+                        index,
+                        title: 'Mensaje requerido',
+                        message: `Debes añadir un texto cuando se seleccione la respuesta incorrecta del capítulo ${index + 1}`,
+                    });
+                }
                 const answerNoText = Object.values(question.answers)
                     .filter(answer => !answer.text || answer.text.length < 2);
                 const correctAnswer = Object.values(question.answers)
@@ -117,6 +124,7 @@ class Header extends Component {
                 { cancelable: true },
             );
         }
+        this.props.openPopDialog();
     }
     render() {
         return (
@@ -142,6 +150,7 @@ Header.propTypes = {
     style: PropTypes.shape().isRequired,
     refPb: PropTypes.shape().isRequired,
     scrollToElementByIndex: PropTypes.func.isRequired,
+    openPopDialog: PropTypes.func.isRequired,
 };
 
 export default Header;

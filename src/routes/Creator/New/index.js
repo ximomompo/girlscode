@@ -9,13 +9,24 @@ import {
     ActivityIndicator,
     Image,
     Alert,
+    Text,
+    FlatList,
 } from 'react-native';
 import firebase from 'react-native-firebase';
+import { Actions } from 'react-native-router-flux';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import PopupDialog, { SlideAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
+import Emoji from 'react-native-emoji';
+import { VALUE_SCENE_PUBLISHED } from '../../../helpers/constants';
+import CategoryItem from './components/CategoryItem';
 import Footer from './components/Footer';
 import Chapter from './components/Chapter';
 import Header from './components/Header';
 import styles from './styles';
+
+const slideAnimation = new SlideAnimation({
+    slideFrom: 'bottom',
+});
 
 class MainCreator extends Component {
     constructor(props) {
@@ -28,12 +39,14 @@ class MainCreator extends Component {
             offsetAnim: new Animated.Value(0),
             loaded: false,
             yPosition: [],
+            categories: [],
+            category: null,
         };
     }
     componentWillMount() {
         this.state.scrollAnim.addListener(this.handleScroll);
         this.refPb.once('value', (snap) => {
-            const { title } = snap.val();
+            const { title, category } = snap.val();
             const chapters = [];
             const preloadImages = [];
             let numQuestions = 0;
@@ -51,8 +64,18 @@ class MainCreator extends Component {
                     numQuestions,
                     chapters: sortBy(chapters, ['created_at']),
                     loaded: true,
+                    category: (category) ? category.name : null,
                 });
             });
+        });
+        firebase.database().ref('categories').once('value', (snap) => {
+            const categories = [];
+            snap.forEach((snapC) => {
+                categories.push(Object.assign({}, snapC.val(), {
+                    id: snapC.key,
+                }));
+            });
+            this.setState({ categories });
         });
     }
     componentWillUnmount() {
@@ -66,6 +89,11 @@ class MainCreator extends Component {
     }
     setNumQuestion = (value) => {
         this.setState({ numQuestions: this.state.numQuestions + value });
+    }
+    setCategory = (value) => {
+        this.setState({ category: value.name }, () => {
+            this.refPb.child('category').set(value);
+        });
     }
     handleScroll = ({ value }) => {
         this.previousScrollvalue = this.currentScrollValue;
@@ -98,15 +126,6 @@ class MainCreator extends Component {
             }).start();
         }
     };
-
-    /* validaciones: 
-        - Tiene que existir la imagen
-        - Tiene que existir texto (min 12)
-        - Si tiene question:
-        - - Las respuestas tienen que tener texto
-        - - Tiene que existir una verdadera
-        - - Tiene que existir el texto de question
-    */
     newChapter = async () => {
         const dataChapter = {
             created_at: firebase.database.ServerValue.TIMESTAMP,
@@ -158,6 +177,15 @@ class MainCreator extends Component {
     }
     scrollToElementByIndex = (index) => {
         this.flatListRef.scrollToIndex({ index });
+    }
+    openPopDialog = () => {
+        this.popupDialogCat.show();
+    }
+    confirmPublish = () => {
+        this.refPb.child('finished_at').set(firebase.database.ServerValue.TIMESTAMP).then(() => {
+            this.popupDialogCat.dismiss();
+            this.popupDialogPublished.show();
+        });
     }
     refPb = firebase.database().ref('building_playbooks').child(this.props.pbKey);
     render() {
@@ -225,12 +253,76 @@ class MainCreator extends Component {
                     style={{ transform: [{ translateY }] }}
                     refPb={this.refPb}
                     scrollToElementByIndex={this.scrollToElementByIndex}
+                    openPopDialog={this.openPopDialog}
                 />
                 <Footer
                     newChapter={this.newChapter}
                     numQuestions={this.state.numQuestions}
                     numChapters={this.state.chapters.length}
                 />
+                <PopupDialog
+                    width={0.8}
+                    height={350}
+                    ref={(popupDialog) => { this.popupDialogCat = popupDialog; }}
+                    dialogAnimation={slideAnimation}
+                    dialogTitle={<DialogTitle title="Último paso" />}
+                    actions={[
+                        <DialogButton
+                            text="Publicar"
+                            onPress={() => {
+                                this.confirmPublish();
+                            }}
+                            key="publish"
+                            disabled={!this.state.category}
+                            textStyle={styles.buttonPopup}
+                        />,
+                    ]}
+                >
+                    <View style={styles.containerPopup}>
+                        <Text style={styles.textPopup}>
+                            Selecciona la categoría en la que encontrarías tu historia
+                        </Text>
+                        <FlatList
+                            style={styles.containerCategories}
+                            extraData={this.state}
+                            data={this.state.categories}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <CategoryItem
+                                    item={item}
+                                    setCategory={this.setCategory}
+                                    selected={(this.state.category === item.name)}
+                                />
+                            )}
+                        />
+                    </View>
+                </PopupDialog>
+                <PopupDialog
+                    width={0.8}
+                    height={400}
+                    ref={(popupDialog) => { this.popupDialogPublished = popupDialog; }}
+                    dialogAnimation={slideAnimation}
+                    actions={[
+                        <DialogButton
+                            text="Ok!"
+                            onPress={() => Actions.reset('playbooks')}
+                            key="done"
+                            textStyle={styles.buttonPopup}
+                        />,
+                    ]}
+                >
+                    <View style={styles.containerPopup}>
+                        <Text style={styles.emojiPopup}>
+                            <Emoji name="smiley" />
+                        </Text>
+                        <Text style={styles.texth1Popup}>
+                            Historia enviada para publicar
+                        </Text>
+                        <Text style={styles.textPopup}>
+                            Nuestro equipo esta validando que la historia puede ser publicada, una vez aprobada nos pondremos en contacto contingo. Si se publica tu historia conseguiras {this.state.chapters.length * VALUE_SCENE_PUBLISHED} puntos en la categoria {this.state.category} ¡Mucha suerte!
+                        </Text>
+                    </View>
+                </PopupDialog>
             </View>
         );
     }

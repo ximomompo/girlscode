@@ -1,69 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import IconBadge from 'react-native-icon-badge';
-import { Scene, Router, Stack, Tabs, Actions, Modal } from 'react-native-router-flux';
+import { Scene, Router, Stack, Tabs, Modal } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import firebase from 'react-native-firebase';
 import { TabIcon } from './components/Commons';
 import LoginForm from './routes/Auth/LoginForm';
 import RegisterForm from './routes/Auth/RegisterForm';
 import AuthMain from './routes/Auth';
 import Playbooks from './routes/Playbooks';
 import Profile from './routes/Profile';
-import OnboardingCreator from './routes/Creator';
+import OnboardingCreator from './routes/Creator/Main';
 import MainCreator from './routes/Creator/New';
 import Play from './routes/Play';
 import * as colors from './helpers/colors';
 import { clearImage } from './modules/gallery/actions';
-import { publishPlaybook } from './helpers/functions';
-
-const styles = StyleSheet.create({
-    text: {
-        fontSize: 16,
-        color: colors.primary,
-    },
-    iconLeft: {
-        marginLeft: 12,
-    },
-    iconRight: {
-        marginRight: 12,
-    },
-});
 
 class RouterComponent extends Component {
-    onPublishPb = (key) => {
-        publishPlaybook(key)
-            .then(() => Actions.reset('playbooks'))
-            .catch((error) => {
-                if (error.type === 'alert') {
-                    Alert.alert(
-                        error.title,
-                        error.message,
-                        [{ text: 'OK' }],
-                        { cancelable: true },
-                    );
-                }
-                console.log('error', error);
-            });
-    }
-    checkToPusblishPb = (key) => {
-        firebase.database().ref('building_playbooks').child(key)
-            .once('value', (snap) => {
-                if (snap.child('numScenes').val() <= 0) {
-                    Alert.alert(
-                        'Pocas de escenas',
-                        'El número de escenas debe ser de al menos 3',
-                        [{ text: 'OK' }],
-                        { cancelable: true },
-                    );
-                } else {
-                    Actions.publish_playbook({ pbKey: key });
-                }
-            });
-    }
+    onNothing = () => {}
     render() {
         return (
             <Router

@@ -1,23 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Image, Text, TouchableOpacity } from 'react-native';
-// import { Icon } from 'react-native-elements';
+import { black, gray2 } from '../../../../helpers/colors';
+import { regular, bold } from '../../../../helpers/fonts';
 import styles from '../styles';
 
 const CategoryItem = props => (
     <TouchableOpacity
-        style={[styles.containerItemCat, {
-            backgroundColor: (props.selected) ? '#EAEAEA' : 'white',
-        }]}
+        style={styles.containerItemCat}
         onPress={() => props.setCategory(props.item)}
     >
         <Image
-            style={{ position: 'absolute', left: 16, top: 10, width: 32, height: 32 }}
+            style={{ width: 32, height: 32 }}
             source={{ uri: props.item.icon }}
         />
         <Text
             style={[styles.textCat, {
-                color: (props.selected) ? 'black' : 'gray',
+                color: (props.selected) ? black : gray2,
+                fontFamily: (props.selected) ? bold : regular,
             }]}
         >
             {props.item.name}
@@ -38,13 +38,3 @@ CategoryItem.defaultProps = {
 };
 
 export default CategoryItem;
-
-/*
-<Icon
-    name={props.item.icon}
-    type="font-awesome"
-    color={(props.selectedCategory === props.item.name) ? 'black' : 'gray'}
-    style={{ position: 'absolute', left: 20, top: 12 }}
-    iconStyle={{ fontSize: 32 }}
-/>
-*/

@@ -307,6 +307,52 @@ export default StyleSheet.create({
         color: colors.primary,
         fontFamily: fonts.regular,
     },
+    containerPopup: {
+        padding: 12,
+        flex: 0,
+        justifyContent: 'center',
+    },
+    textPopup: {
+        fontFamily: fonts.regular,
+        marginBottom: 12,
+        width: '100%',
+        textAlign: 'center',
+    },
+    containerCategories: {
+        width: '100%',
+    },
+    containerItemCat: {
+        width: '100%',
+        paddingTop: 8,
+        paddingBottom: 8,
+        flex: 0,
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    textCat: {
+        paddingLeft: 16,
+        paddingRight: 16,
+        fontSize: 14,
+        fontFamily: fonts.regular,
+    },
+    texth1Popup: {
+        width: '100%',
+        textAlign: 'center',
+        fontFamily: fonts.bold,
+        fontSize: 20,
+        marginBottom: 12,
+    },
+    emojiPopup: {
+        fontSize: 36,
+        marginTop: 12,
+        marginBottom: 12,
+        width: '100%',
+        textAlign: 'center',
+    },
+    buttonPopup: {
+        color: colors.primary,
+    },
     // containerChapter: {
     //     position: 'absolute',
     //     top: -12,

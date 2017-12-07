@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { Icon } from 'react-native-elements';
 import _ from 'lodash';
-import { View, Image, Text, FlatList, TouchableHighlight } from 'react-native';
+import { View, Image, Text, FlatList, TouchableHighlight, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
 import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { Actions } from 'react-native-router-flux';
 import StarRating from 'react-native-star-rating';
 import Answer from './components/Answer';
 import { yellow } from '../../helpers/colors';
 import { VALUE_SCENE_PLAYED } from '../../helpers/constants';
-import IconAbsolute from '../Creator/MakeScene/Layouts/components/IconAbsolute';
 import styles from './styles';
 
 const slideAnimation = new SlideAnimation({
@@ -237,26 +235,13 @@ class Play extends Component {
     render() {
         if (this.state.scenes.length === 0 || !this.state.loadImages) {
             return (
-                <Spinner
-                    visible
-                    textContent="Cargando..."
-                    textStyle={{ color: '#FFF' }}
-                />
+                <View>
+                    <ActivityIndicator />
+                </View>
             );
         }
         return (
             <View style={styles.container}>
-                <IconAbsolute
-                    position="TopLeft"
-                    onPress={() => Actions.reset('playbooks')}
-                >
-                    <Icon
-                        name="cross"
-                        type="entypo"
-                        color="white"
-                        iconStyle={{ fontSize: 32 }}
-                    />
-                </IconAbsolute>
                 {this.renderContent()}
                 {this.renderImages()}
                 <PopupDialog

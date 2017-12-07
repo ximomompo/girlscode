@@ -9,12 +9,13 @@ import {
     Dimensions,
     ActivityIndicator,
 } from 'react-native';
-// import CameraRollPicker from 'react-native-camera-roll-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Emoji from 'react-native-emoji';
 import firebase from 'react-native-firebase';
+import { Icon } from 'react-native-elements';
 import Question from './Question';
 import Separator from './Separator';
+import { gray2 } from '../../../../helpers/colors';
 import styles from '../styles';
 
 class Chapter extends Component {
@@ -89,7 +90,10 @@ class Chapter extends Component {
         }
         if (this.state.image) {
             return (
-                <TouchableOpacity onPress={() => this.openPicker()}>
+                <TouchableOpacity
+                    style={styles.containerImage}
+                    onPress={() => this.openPicker()}
+                >
                     <Image
                         style={[styles.image, { height }]}
                         source={{ uri: this.state.image }}
@@ -98,7 +102,10 @@ class Chapter extends Component {
             );
         }
         return (
-            <TouchableOpacity onPress={() => this.openPicker()}>
+            <TouchableOpacity
+                style={styles.containerImage}
+                onPress={() => this.openPicker()}
+            >
                 <View style={[styles.defaultImage, { height }]}>
                     <Text style={styles.emojiDefaultImage}>
                         <Emoji name="frame_with_picture" />
@@ -119,33 +126,63 @@ class Chapter extends Component {
         }
         return (
             <TouchableOpacity
-                style={styles.containerButton}
+                style={styles.containerAddQuestion}
                 onPress={() => this.addQuestion()}
             >
-                <Text style={styles.emojiButton}>
+                <Text style={styles.emojiAddQuestion}>
                     <Emoji name="thinking_face" />
                 </Text>
-                <Text style={[styles.textButton, styles.textAddQuestion]}>
+                <Text style={styles.textAddQuestion}>
                     Añadir pregunta
                 </Text>
             </TouchableOpacity>
         );
     }
+    renderRemoveChapter = () => {
+        if (this.props.number === 1) return null;
+        return (
+            <TouchableOpacity
+                onPress={() => this.props.removeChapter(this.props.chapterKey)}
+            >
+                <Icon
+                    name="times"
+                    type="font-awesome"
+                    color={gray2}
+                    iconStyle={{ fontSize: 16 }}
+                    style={{ padding: 12, paddingLeft: 8 }}
+                />
+            </TouchableOpacity>
+        )
+    }
     render() {
         return (
-            <View>
+            <View style={styles.chapter}>
                 {this.renderImage()}
-                <Separator>
-                    <Text style={styles.textSeparator}>Capítulo {this.props.number}</Text>
-                </Separator>
-                <TextInput
-                    style={styles.inputText}
-                    multiline
-                    placeholder="Escribe aquí el texto de tu capítulo"
-                    onChangeText={value => this.setText(value)}
-                    value={this.state.text}
-                />
+                <View style={styles.containerChapterH}>
+                    <Text style={styles.textChapterH}>
+                        Capítulo {this.props.number}
+                    </Text>
+                    {this.renderRemoveChapter()}
+                </View>
+                <View style={styles.containerInputText}>
+                    <TextInput
+                        style={[styles.inputText, {
+                            marginLeft: (this.state.text) ? 0 : 24,
+                        }]}
+                        multiline
+                        placeholder="Empieza aquí tu capítulo"
+                        onChangeText={value => this.setText(value)}
+                        value={this.state.text}
+                    />
+                    {(this.state.text)
+                        ? null
+                        : <Text style={styles.emojiInputText}>
+                            <Emoji name="memo" />
+                        </Text>
+                    }
+                </View>
                 {this.renderQuestion()}
+                <Separator />
             </View>
         );
     }

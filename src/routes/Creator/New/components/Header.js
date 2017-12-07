@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Animated, Alert } from 'react-native';
+import { Text, TouchableOpacity, Animated, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';
-import Emoji from 'react-native-emoji';
+import { primary } from '../../../../helpers/colors';
 import styles from '../styles';
 
 
@@ -32,33 +33,39 @@ class Header extends Component {
                 { cancelable: true },
             );
         }
-        let numChapters = 0;
-        let numQuestions = 0;
+        const counts = {
+            numChapters: 0,
+            numQuestions: 0,
+        };
         const errorsChapters = [];
-        await snapPB.child('chapters').forEach(async (snapChapter) => {
-            const { image, text, question, number } = snapChapter.val();
-            const index = parseInt(number, 10) - 1;
+        const snapChapters = await this.props.refPb
+            .child('chapters')
+            .orderByChild('finished_at')
+            .once('value');
+        await snapChapters.forEach(async (snapChapter) => {
+            const { image, text, question } = snapChapter.val();
+            const index = Object.assign({}, counts).numChapters;
             if (!image) {
                 errorsChapters.push({
                     index,
                     title: 'Imagen requerida',
-                    message: `Aun no has añadido una imagen a tu capítulo ${number}`,
+                    message: `Aun no has añadido una imagen a tu capítulo ${index + 1}`,
                 });
             }
             if (!text) {
                 errorsChapters.push({
                     index,
                     title: 'Texto requerido',
-                    message: `Aun no has añadido un texto a tu capítulo ${number}`,
+                    message: `Aun no has añadido un texto a tu capítulo ${index + 1}`,
                 });
             }
             if (question) {
-                numQuestions += 1;
+                counts.numQuestions += 1;
                 if (!question.text) {
                     errorsChapters.push({
                         index,
                         title: 'Pregunta requerida',
-                        message: `Debes añadir un texto a tu pregunta del capítulo ${number}`,
+                        message: `Debes añadir un texto a tu pregunta del capítulo ${index + 1}`,
                     });
                 }
                 const answerNoText = Object.values(question.answers)
@@ -70,7 +77,7 @@ class Header extends Component {
                     errorsChapters.push({
                         index,
                         title: 'Respuestas sin texto',
-                        message: `Todas las respuestas deben tener texto en tu capítulo ${number}`,
+                        message: `Todas las respuestas deben tener texto en tu capítulo ${index + 1}`,
                     });
                 }
                 if (correctAnswer.length !== 1) {
@@ -81,7 +88,7 @@ class Header extends Component {
                     });
                 }
             }
-            numChapters += 1;
+            counts.numChapters += 1;
         });
         if (errorsChapters.length > 0) {
             const error = errorsChapters[0];
@@ -93,7 +100,7 @@ class Header extends Component {
                 { cancelable: true },
             );
         }
-        if (numChapters < 3) {
+        if (counts.numChapters < 3) {
             return Alert.alert(
                 'Capítulos insuficientes',
                 'Tu historia debe tener al menos 3 capítulos',
@@ -102,7 +109,7 @@ class Header extends Component {
             );
         }
 
-        if (numQuestions < 2) {
+        if (counts.numQuestions < 2) {
             return Alert.alert(
                 'Decisiones insuficientes',
                 'Tu historia debe tener al menos 2 decisiones',
@@ -115,26 +122,14 @@ class Header extends Component {
         return (
             <Animated.View style={[this.props.style, styles.containerHeader]}>
                 <TouchableOpacity onPress={() => Actions.reset('playbooks')}>
-                    <Text style={styles.textHeader}>Guardar</Text>
+                    <Icon
+                        name="ios-arrow-back"
+                        type="ionicon"
+                        color={primary}
+                        iconStyle={{ fontSize: 26 }}
+                        style={{ padding: 12, paddingTop: 10 }}
+                    />
                 </TouchableOpacity>
-                <View style={styles.containerMetrics}>
-                    <View style={styles.containerMetric}>
-                        <Text style={styles.textMetric}>
-                            {this.props.numChapters}
-                        </Text>
-                        <Text style={styles.emojiHeader}>
-                            <Emoji name="memo" />
-                        </Text>
-                    </View>
-                    <View style={styles.containerMetric}>
-                        <Text style={styles.textMetric}>
-                            {this.props.numQuestions}
-                        </Text>
-                        <Text style={styles.emojiHeader}>
-                            <Emoji name="thinking_face" />
-                        </Text>
-                    </View>
-                </View>
                 <TouchableOpacity onPress={() => this.onPublish()}>
                     <Text style={styles.textHeader}>Publicar</Text>
                 </TouchableOpacity>
@@ -144,8 +139,6 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-    numChapters: PropTypes.number.isRequired,
-    numQuestions: PropTypes.number.isRequired,
     style: PropTypes.shape().isRequired,
     refPb: PropTypes.shape().isRequired,
     scrollToElementByIndex: PropTypes.func.isRequired,

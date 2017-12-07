@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import update from 'react-addons-update';
+import { sortBy } from 'lodash';
 import {
     View,
     TextInput,
-    Alert,
-    TouchableOpacity,
-    Text,
     Animated,
     ActivityIndicator,
     Image,
+    Alert,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import Emoji from 'react-native-emoji';
+import Footer from './components/Footer';
 import Chapter from './components/Chapter';
 import Header from './components/Header';
 import styles from './styles';
@@ -50,7 +49,7 @@ class MainCreator extends Component {
                 this.setState({
                     title,
                     numQuestions,
-                    chapters: _.sortBy(chapters, ['number']),
+                    chapters: sortBy(chapters, ['created_at']),
                     loaded: true,
                 });
             });
@@ -95,11 +94,10 @@ class MainCreator extends Component {
         } else {
             Animated.timing(this.state.offsetAnim, {
                 toValue: 0,
-                duration: 500,
+                duration: 0,
             }).start();
         }
     };
-    refPb = firebase.database().ref('building_playbooks').child(this.props.pbKey);
 
     /* validaciones: 
         - Tiene que existir la imagen
@@ -111,7 +109,6 @@ class MainCreator extends Component {
     */
     newChapter = async () => {
         const dataChapter = {
-            number: this.state.chapters.length + 1,
             created_at: firebase.database.ServerValue.TIMESTAMP,
         };
         const key = await this.refPb.child('chapters').push().key;
@@ -119,15 +116,50 @@ class MainCreator extends Component {
             const newChapter = Object.assign({}, dataChapter, { key });
             this.setState({
                 chapters: [...this.state.chapters, newChapter],
+            }, () => {
+                this.flatListRef.scrollToEnd();
             });
         });
     }
-    removeChapter = () => {
-
+    removeChapter = (chapterKey) => {
+        Alert.alert(
+            'Borrar capítulo',
+            '¿Estas seguro de eliminar este capítulo?',
+            [
+                {
+                    text: 'Eliminar',
+                    onPress: () => {
+                        const index = this.state.chapters
+                            .findIndex(chapter => chapter.key === chapterKey);
+                        this.setState({
+                            chapters: update(this.state.chapters, { $splice: [[index, 1]] }),
+                        }, () => {
+                            const indexScroll = (index > this.state.chapters.length - 1)
+                                ? this.state.chapters.length - 1
+                                : index;
+                            this.scrollToElementByIndex(indexScroll);
+                        });
+                        
+                        this.refPb.child('chapters').child(chapterKey).once('value', (snap) => {
+                            if (snap.hasChild('question')) {
+                                this.setNumQuestion(-1);
+                            }
+                            snap.ref.remove();
+                        });
+                    },
+                },
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false },
+        );
     }
     scrollToElementByIndex = (index) => {
         this.flatListRef.scrollToIndex({ index });
     }
+    refPb = firebase.database().ref('building_playbooks').child(this.props.pbKey);
     render() {
         if (!this.state.loaded) {
             return (
@@ -145,15 +177,8 @@ class MainCreator extends Component {
         });
         return (
             <View style={styles.containerMain}>
-                <Header
-                    numQuestions={this.state.numQuestions}
-                    numChapters={this.state.chapters.length}
-                    style={{ transform: [{ translateY }] }}
-                    refPb={this.refPb}
-                    scrollToElementByIndex={this.scrollToElementByIndex}
-                />
                 <KeyboardAwareFlatList
-                    style={{ width: '100%', flex: 1, marginBottom: 64 }}
+                    style={styles.containerFlatList}
                     innerRef={(ref) => { this.flatListRef = ref; }}
                     scrollEventThrottle={16}
                     onScroll={
@@ -170,8 +195,9 @@ class MainCreator extends Component {
                     onScrollEndDrag={this.handleScrollEndDrag}
                     data={this.state.chapters}
                     keyExtractor={item => item.key}
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
                         <Chapter
+                            number={index + 1}
                             chapterRef={this.refPb.child('chapters').child(item.key)}
                             setNumQuestion={this.setNumQuestion}
                             removeChapter={this.removeChapter}
@@ -185,7 +211,7 @@ class MainCreator extends Component {
                             <TextInput
                                 ref={(c) => { this.textInput = c; }}
                                 style={styles.inputTitle}
-                                placeholder="Pon un título"
+                                placeholder="Pon un título a tu historia"
                                 onChangeText={value => this.setTitle(value)}
                                 value={this.state.title}
                                 multiline
@@ -193,17 +219,18 @@ class MainCreator extends Component {
                         </View>
                     )}
                 />
-                <TouchableOpacity
-                    style={styles.containerFooter}
-                    onPress={() => this.newChapter()}
-                >
-                    <Text style={styles.emojiButton}>
-                        <Emoji name="memo" />
-                    </Text>
-                    <Text style={[styles.textButton, styles.textAddChapter]}>
-                        Añadir nuevo capítulo
-                    </Text>
-                </TouchableOpacity>
+                <Header
+                    numQuestions={this.state.numQuestions}
+                    numChapters={this.state.chapters.length}
+                    style={{ transform: [{ translateY }] }}
+                    refPb={this.refPb}
+                    scrollToElementByIndex={this.scrollToElementByIndex}
+                />
+                <Footer
+                    newChapter={this.newChapter}
+                    numQuestions={this.state.numQuestions}
+                    numChapters={this.state.chapters.length}
+                />
             </View>
         );
     }

@@ -2,11 +2,15 @@ import React from 'react';
 import { View } from 'react-native';
 import styles from '../styles';
 
-const Separator = props => (
+const Separator = () => (
     <View style={styles.containerSeparator}>
-        <View style={styles.lineSeparator} />
-        {props.children}
-        <View style={styles.lineSeparator} />
+        <View />
+        <View style={styles.containerPointSeparator}>
+            <View style={styles.pointSeparator} />
+            <View style={styles.pointSeparator} />
+            <View style={styles.pointSeparator} />
+        </View>
+        <View />
     </View>
 );
 

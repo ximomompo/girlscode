@@ -3,6 +3,14 @@ import * as colors from '../../helpers/colors';
 import * as fonts from '../../helpers/fonts';
 
 export default StyleSheet.create({
+    mainContainer: {
+        width: '100%',
+        flex: 1,
+        justifyContent: 'flex-start',
+    },
+    containerCard: {
+        margin: 12,
+    },
     card: {
         width: '100%',
         borderWidth: 1,
@@ -11,7 +19,7 @@ export default StyleSheet.create({
         flexDirection: 'column',
         alignSelf: 'flex-start',
         alignContent: 'flex-start',
-        borderRadius: 2,
+        borderRadius: 8,
         marginBottom: 16,
         shadowOffset: {
             width: 0,
@@ -19,6 +27,11 @@ export default StyleSheet.create({
         },
         shadowRadius: 3,
         shadowOpacity: 0.2,
+    },
+    cover: {
+        overflow: 'hidden',
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
     },
     header: {
         justifyContent: 'space-between',
@@ -34,9 +47,9 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     avatar: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
         borderWidth: 1,
         borderColor: colors.gray1,
         marginRight: 10,
@@ -47,10 +60,19 @@ export default StyleSheet.create({
         right: 12,
         alignItems: 'center',
     },
-    name: {
-        fontFamily: fonts.bold,
+    title: {
+        backgroundColor: 'transparent',
+        width: '100%',
+        fontFamily: fonts.medium,
         fontSize: 16,
-        color: colors.black,
+        color: colors.white,
+        position: 'absolute',
+        padding: 12,
+        bottom: 0,
+        left: 0,
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 4,
     },
     location: {
         fontFamily: fonts.thin,

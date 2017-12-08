@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-native-elements';
 import * as colors from '../../helpers/colors';
+import * as fonts from '../../helpers/fonts';
 
 const ButtonC = (props) => {
     const bgColor = () => {
@@ -32,7 +33,7 @@ const ButtonC = (props) => {
     return (
         <Button
             buttonStyle={newButtonStyle}
-            textStyle={{ textAlign: 'center' }}
+            textStyle={{ textAlign: 'center', fontFamily: fonts.regular }}
             containerViewStyle={containerViewStyle}
             borderRadius={50}
             large

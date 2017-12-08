@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import firebase from 'react-native-firebase';
-import { MainView } from '../../components/Commons';
 import Playbook from './components/Playbook';
+import styles from './styles';
 
 class Playbooks extends Component {
     constructor(props) {
@@ -23,14 +23,9 @@ class Playbooks extends Component {
                 this.setState({ cards });
             });
     }
-    renderCards = () => (
-        this.state.cards.map(card => (
-            <Playbook key={card.key} {...card} />
-        ))
-    )
     render() {
         return (
-            <MainView style={{ justifyContent: 'flex-start' }}>
+            <View style={styles.mainContainer}>
                 <FlatList
                     style={{ width: '100%' }}
                     data={this.state.cards}
@@ -39,7 +34,7 @@ class Playbooks extends Component {
                         <Playbook pbKey={item.key} {...item} />
                     )}
                 />
-            </MainView>
+            </View>
         );
     }
 }

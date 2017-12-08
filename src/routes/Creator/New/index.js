@@ -187,7 +187,10 @@ class MainCreator extends Component {
             this.popupDialogPublished.show();
         });
     }
-    refPb = firebase.database().ref('building_playbooks').child(this.props.pbKey);
+    refPb = firebase.database().ref('building_playbooks')
+        .child(firebase.auth().currentUser.uid)
+        .child(this.props.pbKey);
+
     render() {
         if (!this.state.loaded) {
             return (

@@ -71,12 +71,8 @@ class Playbook extends Component {
                     onPress={() => Actions.reset('play', {
                         pbKey: this.props.pbKey,
                         statusPb: this.props.status,
-                        owner: {
-                            photoURL: this.props.meta.photoURL,
-                            displayName: this.props.meta.name,
-                        },
-                        title: this.props.meta.title,
-                        categoryName: this.props.meta.category.name,
+                        meta: this.props.meta,
+                        completed: this.props.completed,
                     })}
                 >
                     <View style={styles.cover}>
@@ -95,11 +91,11 @@ class Playbook extends Component {
                         <View style={styles.media}>
                             <Image
                                 style={styles.avatar}
-                                source={{ uri: this.props.meta.photoURL }}
+                                source={{ uri: this.props.meta.owner.photoURL }}
                             />
                             <View>
                                 <Text style={styles.name}>
-                                    creado por {this.props.meta.name}
+                                    creado por {this.props.meta.owner.displayName}
                                 </Text>
                                 <View style={styles.containerMetrics}>
                                     {this.renderNumPlays()}
@@ -146,8 +142,10 @@ Playbook.propTypes = {
     pbKey: PropTypes.string.isRequired,
     meta: PropTypes.shape({
         title: PropTypes.string.isRequired,
-        photoURL: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
+        owner: PropTypes.shape({
+            displayName: PropTypes.string.isRequired,
+            photoURL: PropTypes.string.isRequired,
+        }).isRequired,
         cover: PropTypes.string.isRequired,
         category: PropTypes.shape({
             name: PropTypes.string.isRequired,
@@ -155,6 +153,11 @@ Playbook.propTypes = {
         }).isRequired,
     }).isRequired,
     created_at: PropTypes.number.isRequired,
+    completed: PropTypes.bool,
+};
+
+Playbook.defaultProps = {
+    completed: false,
 };
 
 export default Playbook;

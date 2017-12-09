@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import IconBadge from 'react-native-icon-badge';
-import { Scene, Router, Stack, Tabs, Modal } from 'react-native-router-flux';
+import { Scene, Router, Stack, Tabs, Modal, Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { TabIcon } from './components/Commons';
@@ -12,10 +12,12 @@ import RegisterForm from './routes/Auth/RegisterForm';
 import AuthMain from './routes/Auth';
 import Playbooks from './routes/Playbooks';
 import Profile from './routes/Profile';
+import Settings from './routes/Profile/settings';
 import OnboardingCreator from './routes/Creator/Main';
 import MainCreator from './routes/Creator/New';
 import Play from './routes/Play';
 import * as colors from './helpers/colors';
+import * as fonts from './helpers/fonts';
 import { clearImage } from './modules/gallery/actions';
 
 class RouterComponent extends Component {
@@ -44,23 +46,6 @@ class RouterComponent extends Component {
                         key="playbooks"
                         initial={this.props.logged}
                         showLabel={false}
-                        renderRightButton={() => (
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <IconBadge
-                                    MainElement={<Icon name="bell" type="entypo" style={{ marginRight: 12 }} />}
-                                    BadgeElement={
-                                        <Text style={{ color: '#FFFFFF', fontSize: 11 }}>{1}</Text>
-                                    }
-                                    IconBadgeStyle={{
-                                        top: 'auto',
-                                        bottom: 0,
-                                        minWidth: 18,
-                                        height: 18,
-                                        right: 4,
-                                    }}
-                                />
-                            </View>
-                        )}
                     >
                         <Scene
                             key="playbooks_list"
@@ -90,14 +75,42 @@ class RouterComponent extends Component {
                                 component={MainCreator}
                             />
                         </Stack>
-                        <Scene
-                            key="profile"
-                            component={Profile}
-                            title="Perfil"
+                        <Stack
+                            key="user"
                             icon={TabIcon}
                             iconName="torso-female"
                             iconType="foundation"
-                        />
+                        >
+                            <Scene
+                                key="profile"
+                                component={Profile}
+                                title="Perfil"
+                                renderRightButton={() => (
+                                    <TouchableOpacity
+                                        onPress={() => Actions.setting()}
+                                        style={{ marginRight: 12 }}
+                                    >
+                                        <Icon size={28} name="settings" type="feather" />
+                                    </TouchableOpacity>
+                                )}
+                            />
+                            <Scene
+                                key="setting"
+                                component={Settings}
+                                title="Configuración"
+                                backButtonTintColor={colors.primary}
+                                leftButtonTextStyle={{
+                                    color: colors.primary,
+                                    fontFamily: fonts.regular,
+                                    fontSize: 16,
+                                }}
+                                rightButtonTextStyle={{
+                                    color: colors.primary,
+                                    fontFamily: fonts.regular,
+                                    fontSize: 16,
+                                }}
+                            />
+                        </Stack>
                     </Tabs>
                     <Modal
                         key="play"
@@ -122,3 +135,23 @@ const mapDispatchToProps = dispatch => (
 );
 
 export default connect(null, mapDispatchToProps)(RouterComponent);
+
+
+/**
+ * 
+ * <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        <IconBadge
+            MainElement={<Icon name="bell" type="entypo" style={{ marginRight: 12 }} />}
+            BadgeElement={
+                <Text style={{ color: '#FFFFFF', fontSize: 11 }}>{1}</Text>
+            }
+            IconBadgeStyle={{
+                top: 'auto',
+                bottom: 0,
+                minWidth: 18,
+                height: 18,
+                right: 4,
+            }}
+        />
+    </View>
+ */

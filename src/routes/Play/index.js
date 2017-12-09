@@ -65,7 +65,6 @@ class Play extends Component {
                 Promise.all(preloadImages).then(() => {
                     this.setState({
                         chapters: orderedChapters,
-                        category: snapPb.val().category,
                         pointsValue: orderedChapters.length * VALUE_SCENE_PLAYED,
                         loaded: true,
                     });
@@ -84,22 +83,23 @@ class Play extends Component {
             this.swiperRef.scrollBy(1);
             this.setState({ indexChapter: newIndex });
             // El usuario ha llegado al último capítulo
-            if (newIndex === this.state.chapters.length - 1 && this.props.statusPb !== 'completed') {
+            if (newIndex === this.state.chapters.length - 1 && !this.props.completed) {
                 firebase.database().ref('users_timeline')
                     .child(firebase.auth().currentUser.uid)
                     .child(this.props.pbKey)
-                    .child('status')
-                    .set('completed');
+                    .child('completed')
+                    .set(true);
 
                 firebase.database().ref('users_categories')
                     .child(firebase.auth().currentUser.uid)
-                    .child(this.state.category.id)
+                    .child(this.props.meta.category.id)
                     .child('logs')
                     .push({
                         points: this.state.pointsValue,
                         created_at: firebase.database.ServerValue.TIMESTAMP,
                         type: 'played',
                         playbook_key: this.props.pbKey,
+                        meta: this.props.meta,
                     });
             }
         }
@@ -153,13 +153,13 @@ class Play extends Component {
                         Has llegado al final de la historia.
                     </Text>
                 </View>
-                {(this.props.statusPb !== 'completed')
+                {(!this.props.completed)
                     ? (
                         <View>
                             <View style={styles.listItemLastChapter}>
                                 <Emoji name="tada" />
                                 <Text style={styles.textLastChapter}>
-                                    Has conseguido {this.state.pointsValue} puntos en {this.props.categoryName}.
+                                    Has conseguido {this.state.pointsValue} puntos en {this.props.meta.category.name}.
                                 </Text>
                             </View>
                             <View style={styles.listItemLastChapter}>
@@ -225,10 +225,10 @@ class Play extends Component {
                     ))}
                 </Swiper>
                 <Footer
-                    title={this.props.title}
+                    title={this.props.meta.title}
                     currentChapter={this.state.indexChapter + 1}
                     totalChapters={this.state.chapters.length}
-                    owner={this.props.owner}
+                    owner={this.props.meta.owner}
                 />
                 <PopupDialog
                     width={0.7}
@@ -289,12 +289,20 @@ class Play extends Component {
 Play.propTypes = {
     pbKey: PropTypes.string.isRequired,
     statusPb: PropTypes.string.isRequired,
-    owner: PropTypes.shape({
-        photoURL: PropTypes.string.isRequired,
-        displayName: PropTypes.string.isRequired,
+    meta: PropTypes.shape({
+        owner: PropTypes.shape({
+            photoURL: PropTypes.string.isRequired,
+            displayName: PropTypes.string.isRequired,
+        }).isRequired,
+        title: PropTypes.string.isRequired,
+        category: PropTypes.shape({
+            color: PropTypes.string.isRequired,
+            icon: PropTypes.string.isRequired,
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+        }).isRequired,
     }).isRequired,
-    title: PropTypes.string.isRequired,
-    categoryName: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired,
 };
 
 export default Play;

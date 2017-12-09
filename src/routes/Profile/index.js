@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Text, Image, TextInput, ScrollView } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { Text, Image, TextInput, ScrollView, View, FlatList, Dimensions } from 'react-native';
 import firebase from 'react-native-firebase';
-import { Button, MainView } from '../../components/Commons';
-import Category from './components/Category';
+import { LEVELS_CATEGORY } from '../../helpers/constants';
+import CategoryHeaderTab from './components/CategoryHeaderTab';
+import CategoryItemTab from './components/CategoryItemTab';
+import { gray2 } from '../../helpers/colors';
 import styles from './styles';
 
 class Profile extends Component {
@@ -12,16 +13,18 @@ class Profile extends Component {
         this.state = {
             shortBio: '',
             categories: [],
+            currentTab: null,
+            displayName: firebase.auth().currentUser.displayName,
+            photoURL: firebase.auth().currentUser.photoURL,
+            location: '',
         };
     }
     componentWillMount() {
         firebase.database().ref('users')
             .child(firebase.auth().currentUser.uid)
             .once('value', (snapUser) => {
-                const { shortBio } = snapUser.val();
-                this.setState({
-                    shortBio,
-                });
+                const { shortBio, location } = snapUser.val();
+                this.setState({ shortBio, location });
             });
         firebase.database().ref('users_categories')
             .child(firebase.auth().currentUser.uid)
@@ -29,22 +32,48 @@ class Profile extends Component {
                 const categories = [];
                 snapCat.forEach((snapCatChild) => {
                     const { logs, ...other } = snapCatChild.val();
-                    const category = Object.assign({}, other, {
-                        key: snapCatChild.key,
-                        points: 0,
-                    });
+                    const logsA = [];
+                    let points = 0;
                     snapCatChild.child('logs').forEach((snapCatLog) => {
-                        category.points += snapCatLog.val().points;
+                        points += snapCatLog.val().points;
+                        logsA.push(Object.assign({}, snapCatLog.val(), {
+                            key: snapCatLog.key,
+                        }));
                     });
-                    categories.push(category);
+                    categories.push(Object.assign({}, other, {
+                        key: snapCatChild.key,
+                        points,
+                        logs: logsA,
+                    }));
                 });
-                console.log(categories);
-                this.setState({ categories });
+                this.setState({
+                    categories,
+                    currentTab: categories[0],
+                });
             });
     }
-    onLogout = () => {
-        Actions.reset('auth');
-        firebase.auth().signOut();
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.displayName && nextProps.displayName !== this.state.displayName) {
+            this.setState({ displayName: nextProps.displayName });
+        }
+        if (nextProps.photoURL && nextProps.photoURL !== this.state.photoURL) {
+            this.setState({ photoURL: nextProps.photoURL });
+        }
+        if (nextProps.location && nextProps.location !== this.state.location) {
+            this.setState({ location: nextProps.location });
+        }
+        if (nextProps.shortBio && nextProps.shortBio !== this.state.shortBio) {
+            this.setState({ shortBio: nextProps.shortBio });
+        }
+    }
+    onChangeTab = (index) => {
+        this.setState({ currentTab: this.state.categories[index] });
+    }
+    getLevel = (points) => {
+        const currentLevel = LEVELS_CATEGORY.filter(level => (
+            (points >= level.floor && points <= level.ceil)
+        ));
+        return currentLevel[0].name;
     }
     setShortBio = (value) => {
         this.setState({ shortBio: value }, () => {
@@ -54,35 +83,77 @@ class Profile extends Component {
                 .set(value);
         });
     }
-    renderCategories = () => (
-        this.state.categories.map(category => (
-            <Category key={category.key} {...category} />
-        ))
-    );
     render() {
         return (
-            <ScrollView style={{ width: '100%' }}>
-                <MainView style={styles.container}>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: firebase.auth().currentUser.photoURL }}
+            <ScrollView style={styles.containerScrollView}>
+                <View style={styles.container}>
+                    <View style={styles.containerBasicInfo}>
+                        <Image
+                            style={styles.image}
+                            source={{ uri: this.state.photoURL }}
+                        />
+                        <Text style={styles.name}>{this.state.displayName}</Text>
+                        <Text style={styles.email}>{this.state.location}</Text>
+                        <TextInput
+                            style={styles.shortBioInput}
+                            onChangeText={shortBio => this.setShortBio(shortBio)}
+                            value={this.state.shortBio}
+                            multiline
+                        />
+                    </View>
+                    <FlatList
+                        horizontal
+                        directionalLockEnabled
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={[styles.containerHeaderTabs, {
+                            width: Dimensions.get('window').width,
+                        }]}
+                        data={this.state.categories}
+                        keyExtractor={item => item.key}
+                        scrollEnabled={false}
+                        renderItem={({ item, index }) => (
+                            <CategoryHeaderTab
+                                index={index}
+                                icon={item.icon}
+                                style={{
+                                    width: Dimensions.get('window').width / 3,
+                                    borderBottomWidth: (this.state.currentTab.key === item.key) ? 3 : 0,
+                                    borderBottomColor: (this.state.currentTab.key === item.key)
+                                        ? this.state.currentTab.color
+                                        : gray2,
+                                }}
+                                onPress={this.onChangeTab}
+                            />
+                        )}
                     />
-                    <Text style={styles.name}>{firebase.auth().currentUser.displayName}</Text>
-                    <Text style={styles.email}>{firebase.auth().currentUser.email}as</Text>
-                    <TextInput
-                        style={styles.shortBioInput}
-                        onChangeText={shortBio => this.setShortBio(shortBio)}
-                        value={this.state.shortBio}
-                        multiline
-                    />
-                    {this.renderCategories()}
-                    <Button
-                        style={{ marginTop: 16 }}
-                        title="CERRAR SESIÓN"
-                        onPress={() => this.onLogout()}
-                        fullWidth
-                    />
-                </MainView>
+                    {(this.state.currentTab)
+                        ? (
+                            <FlatList
+                                style={styles.flatListLogs}
+                                data={this.state.currentTab.logs}
+                                keyExtractor={item => item.key}
+                                ListHeaderComponent={() => (
+                                    <View style={styles.containerHeader}>
+                                        <Text style={[
+                                            styles.textHeader,
+                                            { color: this.state.currentTab.color },
+                                        ]}
+                                        >
+                                            {this.state.currentTab.name}
+                                        </Text>
+                                        <Text style={styles.textAuxHeader}>
+                                            {this.getLevel(this.state.currentTab.points)} ({this.state.currentTab.points} ptos)
+                                        </Text>
+                                    </View>
+                                )}
+                                renderItem={({ item }) => (
+                                    <CategoryItemTab pbKey={item.playbook_key} {...item} />
+                                )}
+                                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                            />
+                        ) : null
+                    }
+                </View>
             </ScrollView>
         );
     }

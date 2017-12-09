@@ -5,7 +5,8 @@ import * as fonts from '../../helpers/fonts';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        backgroundColor: colors.grayLight,
     },
     containerText: {
         flex: 1,
@@ -93,5 +94,149 @@ export default StyleSheet.create({
         fontSize: 14,
         width: '100%',
         textAlign: 'center',
+    },
+    containerFooter: {
+        backgroundColor: colors.white,
+        position: 'absolute',
+        bottom: 0,
+        borderTopWidth: 1,
+        borderColor: colors.gray2,
+        padding: 12,
+        flex: 0,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    avatar: {
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        marginRight: 8,
+    },
+    containerTextFooter: {
+        flex: 1,
+    },
+    containerNumChapters: {
+        flex: 0,
+        paddingLeft: 16,
+    },
+    textNumChapters: {
+        fontFamily: fonts.medium,
+        fontSize: 13,
+        marginTop: 4,
+    },
+    textPrimaryFooter: {
+        fontFamily: fonts.medium,
+        fontSize: 13,
+    },
+    textAuxFooter: {
+        fontFamily: fonts.light,
+        fontSize: 11,
+    },
+    containerNext: {
+        flex: 0,
+        flexDirection: 'row',
+        paddingRight: 12,
+        width: '100%',
+        justifyContent: 'flex-end',
+    },
+    textNext: {
+        color: colors.primary,
+        textAlign: 'right',
+        fontFamily: fonts.light,
+        fontSize: 16,
+        paddingRight: 4,
+    },
+    containerLastChapter: {
+        paddingTop: 24,
+        margin: 12,
+        borderTopWidth: 1,
+        borderColor: colors.gray2,
+    },
+    textLastChapter: {
+        fontFamily: fonts.light,
+        marginLeft: 8,
+        fontSize: 14,
+        marginRight: 12,
+    },
+    listItemLastChapter: {
+        justifyContent: 'flex-start',
+        flex: 1,
+        flexDirection: 'row',
+        paddingBottom: 26,
+    },
+    containerLinkLastChapter: {
+        flex: 0,
+        justifyContent: 'center',
+        paddingBottom: 24,
+        paddingTop: 24,
+    },
+    containerRating: {
+        width: '100%',
+        flex: 0,
+        justifyContent: 'center',
+        flexDirection: 'row',
+    },
+    textLinkLastChapter: {
+        width: '100%',
+        textAlign: 'center',
+        fontFamily: fonts.light,
+        fontSize: 16,
+        color: colors.primary,
+    },
+    containerQuestion: {
+        padding: 12,
+        paddingTop: 32,
+    },
+    textQuestion: {
+        fontFamily: fonts.light,
+        fontSize: 18,
+        width: '100%',
+        textAlign: 'center',
+        paddingTop: 12,
+        paddingBottom: 24,
+    },
+    containerAnswer: {
+        paddingBottom: 12,
+    },
+    textAnswer: {
+        width: '100%',
+        textAlign: 'center',
+        fontFamily: fonts.light,
+        fontSize: 16,
+        color: colors.primary,
+    },
+    containerPopup: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 12,
+    },
+    emojiPopup: {
+        fontSize: 40,
+        marginBottom: 12,
+    },
+    textH1Popup: {
+        fontSize: 16,
+        textAlign: 'center',
+        color: colors.black,
+        fontFamily: fonts.medium,
+        marginBottom: 8,
+    },
+    textPopup: {
+        fontSize: 14,
+        textAlign: 'center',
+        color: colors.black,
+        fontFamily: fonts.light,
+    },
+    buttonPopup: {
+        fontSize: 16,
+        color: colors.primary,
+        fontFamily: fonts.light,
+    },
+    containerIconClose: {
+        position: 'absolute',
+        top: 28,
+        right: 12,
+        zIndex: 1,
     }
 });

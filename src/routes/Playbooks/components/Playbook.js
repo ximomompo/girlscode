@@ -41,6 +41,12 @@ class Playbook extends Component {
                     onPress={() => Actions.reset('play', {
                         pbKey: this.props.pbKey,
                         statusPb: this.props.status,
+                        owner: {
+                            photoURL: this.props.meta.photoURL,
+                            displayName: this.props.meta.name,
+                        },
+                        title: this.props.meta.title,
+                        categoryName: this.props.meta.category.name,
                     })}
                 >
                     <View style={styles.cover}>
@@ -69,7 +75,7 @@ class Playbook extends Component {
                                     ? (
                                         <View style={styles.plays}>
                                             <Icon size={8} name="play" type="font-awesome" color="black" />
-                                            <Text style={styles.playsText}>{this.state.numPlays} reproducciones</Text>
+                                            <Text style={styles.playsText}>{this.state.numPlays} lecturas</Text>
                                         </View>
                                     ) : null
                                 }

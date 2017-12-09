@@ -14,7 +14,7 @@ import Emoji from 'react-native-emoji';
 import firebase from 'react-native-firebase';
 import { Icon } from 'react-native-elements';
 import Question from './Question';
-import Separator from './Separator';
+import Separator from '../../../../components/Commons/Separator';
 import { gray2 } from '../../../../helpers/colors';
 import styles from '../styles';
 
@@ -198,7 +198,7 @@ Chapter.propTypes = {
         text: PropTypes.string,
         answers: PropTypes.shape({
             text: PropTypes.string,
-            correcnt: PropTypes.bool,
+            correct: PropTypes.bool,
         }),
     }),
     setNumQuestion: PropTypes.func.isRequired,

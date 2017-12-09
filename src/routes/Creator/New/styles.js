@@ -39,27 +39,6 @@ export default StyleSheet.create({
         fontFamily: fonts.bold,
         textAlign: 'left',
     },
-    containerSeparator: {
-        flex: 0,
-        justifyContent: 'space-between',
-        width: '100%',
-        flexDirection: 'row',
-        marginTop: 24,
-        marginBottom: 24,
-    },
-    containerPointSeparator: {
-        flex: 0,
-        justifyContent: 'center',
-        flexDirection: 'row',
-    },
-    pointSeparator: {
-        width: 6,
-        height: 6,
-        borderRadius: 4,
-        backgroundColor: colors.gray2,
-        marginLeft: 8,
-        marginRight: 8,
-    },
     containerInputText: {
         paddingLeft: 12,
         paddingRight: 12,
@@ -68,7 +47,7 @@ export default StyleSheet.create({
     },
     inputText: {
         fontSize: 18,
-        lineHeight: 40,
+        lineHeight: 21,
         fontFamily: fonts.light,
     },
     emojiInputText: {

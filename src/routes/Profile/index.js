@@ -15,29 +15,32 @@ class Profile extends Component {
         };
     }
     componentWillMount() {
-        firebase.database().ref('users').child(firebase.auth().currentUser.uid).once('value', (snapUser) => {
-            const { shortBio } = snapUser.val();
-            this.setState({
-                shortBio,
-            });
-        });
-        firebase.database().ref('users_categories').child(firebase.auth().currentUser.uid).once('value', (snapCat) => {
-            const categories = [];
-            snapCat.forEach((snapCatChild) => {
-                const { logs, ...other } = snapCatChild.val();
-                const category = Object.assign({}, other, {
-                    key: snapCatChild.key,
-                    points: 0,
+        firebase.database().ref('users')
+            .child(firebase.auth().currentUser.uid)
+            .once('value', (snapUser) => {
+                const { shortBio } = snapUser.val();
+                this.setState({
+                    shortBio,
                 });
-                snapCatChild.child('logs').forEach((snapCatLog) => {
-                    category.points += snapCatLog.val().points;
+            });
+        firebase.database().ref('users_categories')
+            .child(firebase.auth().currentUser.uid)
+            .once('value', (snapCat) => {
+                const categories = [];
+                snapCat.forEach((snapCatChild) => {
+                    const { logs, ...other } = snapCatChild.val();
+                    const category = Object.assign({}, other, {
+                        key: snapCatChild.key,
+                        points: 0,
+                    });
+                    snapCatChild.child('logs').forEach((snapCatLog) => {
+                        category.points += snapCatLog.val().points;
+                    });
+                    categories.push(category);
                 });
-                categories.push(category);
+                console.log(categories);
+                this.setState({ categories });
             });
-            this.setState({
-                categories,
-            });
-        });
     }
     onLogout = () => {
         Actions.reset('auth');

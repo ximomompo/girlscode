@@ -84,7 +84,7 @@ class Play extends Component {
             this.swiperRef.scrollBy(1);
             this.setState({ indexChapter: newIndex });
             // El usuario ha llegado al último capítulo
-            if (newIndex === this.state.chapters.length && this.props.statusPb !== 'completed') {
+            if (newIndex === this.state.chapters.length - 1 && this.props.statusPb !== 'completed') {
                 firebase.database().ref('users_timeline')
                     .child(firebase.auth().currentUser.uid)
                     .child(this.props.pbKey)
@@ -153,28 +153,33 @@ class Play extends Component {
                         Has llegado al final de la historia.
                     </Text>
                 </View>
-                <View style={styles.listItemLastChapter}>
-                    <Emoji name="tada" />
-                    <Text style={styles.textLastChapter}>
-                        Has conseguido {this.state.pointsValue} puntos en {this.props.categoryName}.
-                    </Text>
-                </View>
-                <View style={styles.listItemLastChapter}>
-                    <Emoji name="thought_balloon" />
-                    <Text style={styles.textLastChapter}>
-                        Deja una valoración de esta historia
-                    </Text>
-                </View>
-                <View style={styles.containerRating}>
-                    <StarRating
-                        disabled={false}
-                        maxStars={5}
-                        rating={this.state.starCount}
-                        selectedStar={rating => this.onStarRatingPress(rating)}
-                        starColor={yellow}
-                        starSize={32}
-                    />
-                </View>
+                {(this.props.statusPb !== 'completed')
+                    ? (
+                        <View>
+                            <View style={styles.listItemLastChapter}>
+                                <Emoji name="tada" />
+                                <Text style={styles.textLastChapter}>
+                                    Has conseguido {this.state.pointsValue} puntos en {this.props.categoryName}.
+                                </Text>
+                            </View>
+                            <View style={styles.listItemLastChapter}>
+                                <Emoji name="thought_balloon" />
+                                <Text style={styles.textLastChapter}>
+                                    Deja una valoración de esta historia
+                                </Text>
+                            </View>
+                            <View style={styles.containerRating}>
+                                <StarRating
+                                    disabled={false}
+                                    maxStars={5}
+                                    rating={this.state.starCount}
+                                    selectedStar={rating => this.onStarRatingPress(rating)}
+                                    starColor={yellow}
+                                    starSize={32}
+                                />
+                            </View>
+                        </View>
+                    ) : null}
                 <TouchableOpacity
                     style={styles.containerLinkLastChapter}
                     onPress={() => Actions.reset('playbooks')}

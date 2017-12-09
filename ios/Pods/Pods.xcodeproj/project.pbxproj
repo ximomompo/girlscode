@@ -281,14 +281,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6E12A14CC7D042921F6D8C95;
+			remoteGlobalIDString = 72D9E2512530C04F44B94678;
 			remoteInfo = React;
 		};
 		58B4778F4220145620EBE5A31C88C363 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6E12A14CC7D042921F6D8C95;
+			remoteGlobalIDString = 72D9E2512530C04F44B94678;
 			remoteInfo = React;
 		};
 		7A82DFED04E8960488664C344A888C7D /* PBXContainerItemProxy */ = {
@@ -389,6 +389,7 @@
 		1E907BF2FA773CB25C7B8182ECCFB3E1 /* RCTSliderManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTSliderManager.h; sourceTree = "<group>"; };
 		1EC497F17AC98F085861011C8019337C /* QBImagePickerController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = QBImagePickerController.m; path = QBImagePicker/QBImagePickerController.m; sourceTree = "<group>"; };
 		1ED2AADD525BBE3FB430E1DCE248AEFA /* UIView+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UIView+Private.h"; sourceTree = "<group>"; };
+		21E0566A5CE3562F08F0C47FB210AE6E /* FirebaseCoreDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCoreDiagnostics.framework; path = Frameworks/FirebaseCoreDiagnostics.framework; sourceTree = "<group>"; };
 		2220B22C6A68DB46B25F7E76334BB487 /* RCTViewManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTViewManager.m; sourceTree = "<group>"; };
 		224F17884AA805F9C101EAE6A41C8615 /* RCTTabBarItemManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTTabBarItemManager.h; sourceTree = "<group>"; };
 		2419851CA0A7E6E64B821391CF64B67A /* Pods-girlscode-tvOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-girlscode-tvOS-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -511,7 +512,6 @@
 		5A0A6DF69B69A92FB3C88184FFA40194 /* RSKImageScrollView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSKImageScrollView.m; path = RSKImageCropper/RSKImageScrollView.m; sourceTree = "<group>"; };
 		5B724652992DE03FA179494540A61887 /* React-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "React-dummy.m"; sourceTree = "<group>"; };
 		5B95F1BB0019511FBA8DAF306B4499DC /* Yoga-internal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Yoga-internal.h"; path = "yoga/Yoga-internal.h"; sourceTree = "<group>"; };
-		5BD441C566826DC62EDC303719DACCB5 /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Frameworks/FirebaseCore.framework; sourceTree = "<group>"; };
 		5C238EE2EA5E00A385752DDC20A3B609 /* RCTPointerEvents.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTPointerEvents.h; sourceTree = "<group>"; };
 		5C7D076F40E9168876FCF5FCD3CB294C /* RCTScrollView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTScrollView.m; sourceTree = "<group>"; };
 		5D6E2AD6BB31EF1B5F53C5AF25ECF4F9 /* QBAlbumsViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = QBAlbumsViewController.m; path = QBImagePicker/QBAlbumsViewController.m; sourceTree = "<group>"; };
@@ -547,7 +547,6 @@
 		6A3B138A606CE4D27DF8638791C3731B /* version_edit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = version_edit.h; path = db/version_edit.h; sourceTree = "<group>"; };
 		6AC4A4D3EEBEF47CCA02E708E3AEBC0E /* QBAssetCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = QBAssetCell.h; path = QBImagePicker/QBAssetCell.h; sourceTree = "<group>"; };
 		6B10308536FDF33F11996DB3CA286596 /* db_iter.cc */ = {isa = PBXFileReference; includeInIndex = 1; name = db_iter.cc; path = db/db_iter.cc; sourceTree = "<group>"; };
-		6B57AF3BF8CE126345B9DC0804D3382A /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = Frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		6B94D4D2565ECE379AB893EE93CD3BDC /* RCTTVRemoteHandler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTTVRemoteHandler.m; sourceTree = "<group>"; };
 		6BAE6BAE8E0DCE17781C286A7461DFF4 /* RCTScrollContentViewManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTScrollContentViewManager.h; sourceTree = "<group>"; };
 		6C889296462F7ABF8D979B61BED6D890 /* RNFirebaseFirestoreCollectionReference.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RNFirebaseFirestoreCollectionReference.m; sourceTree = "<group>"; };
@@ -564,7 +563,6 @@
 		74128269ED92F1C62087D8AE4490F466 /* RCTSwitchManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTSwitchManager.m; sourceTree = "<group>"; };
 		7488C6481577EC57C4E54AF33F14459A /* libYoga.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libYoga.a; path = libYoga.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		755F7B3241415C7C913B9DB0D8D9AF2C /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libReact.a; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		75A418DCA2FF1C78598C433BFAE5E823 /* FirebaseCoreDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCoreDiagnostics.framework; path = Frameworks/FirebaseCoreDiagnostics.framework; sourceTree = "<group>"; };
 		775C4FA85EA4093D72D55036F71460EF /* cache.cc */ = {isa = PBXFileReference; includeInIndex = 1; name = cache.cc; path = util/cache.cc; sourceTree = "<group>"; };
 		776D8BC7D2ED0E7ABFA4F043858C0304 /* RNFirebaseAdMobNativeExpressManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RNFirebaseAdMobNativeExpressManager.h; sourceTree = "<group>"; };
 		779222C5ED813E17FDC8548FCD98EC85 /* RCTReloadCommand.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTReloadCommand.m; sourceTree = "<group>"; };
@@ -610,6 +608,7 @@
 		8B6264515141D079E5C9CC56CE9D3055 /* Pods-girlscode-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-girlscode-resources.sh"; sourceTree = "<group>"; };
 		8C9185B5C457F12CE3ECB6F24FEB4349 /* GTMNSString+URLArguments.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+URLArguments.h"; path = "Foundation/GTMNSString+URLArguments.h"; sourceTree = "<group>"; };
 		8CE6BB43ED7740C55724061A54305A43 /* RCTModalHostView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTModalHostView.m; sourceTree = "<group>"; };
+		8D11FEABB76A4F2434CBA26A46B28C40 /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Frameworks/FirebaseCore.framework; sourceTree = "<group>"; };
 		8D2ABD025315BCA0F36C62D1ADE79384 /* de.lproj */ = {isa = PBXFileReference; includeInIndex = 1; name = de.lproj; path = QBImagePicker/de.lproj; sourceTree = "<group>"; };
 		8D775E76C20E611689CACA082273EDBC /* RCTSwitchManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTSwitchManager.h; sourceTree = "<group>"; };
 		8E23517F29BA7CD7D96274F638BF4F63 /* table_cache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = table_cache.h; path = db/table_cache.h; sourceTree = "<group>"; };
@@ -693,7 +692,6 @@
 		B5120BEFF98B52B734BA7B72C1093858 /* RNFirebaseStorage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RNFirebaseStorage.m; sourceTree = "<group>"; };
 		B538F586F17D69EF951BD6FE3911972C /* RCTModuleMethod.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTModuleMethod.h; sourceTree = "<group>"; };
 		B6471877BCD43893441C261B28FB6A44 /* RCTBridgeMethod.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTBridgeMethod.h; sourceTree = "<group>"; };
-		B6572E533E8AC27D2A2ED05210A28341 /* FirebaseNanoPB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseNanoPB.framework; path = Frameworks/FirebaseNanoPB.framework; sourceTree = "<group>"; };
 		B6A9393665FD4009269BC9CBF9E0BC30 /* RCTSliderManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTSliderManager.m; sourceTree = "<group>"; };
 		B70AF4A64F27FFA18BBAF6E8C2C6341E /* React.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = React.xcconfig; sourceTree = "<group>"; };
 		B7AEAE66929F5AAF33EA676C767F0A7C /* RCTFPSGraph.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTFPSGraph.m; sourceTree = "<group>"; };
@@ -853,6 +851,7 @@
 		F654A114D64F4D5CA99FD3394FC8CD96 /* QBImagePickerController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "QBImagePickerController-dummy.m"; sourceTree = "<group>"; };
 		F72BFCB248A02EDFCABA519CDD17C092 /* RNFirebaseAdMobRewardedVideo.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RNFirebaseAdMobRewardedVideo.h; sourceTree = "<group>"; };
 		F7A4A0ED97833936B980A4A7D43AE324 /* RCTMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTMacros.h; sourceTree = "<group>"; };
+		F93970DE6EE897CA41FC572FD66FF790 /* FirebaseNanoPB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseNanoPB.framework; path = Frameworks/FirebaseNanoPB.framework; sourceTree = "<group>"; };
 		F944CE58CFF59159D1BA0E47BBCD32AC /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Photos.framework; sourceTree = DEVELOPER_DIR; };
 		F9617A09DAF16252A1ADB8B0034E743E /* RCTUIManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTUIManager.h; sourceTree = "<group>"; };
 		F987B5130E9EBCD431351F3BFC28211E /* RCTRefreshControl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTRefreshControl.h; sourceTree = "<group>"; };
@@ -864,6 +863,7 @@
 		FD51FE121CAE0F19FDFF2A0AB4053F81 /* RCTFont.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RCTFont.mm; sourceTree = "<group>"; };
 		FD95010B7C18092005A6590B5F863AF6 /* RCTLayoutAnimation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RCTLayoutAnimation.m; sourceTree = "<group>"; };
 		FE043162EEAE6B3853EA27267931F4C3 /* repair.cc */ = {isa = PBXFileReference; includeInIndex = 1; name = repair.cc; path = db/repair.cc; sourceTree = "<group>"; };
+		FFC59F270A824BEB18BBDAB7363F393A /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = Frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		FFD8AAAAAD022311B66754E316744DFD /* YGNodeList.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YGNodeList.h; path = yoga/YGNodeList.h; sourceTree = "<group>"; };
 		FFF936F86B27C13631EC2A0207D33083 /* RCTLayoutAnimation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RCTLayoutAnimation.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1011,6 +1011,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		110C758F94B05ADE3388DF42D8DA55B4 /* FirebaseCore */ = {
+			isa = PBXGroup;
+			children = (
+				1B78B00DC35E548128F967664DC5E9BD /* Frameworks */,
+			);
+			name = FirebaseCore;
+			path = FirebaseCore;
+			sourceTree = "<group>";
+		};
 		1295AC693AFF279F80D70D26CB0E5897 /* Profiler */ = {
 			isa = PBXGroup;
 			children = (
@@ -1048,6 +1057,14 @@
 				C6024D83CD99FE3C57BF55E7DE3D0A98 /* QBImagePicker.bundle */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1B78B00DC35E548128F967664DC5E9BD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8D11FEABB76A4F2434CBA26A46B28C40 /* FirebaseCore.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		1D2BB32D2269F177DC1D51E7AAC72E60 /* NSData+zlib */ = {
@@ -1104,15 +1121,6 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		2BDD5E62BA09B1623A5B4A45596B4F5A /* FirebaseCore */ = {
-			isa = PBXGroup;
-			children = (
-				7AF9C4F09A8D39CE94299543693769C5 /* Frameworks */,
-			);
-			name = FirebaseCore;
-			path = FirebaseCore;
-			sourceTree = "<group>";
-		};
 		2C0B5EC1A8895EA8279365F7AA67D73D /* admob */ = {
 			isa = PBXGroup;
 			children = (
@@ -1133,15 +1141,6 @@
 			);
 			name = admob;
 			path = ios/RNFirebase/admob;
-			sourceTree = "<group>";
-		};
-		2F656CA43CFFEE3CB9A93884E2997A3D /* FirebaseAnalytics */ = {
-			isa = PBXGroup;
-			children = (
-				8A335150BAEB489AE7F68ED905FD8790 /* Frameworks */,
-			);
-			name = FirebaseAnalytics;
-			path = FirebaseAnalytics;
 			sourceTree = "<group>";
 		};
 		319F3CD239B298AF7E5996B0E0CFF5FF /* Frameworks */ = {
@@ -1491,16 +1490,6 @@
 			path = FirebaseStorage;
 			sourceTree = "<group>";
 		};
-		7AF9C4F09A8D39CE94299543693769C5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				5BD441C566826DC62EDC303719DACCB5 /* FirebaseCore.framework */,
-				75A418DCA2FF1C78598C433BFAE5E823 /* FirebaseCoreDiagnostics.framework */,
-				B6572E533E8AC27D2A2ED05210A28341 /* FirebaseNanoPB.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
@@ -1686,14 +1675,6 @@
 			path = "../Target Support Files/RSKImageCropper";
 			sourceTree = "<group>";
 		};
-		8A335150BAEB489AE7F68ED905FD8790 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				6B57AF3BF8CE126345B9DC0804D3382A /* FirebaseAnalytics.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		8CC7910989402AAECE693668C44000C5 /* Firebase */ = {
 			isa = PBXGroup;
 			children = (
@@ -1732,6 +1713,16 @@
 				3B75C88C213A480F3BA52799E398090F /* Views */,
 			);
 			name = Core;
+			sourceTree = "<group>";
+		};
+		922E23197A91EBCFC40253D2E29DEE89 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FFC59F270A824BEB18BBDAB7363F393A /* FirebaseAnalytics.framework */,
+				21E0566A5CE3562F08F0C47FB210AE6E /* FirebaseCoreDiagnostics.framework */,
+				F93970DE6EE897CA41FC572FD66FF790 /* FirebaseNanoPB.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		9270D8B4DC31F3196DF4CF4F893AA1D2 /* Support Files */ = {
@@ -1778,6 +1769,15 @@
 			);
 			name = "Support Files";
 			path = "../Target Support Files/nanopb";
+			sourceTree = "<group>";
+		};
+		A378B6FA5F13589372969AF81AE5121C /* FirebaseAnalytics */ = {
+			isa = PBXGroup;
+			children = (
+				922E23197A91EBCFC40253D2E29DEE89 /* Frameworks */,
+			);
+			name = FirebaseAnalytics;
+			path = FirebaseAnalytics;
 			sourceTree = "<group>";
 		};
 		AA0987B63F3FACB68306C47E7467554C /* nanopb */ = {
@@ -1952,9 +1952,9 @@
 			isa = PBXGroup;
 			children = (
 				8CC7910989402AAECE693668C44000C5 /* Firebase */,
-				2F656CA43CFFEE3CB9A93884E2997A3D /* FirebaseAnalytics */,
+				A378B6FA5F13589372969AF81AE5121C /* FirebaseAnalytics */,
 				8CF976103C6F03D11109D3ABA6397C89 /* FirebaseAuth */,
-				2BDD5E62BA09B1623A5B4A45596B4F5A /* FirebaseCore */,
+				110C758F94B05ADE3388DF42D8DA55B4 /* FirebaseCore */,
 				BB7384BBF422735022F80426BE045186 /* FirebaseDatabase */,
 				F7DEE7F6AEBC1364FB7279A9F9657958 /* FirebaseInstanceID */,
 				7486682C45E994408D29F4E08985FE62 /* FirebaseStorage */,

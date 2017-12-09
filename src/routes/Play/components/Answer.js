@@ -6,7 +6,7 @@ import styles from '../styles';
 const Answer = props => (
     <TouchableOpacity
         style={styles.containerAnswer}
-        onPress={() => this.props.onRespondAnswer(props.correct)}
+        onPress={() => props.onRespondAnswer(props.correct)}
     >
         <Text style={styles.textAnswer}>{props.text}</Text>
     </TouchableOpacity>

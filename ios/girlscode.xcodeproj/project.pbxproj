@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -23,7 +24,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		17902D88325C21496719401D /* libPods-girlscode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D56F99D311ED3CAB72960F84 /* libPods-girlscode.a */; };
 		25B54ED538B74759B1CDD641 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D003EB44CB234C4895721142 /* Roboto-Regular.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -57,6 +57,7 @@
 		7C3EE2471F9136EB0022CB6C /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C3EE2461F9136EB0022CB6C /* FBSDKShareKit.framework */; };
 		7C4247611F92839D00B69A09 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4247601F92837A00B69A09 /* libRCTCameraRoll.a */; };
 		7CB7D8E81F7DD22100443D01 /* GoogleService-Info.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7CB7D8E61F7DD17B00443D01 /* GoogleService-Info.plist */; };
+		7CC37B8B1FDBF48A001064B7 /* libPods-girlscode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D56F99D311ED3CAB72960F84 /* libPods-girlscode.a */; };
 		82E831631FCA489EB84F8B1A /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EFCC2A67F4748F2935E49B0 /* Entypo.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		903EA22A2112943C3C6BAA94 /* libPods-girlscode-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 847D1FD119F2D983AB1F848B /* libPods-girlscode-tvOS.a */; };
@@ -70,7 +71,6 @@
 		D2B346D7F43C4CFEA81D476B /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13112D3AC0E34D9A905D5F09 /* Roboto-Thin.ttf */; };
 		DB2BCF40CAB440538CBE33F0 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 216D31619CD344D5941CFFA8 /* Roboto-ThinItalic.ttf */; };
 		E21359DECCF84B028DBFEFC5 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AFF69685B04947ABBC5E9782 /* MaterialCommunityIcons.ttf */; };
-		E3C9601C20F1417DB6756B6D /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6AB10890B37485784610082 /* libRCTCamera.a */; };
 		E7DF756DAB864DA5B1243B7D /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BFA50636124EF2AA99084A /* libRCTFBSDK.a */; };
 		EEF1CF51E9FD46488E8FAEF1 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F43E4D4ED1E4EC8AD81797F /* Roboto-Black.ttf */; };
 		F8FBF20F77AA43D6AC6BC8C9 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4D20B9E2920423E9AAAA5E7 /* Roboto-Medium.ttf */; };
@@ -475,6 +475,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CC37B8B1FDBF48A001064B7 /* libPods-girlscode.a in Frameworks */,
 				7C4247611F92839D00B69A09 /* libRCTCameraRoll.a in Frameworks */,
 				7C3EE2471F9136EB0022CB6C /* FBSDKShareKit.framework in Frameworks */,
 				7C3EE2451F9136DE0022CB6C /* FBSDKLoginKit.framework in Frameworks */,
@@ -492,12 +493,10 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				17902D88325C21496719401D /* libPods-girlscode.a in Frameworks */,
 				6DA082644D83455CBC95AD73 /* libRNFirebase.a in Frameworks */,
 				A608C0B3C8294FBFA071B0E8 /* libRNVectorIcons.a in Frameworks */,
 				76FF2D3138844148B7B42FFC /* libRNSVG.a in Frameworks */,
 				E7DF756DAB864DA5B1243B7D /* libRCTFBSDK.a in Frameworks */,
-				E3C9601C20F1417DB6756B6D /* libRCTCamera.a in Frameworks */,
 				0EE2917F344F436E8ADE5441 /* libimageCropPicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

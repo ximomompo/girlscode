@@ -158,7 +158,7 @@ export default StyleSheet.create({
     },
     containerAds: {
         flex: 2,
-        width: '90%',
+        width: '80%',
     },
     containerCarousel: {
         flex: 5,

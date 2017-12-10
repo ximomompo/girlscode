@@ -44,13 +44,13 @@ class AuthMain extends Component {
             >
                 <View style={styles.mainView}>
                     <NextButton onNext={this.onNext} />
-                    <SVGImage
+                    <Image
                         style={styles.textLogo}
-                        scrollEnabled={false}
                         source={{
                             uri: TEXT_LOGO,
                             cache: 'only-if-cached',
                         }}
+                        resizeMode="contain"
                     />
                     <View style={styles.containerText}>
                         <Text style={styles.mainText}>
@@ -66,10 +66,12 @@ class AuthMain extends Component {
                 <View style={[styles.mainView, { paddingTop: 60 }]}>
                     <NextButton onNext={this.onNext} />
                     <View style={styles.containerTip}>
-                        <SVGImage
+                        <Image
                             style={styles.imageTip}
-                            scrollEnabled={false}
-                            source={{ uri: CUENTA_HISTORIA }}
+                            source={{
+                                uri: CUENTA_HISTORIA,
+                                cache: 'only-if-cached',
+                            }}
                             resizeMode="contain"
                         />
                         <Text style={[styles.mainText, { textAlign: 'center' }]}>
@@ -77,10 +79,12 @@ class AuthMain extends Component {
                         </Text>
                     </View>
                     <View style={styles.containerTip}>
-                        <SVGImage
+                        <Image
                             style={styles.imageTip}
-                            scrollEnabled={false}
-                            source={{ uri: LEE_HISTORIA }}
+                            source={{
+                                uri: LEE_HISTORIA,
+                                cache: 'only-if-cached',
+                            }}
                             resizeMode="contain"
                         />
                         <Text style={[styles.mainText, { textAlign: 'center' }]}>
@@ -91,17 +95,17 @@ class AuthMain extends Component {
                 <View style={styles.mainView}>
                     <View style={styles.mainLogo}>
                         <View style={styles.whiteCircle}>
-                            <SVGImage
+                            <Image
                                 style={styles.image}
-                                scrollEnabled={false}
                                 source={{ uri: LOGO_SIN_TEXTO }}
+                                resizeMode="contain"
                             />
                         </View>
                         <View style={styles.contMainTextLogo}>
-                            <SVGImage
+                            <Image
                                 style={styles.mainTextLogo}
-                                scrollEnabled={false}
                                 source={{ uri: TEXT_LOGO }}
+                                resizeMode="contain"
                             />
                         </View>
                     </View>

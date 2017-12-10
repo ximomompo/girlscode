@@ -22,10 +22,7 @@ export default StyleSheet.create({
         marginBottom: '20%',
     },
     whiteCircle: {
-        backgroundColor: colors.white,
-        borderRadius: 80,
         flex: 2,
-        width: 160,
     },
     image: {
         flex: 1,

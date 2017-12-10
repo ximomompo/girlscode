@@ -36,6 +36,7 @@ class RegisterForm extends Component {
                     name="username"
                     placeholder="Nombre"
                     autoCapitalize="none"
+                    underlineColorAndroid="transparent"
                     component={Input}
                 />
                 <Field
@@ -43,12 +44,14 @@ class RegisterForm extends Component {
                     name="email"
                     placeholder="Email"
                     autoCapitalize="none"
+                    underlineColorAndroid="transparent"
                     component={Input}
                 />
                 <Field
                     type="password"
                     name="password"
                     placeholder="Contraseña"
+                    underlineColorAndroid="transparent"
                     secureTextEntry
                     component={Input}
                 />

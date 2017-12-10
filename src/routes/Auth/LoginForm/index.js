@@ -33,12 +33,14 @@ class LoginForm extends Component {
                     type="email"
                     name="email"
                     placeholder="Email"
+                    underlineColorAndroid="transparent"
                     autoCapitalize="none"
                     component={Input}
                 />
                 <Field
                     type="password"
                     name="password"
+                    underlineColorAndroid="transparent"
                     placeholder="Contraseña"
                     secureTextEntry
                     component={Input}

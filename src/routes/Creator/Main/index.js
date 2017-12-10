@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, FlatList, Alert } from 'react-native';
+import { View, FlatList, Alert, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
+import { Icon } from 'react-native-elements';
 import update from 'react-addons-update';
 import PlaybookItem from './components/PlaybookItem';
 import { Text, Button, MainView } from '../../../components/Commons';
+import { primary } from '../../../helpers/colors';
 import styles from './styles';
 
 class Create extends Component {
@@ -95,6 +97,17 @@ class Create extends Component {
     render() {
         return (
             <MainView style={styles.container}>
+                <TouchableOpacity
+                    onPress={() => Actions.pop()}
+                    style={styles.backButton}
+                >
+                    <Icon
+                        name="chevron-left"
+                        type="entypo"
+                        color={primary}
+                        iconStyle={{ fontSize: 28 }}
+                    />
+                </TouchableOpacity>
                 <View style={styles.text}>
                     <Text style={styles.title}>Empezar a crear playbook</Text>
                     <Text style={styles.aux}>

@@ -2,11 +2,12 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { FormInput } from 'react-native-elements';
 import * as colors from '../../helpers/colors';
+import * as fonts from '../../helpers/fonts';
 
 const styles = StyleSheet.create({
     container: {
-        borderWidth: 2,
-        borderColor: colors.gray2,
+        borderWidth: 1,
+        borderColor: colors.white,
         borderRadius: 50,
         margin: 8,
         paddingTop: 4,
@@ -14,11 +15,13 @@ const styles = StyleSheet.create({
         paddingRight: 16,
         paddingLeft: 16,
         width: '100%',
+        backgroundColor: colors.white,
     },
     input: {
         borderBottomWidth: 0,
         fontSize: 16,
-        fontFamily: 'Roboto-Medium',
+        fontFamily: fonts.regular,
+        color: colors.black,
     },
 });
 

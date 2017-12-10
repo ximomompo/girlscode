@@ -6,23 +6,27 @@ import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import * as reqStatusActions from '../requestStatus/actions';
 import { PHOTO_DEFAULT } from '../../helpers/constants';
 
-function createUser(id, data) {
-    return firebase.database().ref('users').child(id).update(data)
-        .then(() => {
-            firebase.database().ref('user_categories').child(id).once('value', (snapUC) => {
-                if (!snapUC.exist()) {
-                    firebase.database().ref('categories').once('value', (snapCat) => {
-                        snapCat.forEach((snapCatChild) => {
-                            const dataCat = Object.assign({}, snapCatChild.val(), {
-                                points: 0,
-                            });
-                            snapUC.ref.child(snapCatChild.key).set(dataCat);
-                        });
+const createUser = async (id, data) => {
+    await firebase.database().ref('users').child(id).update(data);
+    await firebase.database().ref('users_categories').child(id).once('value', (snapUC) => {
+        if (!snapUC.exists()) {
+            firebase.database().ref('categories').once('value', (snapCat) => {
+                snapCat.forEach((snapCatChild) => {
+                    const dataCat = Object.assign({}, snapCatChild.val(), {
+                        points: 0,
                     });
-                }
+                    snapUC.ref.child(snapCatChild.key).set(dataCat);
+                });
             });
-        });
-}
+        }
+    });
+    const playbooks = await firebase.database().ref('timeline_template').once('value');
+    return firebase.database().ref('users_timeline').child(id).once('value', (snapUT) => {
+        if (!snapUT.exists()) {
+            snapUT.ref.set(playbooks);
+        }
+    });
+};
 
 function launchError(title, message, domain, dispatch) {
     Alert.alert(
@@ -98,13 +102,14 @@ export function register(email, password, username) {
                 });
             })
             .catch((error) => {
+                console.log('errorMoreno', error.message);
                 Alert.alert(
                     'Error al registrarse',
-                    error,
+                    error.message,
                     [{ text: 'OK' }],
                     { cancelable: true },
                 );
-                dispatch(reqStatusActions.setError(error, domain));
+                dispatch(reqStatusActions.setError(error.message, domain));
             });
     };
 }

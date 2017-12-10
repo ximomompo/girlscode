@@ -1,6 +1,6 @@
 export const gray1 = '#E1E1E1';
 export const gray2 = '#D1D1D1';
-export const grayLight = '#FAFAFA';
+export const grayLight = '#fefbf1';
 export const white = '#FFFFFF';
 export const black = '#000000';
 export const primary = '#EF008C';
@@ -12,3 +12,4 @@ export const orange = '#F7941E';
 export const green = '#80AD38';
 export const red = '#EA2B1F';
 export const yellow = '#FFCB47';
+export const moco = '#f7e8a9';

@@ -13,7 +13,7 @@ export default StyleSheet.create({
     },
     container: {
         justifyContent: 'center',
-        backgroundColor: colors.grayLight,
+        backgroundColor: colors.moco,
     },
     text: {
         marginBottom: 24,
@@ -73,5 +73,12 @@ export default StyleSheet.create({
     },
     emojiPlaybookItem: {
         fontSize: 20,
+    },
+    backButton: {
+        position: 'absolute',
+        zIndex: 1,
+        top: 20,
+        left: 0,
+        padding: 12,
     },
 });

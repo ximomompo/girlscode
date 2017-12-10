@@ -152,7 +152,7 @@ class Chapter extends Component {
                     style={{ padding: 12, paddingLeft: 8 }}
                 />
             </TouchableOpacity>
-        )
+        );
     }
     render() {
         return (

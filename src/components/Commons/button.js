@@ -21,6 +21,9 @@ const ButtonC = (props) => {
     const { buttonStyle, color, ...other } = props;
     const newButtonStyle = Object.assign({}, props.buttonStyle, {
         backgroundColor: bgColor(),
+        padding: 12,
+        paddingTop: 16,
+        paddingBottom: 16,
     });
     const containerViewStyle = {
         marginTop: 8,
@@ -33,12 +36,12 @@ const ButtonC = (props) => {
     return (
         <Button
             buttonStyle={newButtonStyle}
-            textStyle={{ textAlign: 'center', fontFamily: fonts.regular }}
+            textStyle={{ textAlign: 'center', fontFamily: fonts.regular, fontSize: 13 }}
             containerViewStyle={containerViewStyle}
             borderRadius={50}
             large
             disabledStyle={newDisabledStyle}
-            fontFamily="Roboto-Medium"
+            fontFamily="Roboto-Regular"
             {...other}
         />
     );

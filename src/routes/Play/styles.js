@@ -107,10 +107,11 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     avatar: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
+        width: 36,
+        height: 36,
         marginRight: 8,
+        backgroundColor: 'transparent',
+        marginTop: 4,
     },
     containerTextFooter: {
         flex: 1,

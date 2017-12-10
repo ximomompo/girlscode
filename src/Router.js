@@ -25,7 +25,7 @@ class RouterComponent extends Component {
     render() {
         return (
             <Router
-                sceneStyle={{ backgroundColor: colors.white }}
+                sceneStyle={{ backgroundColor: colors.moco }}
             >
                 <Stack
                     key="root"
@@ -36,26 +36,43 @@ class RouterComponent extends Component {
                         key="auth"
                         initial={!this.props.logged}
                         navTransparent
+                        headerMode="none"
                     >
-                        <Scene key="index" component={AuthMain} init />
-                        <Scene key="login" component={LoginForm} backTitle=" " title="Acceder" />
-                        <Scene key="register" component={RegisterForm} backTitle=" " title="Registro" />
+                        <Scene
+                            key="index"
+                            component={AuthMain}
+                            init
+                        />
+                        <Scene
+                            key="login"
+                            component={LoginForm}
+                            backTitle=" "
+                            title="Acceder"
+                        />
+                        <Scene
+                            key="register"
+                            component={RegisterForm}
+                            backTitle=" "
+                            title="Registro"
+                        />
                     </Stack>
 
                     <Tabs
                         key="playbooks"
                         initial={this.props.logged}
                         showLabel={false}
+                        hideTabBar
                     >
                         <Scene
                             key="playbooks_list"
                             component={Playbooks}
-                            title="Playbooks"
                             init
+                            navTransparent
                             icon={TabIcon}
                             iconName="open-book"
                             iconType="entypo"
                             direction="leftToRight"
+                            headerMode="none"
                         />
                         <Stack
                             key="playbooks_create"
@@ -84,15 +101,8 @@ class RouterComponent extends Component {
                             <Scene
                                 key="profile"
                                 component={Profile}
-                                title="Perfil"
-                                renderRightButton={() => (
-                                    <TouchableOpacity
-                                        onPress={() => Actions.setting()}
-                                        style={{ marginRight: 12 }}
-                                    >
-                                        <Icon size={28} name="settings" type="feather" />
-                                    </TouchableOpacity>
-                                )}
+                                navTransparent
+                                init
                             />
                             <Scene
                                 key="setting"

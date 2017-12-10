@@ -288,7 +288,6 @@ class Play extends Component {
 
 Play.propTypes = {
     pbKey: PropTypes.string.isRequired,
-    statusPb: PropTypes.string.isRequired,
     meta: PropTypes.shape({
         owner: PropTypes.shape({
             photoURL: PropTypes.string.isRequired,

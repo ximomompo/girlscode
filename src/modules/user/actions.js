@@ -102,7 +102,6 @@ export function register(email, password, username) {
                 });
             })
             .catch((error) => {
-                console.log('errorMoreno', error.message);
                 Alert.alert(
                     'Error al registrarse',
                     error.message,

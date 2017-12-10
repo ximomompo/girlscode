@@ -28,10 +28,6 @@ class Playbooks extends Component {
         };
     }
     componentWillMount() {
-        firebase.database().ref('users_timeline').child('ar5niIDUeDfpPTkcsW4imkKZufO2').once('value', (snap) => {
-            console.log('hola?');
-            firebase.database().ref('timeline_template').set(snap.val());
-        });
         firebase.database().ref('ads').once('value', (snap) => {
             const ads = [];
             const length = snap.numChildren();

@@ -33,18 +33,22 @@ class Header extends Component {
                 { cancelable: true },
             );
         }
-        const counts = {
-            numChapters: 0,
-            numQuestions: 0,
-        };
+        
         const errorsChapters = [];
         const snapChapters = await this.props.refPb
             .child('chapters')
             .orderByChild('finished_at')
             .once('value');
+        
+        const counts = {
+            numChapters: snapChapters.numChildren(),
+            numQuestions: 0,
+            index: 0,
+        };
+        
         await snapChapters.forEach(async (snapChapter) => {
             const { image, text, question } = snapChapter.val();
-            const index = Object.assign({}, counts).numChapters;
+            const index = Object.assign({}, counts).index;
             if (!image) {
                 errorsChapters.push({
                     index,
@@ -60,6 +64,13 @@ class Header extends Component {
                 });
             }
             if (question) {
+                if (index === counts.numChapters - 1) {
+                    errorsChapters.push({
+                        index,
+                        title: 'Capítulo final',
+                        message: 'El último capítulo no puede tener una pregunta',
+                    });
+                }
                 counts.numQuestions += 1;
                 if (!question.text) {
                     errorsChapters.push({
@@ -95,7 +106,7 @@ class Header extends Component {
                     });
                 }
             }
-            counts.numChapters += 1;
+            counts.index += 1;
         });
         if (errorsChapters.length > 0) {
             const error = errorsChapters[0];

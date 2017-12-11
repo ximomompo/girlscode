@@ -57,71 +57,66 @@ class RouterComponent extends Component {
                         />
                     </Stack>
 
-                    <Tabs
+                    <Scene
                         key="playbooks"
                         initial={this.props.logged}
-                        showLabel={false}
+                        component={Playbooks}
+                        navTransparent
+                        icon={TabIcon}
+                        iconName="open-book"
+                        iconType="entypo"
+                        direction="leftToRight"
+                        headerMode="none"
+                        navigationBarStyle={{ border: 0 }}
+                    />
+                    <Stack
+                        key="playbooks_create"
+                        icon={TabIcon}
+                        iconName="photo-camera"
+                        navTransparent
+                        type="replace"
                         hideTabBar
+                        headerMode="none"
                     >
                         <Scene
-                            key="playbooks_list"
-                            component={Playbooks}
-                            init
-                            navTransparent
-                            icon={TabIcon}
-                            iconName="open-book"
-                            iconType="entypo"
-                            direction="leftToRight"
-                            headerMode="none"
+                            key="onboarding_creator"
+                            component={OnboardingCreator}
                         />
-                        <Stack
-                            key="playbooks_create"
-                            icon={TabIcon}
-                            iconName="photo-camera"
+                        <Scene
+                            key="main_creator"
+                            component={MainCreator}
+                        />
+                    </Stack>
+                    <Stack
+                        key="user"
+                        icon={TabIcon}
+                        iconName="torso-female"
+                        iconType="foundation"
+                    >
+                        <Scene
+                            key="profile"
+                            component={Profile}
                             navTransparent
-                            type="replace"
-                            hideTabBar
-                            headerMode="none"
-                        >
-                            <Scene
-                                key="onboarding_creator"
-                                component={OnboardingCreator}
-                            />
-                            <Scene
-                                key="main_creator"
-                                component={MainCreator}
-                            />
-                        </Stack>
-                        <Stack
-                            key="user"
-                            icon={TabIcon}
-                            iconName="torso-female"
-                            iconType="foundation"
-                        >
-                            <Scene
-                                key="profile"
-                                component={Profile}
-                                navTransparent
-                                init
-                            />
-                            <Scene
-                                key="setting"
-                                component={Settings}
-                                title="Configuración"
-                                backButtonTintColor={colors.primary}
-                                leftButtonTextStyle={{
-                                    color: colors.primary,
-                                    fontFamily: fonts.regular,
-                                    fontSize: 16,
-                                }}
-                                rightButtonTextStyle={{
-                                    color: colors.primary,
-                                    fontFamily: fonts.regular,
-                                    fontSize: 16,
-                                }}
-                            />
-                        </Stack>
-                    </Tabs>
+                            init
+                            hideNavBar
+                        />
+                        <Scene
+                            key="setting"
+                            component={Settings}
+                            title="Configuración"
+                            backButtonTintColor={colors.primary}
+                            leftButtonTextStyle={{
+                                color: colors.primary,
+                                fontFamily: fonts.regular,
+                                fontSize: 16,
+                            }}
+                            rightButtonTextStyle={{
+                                color: colors.primary,
+                                fontFamily: fonts.regular,
+                                fontSize: 16,
+                            }}
+                        />
+                    </Stack>
                     <Modal
                         key="play"
                         hideNavBar

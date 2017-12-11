@@ -20,7 +20,8 @@ const StatusButton = (props) => {
                 disabled
                 noSpecialStylesDisabled
                 loading
-                activityIndicatorStyle={{ position: 'absolute', left: 8, top: 30 }}
+                activityIndicatorStyle={{ position: 'absolute', left: 8, top: 24 }}
+                large={false}
                 {...other}
             />
         );

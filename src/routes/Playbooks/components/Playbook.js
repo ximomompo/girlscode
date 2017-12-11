@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Text, TouchableOpacity, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import SVGImage from 'react-native-svg-image';
 import 'moment/locale/es';
 import Moment from 'react-moment';
 import { Icon } from 'react-native-elements';
@@ -87,31 +86,11 @@ class Playbook extends Component {
                 </View>
                 <View style={styles.header}>
                     <View style={styles.media}>
-                        <Image
-                            style={styles.avatar}
-                            source={{ uri: this.props.meta.owner.photoURL }}
-                        />
                         <View>
-                            <Text style={styles.name} numberOfLines={1}>
-                                creado por {this.props.meta.owner.displayName}
-                            </Text>
-                            <View style={styles.containerMetrics}>
-                                {this.renderNumPlays()}
-                                {this.renderAverageRating()}
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.share}>
-                        <Icon size={32} name="share-google" type="evilicon" color="gray" />
-                    </View>
-                </View>
-                <View style={styles.footer}>
-                    <View style={styles.media}>
-                        <View>
-                            <SVGImage
+                            <Image
                                 style={styles.iconCategory}
-                                scrollEnabled={false}
                                 source={{ uri: this.props.meta.category.icon }}
+                                resizeMode="contain"
                             />
                         </View>
                         <View>
@@ -129,6 +108,27 @@ class Playbook extends Component {
                     <Text style={[styles.textPoints, { color: this.props.meta.category.color }]}>
                         {this.state.points} ptos
                     </Text>
+                </View>
+                <View style={styles.footer}>
+                    <View style={styles.media}>
+                        <Image
+                            style={styles.avatar}
+                            source={{ uri: this.props.meta.owner.photoURL }}
+                        />
+                        <View>
+                            <Text style={styles.name} numberOfLines={1}>
+                                creado por {this.props.meta.owner.displayName}
+                            </Text>
+                            <View style={styles.containerMetrics}>
+                                {this.renderNumPlays()}
+                                {this.renderAverageRating()}
+                            </View>
+                        </View>
+                    </View>
+                    { /* <View style={styles.share}>
+                        <Icon size={32} name="share-google" type="evilicon" color="gray" />
+                    </View>
+                    */ }
                 </View>
             </TouchableOpacity>
         );

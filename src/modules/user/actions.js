@@ -64,7 +64,7 @@ export function authByFB() {
                                     });
                                     return createUser(_user.uid, _user.providerData[0]).then(() => {
                                         dispatch(reqStatusActions.setReset(domain));
-                                        Actions.replace('playbooks_list');
+                                        Actions.replace('playbooks');
                                     });
                                 }, (err) => {
                                     launchError('Ha ocurrido un error', err, domain, dispatch);
@@ -120,7 +120,7 @@ export function login(email, password) {
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
                 dispatch(reqStatusActions.setReset(domain));
-                Actions.replace('playbooks_list');
+                Actions.replace('playbooks');
             })
             .catch((error) => {
                 Alert.alert(

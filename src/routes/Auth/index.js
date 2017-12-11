@@ -46,10 +46,7 @@ class AuthMain extends Component {
                     <NextButton onNext={this.onNext} />
                     <Image
                         style={styles.textLogo}
-                        source={{
-                            uri: TEXT_LOGO,
-                            cache: 'only-if-cached',
-                        }}
+                        source={{ uri: TEXT_LOGO }}
                         resizeMode="contain"
                     />
                     <View style={styles.containerText}>
@@ -68,10 +65,7 @@ class AuthMain extends Component {
                     <View style={styles.containerTip}>
                         <Image
                             style={styles.imageTip}
-                            source={{
-                                uri: CUENTA_HISTORIA,
-                                cache: 'only-if-cached',
-                            }}
+                            source={{ uri: CUENTA_HISTORIA }}
                             resizeMode="contain"
                         />
                         <Text style={[styles.mainText, { textAlign: 'center' }]}>
@@ -81,10 +75,7 @@ class AuthMain extends Component {
                     <View style={styles.containerTip}>
                         <Image
                             style={styles.imageTip}
-                            source={{
-                                uri: LEE_HISTORIA,
-                                cache: 'only-if-cached',
-                            }}
+                            source={{ uri: LEE_HISTORIA }}
                             resizeMode="contain"
                         />
                         <Text style={[styles.mainText, { textAlign: 'center' }]}>

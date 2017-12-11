@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from '../../helpers/colors';
 import * as fonts from '../../helpers/fonts';
+
+const isIOs = (Platform.OS === 'ios');
 
 export default StyleSheet.create({
     mainContainer: {
@@ -153,12 +155,12 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
-        marginTop: 24,
-        marginBottom: 24,
+        marginTop: isIOs ? 24 : 12,
+        marginBottom: isIOs ? 24 : 8,
     },
     containerAds: {
         flex: 2,
-        width: '80%',
+        width: '85%',
     },
     containerCarousel: {
         flex: 5,
@@ -209,7 +211,7 @@ export default StyleSheet.create({
     containerAd: {
         backgroundColor: colors.white,
         borderRadius: 8,
-        padding: 12,
+        padding: 8,
         shadowOffset: {
             width: 0,
             height: 2,

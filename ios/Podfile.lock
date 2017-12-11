@@ -59,7 +59,7 @@ PODS:
   - React/cxxreact_legacy (0.48.4):
     - React/jschelpers_legacy
   - React/jschelpers_legacy (0.48.4)
-  - RNFirebase (3.0.6):
+  - RNFirebase (3.1.1):
     - React
   - RSKImageCropper (2.0.0)
   - Yoga (0.48.4.React)
@@ -98,7 +98,7 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: 6d68659481a8a56e0f6b3dbecd984d5b9bb2d6c5
-  RNFirebase: 47de1a32a5e7e7a6f392b6031076cad6748c5c25
+  RNFirebase: 30522211772f22affff6f3a61981110852d2668b
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
   Yoga: ccefa1454b2e9825dce3b2df98088b7f0e3c2675
 

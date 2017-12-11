@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TextInput, View, Text, TouchableOpacity } from 'react-native';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import PropTypes from 'prop-types';
 import Emoji from 'react-native-emoji';
 import { Icon } from 'react-native-elements';
@@ -65,12 +66,12 @@ class Question extends Component {
                 <Text style={styles.containerEmoji}>
                     <Emoji name="thinking_face" />
                 </Text>
-                <TextInput
+                <AutoGrowingTextInput
                     style={styles.inputQuestion}
-                    multiline
                     placeholder="Escribe aquí la pregunta"
                     onChangeText={value => this.setText(value)}
                     value={this.state.text}
+                    underlineColorAndroid="transparent"
                 />
                 {this.state.answers.map(answer => (
                     <Answer

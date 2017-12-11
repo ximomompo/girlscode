@@ -9,7 +9,6 @@ import {
     Linking,
 } from 'react-native';
 import firebase from 'react-native-firebase';
-import SVGImage from 'react-native-svg-image';
 import Carousel from 'react-native-snap-carousel';
 import { Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
@@ -46,12 +45,9 @@ class Playbooks extends Component {
                 const cards = [];
                 snap.forEach((snapCard) => {
                     cards.push(snapCard.val());
-                    cards.push(Object.assign({}, snapCard.val(), {
-                        key: 'test',
-                    }));
                 });
                 this.setState({
-                    cards,
+                    cards: cards.reverse(),
                     loaded: true,
                 });
             });
@@ -94,6 +90,7 @@ class Playbooks extends Component {
                             {this.state.ad.title}
                         </Text>
                         <Text
+                            numberOfLines={3}
                             style={styles.textAuxAd}
                         >
                             {this.state.ad.text}
@@ -121,9 +118,10 @@ class Playbooks extends Component {
                             onPress={() => Actions.user()}
                             style={styles.containerInnerLogo}
                         >
-                            <SVGImage
+                            <Image
                                 style={styles.logo}
                                 source={{ uri: LOGO_SIN_TEXTO }}
+                                resizeMode="contain"
                             />
                         </TouchableOpacity>
                     </View>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import firebase from 'react-native-firebase';
+import SplashScreen from 'react-native-splash-screen';
 import configureStore from './store';
 import RouterComponent from './Router';
 
@@ -22,6 +23,7 @@ class App extends Component {
                 this.setState({ logged: false });
             }
         });
+        SplashScreen.hide();
     }
 
     render() {

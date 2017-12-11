@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as colors from '../../../helpers/colors';
 import * as fonts from '../../../helpers/fonts';
+
+const isIOs = (Platform.OS === 'ios');
 
 export default StyleSheet.create({
     containerMain: {
@@ -209,12 +211,12 @@ export default StyleSheet.create({
         top: 0,
         left: 0,
         justifyContent: 'space-between',
-        paddingTop: 20,
+        paddingTop: isIOs ? 20 : 0,
         width: '100%',
         flexDirection: 'row',
         flex: 0,
         zIndex: 1,
-        height: 64,
+        height: isIOs ? 64 : 48,
         backgroundColor: colors.white,
         borderBottomWidth: 1,
         borderColor: colors.gray2,

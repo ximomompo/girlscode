@@ -13,6 +13,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Emoji from 'react-native-emoji';
 import firebase from 'react-native-firebase';
 import { Icon } from 'react-native-elements';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import Question from './Question';
 import Separator from '../../../../components/Commons/Separator';
 import { gray2 } from '../../../../helpers/colors';
@@ -41,8 +42,8 @@ class Chapter extends Component {
     }
     openPicker = () => {
         ImagePicker.openPicker({
-            width: Dimensions.get('window').width,
-            height: Dimensions.get('window').width / 1.61,
+            width: parseInt(Dimensions.get('window').width, 10),
+            height: parseInt(Dimensions.get('window').width / 1.61, 10),
             cropping: true,
         }).then((image) => {
             this.setState({ uploadImage: true });
@@ -165,14 +166,14 @@ class Chapter extends Component {
                     {this.renderRemoveChapter()}
                 </View>
                 <View style={styles.containerInputText}>
-                    <TextInput
+                    <AutoGrowingTextInput
                         style={[styles.inputText, {
                             marginLeft: (this.state.text) ? 0 : 24,
                         }]}
-                        multiline
                         placeholder="Empieza aquí tu capítulo"
                         onChangeText={value => this.setText(value)}
                         value={this.state.text}
+                        underlineColorAndroid="transparent"
                     />
                     {(this.state.text)
                         ? null

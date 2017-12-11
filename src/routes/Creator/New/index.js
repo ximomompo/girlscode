@@ -11,9 +11,12 @@ import {
     Alert,
     Text,
     FlatList,
+    Platform,
+    ScrollView,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import { Actions } from 'react-native-router-flux';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import PopupDialog, { SlideAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
 import Emoji from 'react-native-emoji';
@@ -23,6 +26,10 @@ import Footer from './components/Footer';
 import Chapter from './components/Chapter';
 import Header from './components/Header';
 import styles from './styles';
+
+const isIOs = (Platform.OS === 'ios');
+
+const heightHeader = isIOs ? 64 : 48;
 
 const slideAnimation = new SlideAnimation({
     slideFrom: 'bottom',
@@ -112,7 +119,7 @@ class MainCreator extends Component {
         const previous = this.previousScrollvalue;
         const current = this.currentScrollValue;
 
-        if (previous > current || current < 64) {
+        if (previous > current || current < heightHeader) {
             // User scrolled down or scroll amount was too less, lets snap back our header
             Animated.spring(this.state.offsetAnim, {
                 toValue: -current,
@@ -202,54 +209,56 @@ class MainCreator extends Component {
         const { scrollAnim, offsetAnim } = this.state;
 
         const translateY = Animated.add(scrollAnim, offsetAnim).interpolate({
-            inputRange: [0, 64],
-            outputRange: [0, -64],
+            inputRange: [0, heightHeader],
+            outputRange: [0, (-1 * heightHeader)],
             extrapolate: 'clamp',
         });
         return (
             <View style={styles.containerMain}>
-                <KeyboardAwareFlatList
-                    style={styles.containerFlatList}
-                    innerRef={(ref) => { this.flatListRef = ref; }}
-                    scrollEventThrottle={16}
-                    onScroll={
-                        Animated.event([{
-                            nativeEvent: {
-                                contentOffset: {
-                                    y: this.state.scrollAnim,
-                                },
-                            },
-                        }])
-                    }
-                    onMomentumScrollBegin={this.handleMomentumScrollBegin}
-                    onMomentumScrollEnd={this.handleMomentumScrollEnd}
-                    onScrollEndDrag={this.handleScrollEndDrag}
-                    data={this.state.chapters}
-                    keyExtractor={item => item.key}
-                    renderItem={({ item, index }) => (
-                        <Chapter
-                            number={index + 1}
-                            chapterRef={this.refPb.child('chapters').child(item.key)}
-                            setNumQuestion={this.setNumQuestion}
-                            removeChapter={this.removeChapter}
-                            pbKey={this.props.pbKey}
-                            chapterKey={item.key}
-                            {...item}
+                <ScrollView>
+                    <View style={{ marginTop: heightHeader }}>
+                        <AutoGrowingTextInput
+                            style={styles.inputTitle}
+                            placeholder="Pon un título a tu historia"
+                            onChangeText={value => this.setTitle(value)}
+                            value={this.state.title}
+                            underlineColorAndroid="transparent"
                         />
-                    )}
-                    ListHeaderComponent={() => (
-                        <View style={{ marginTop: 64 }}>
-                            <TextInput
-                                ref={(c) => { this.textInput = c; }}
-                                style={styles.inputTitle}
-                                placeholder="Pon un título a tu historia"
-                                onChangeText={value => this.setTitle(value)}
-                                value={this.state.title}
-                                multiline
+                    </View>
+                    <KeyboardAwareFlatList
+                        enableOnAndroid
+                        extraScrollHeight={100}
+                        keyboardShouldPersistTaps="handled"
+                        style={styles.containerFlatList}
+                        innerRef={(ref) => { this.flatListRef = ref; }}
+                        scrollEventThrottle={16}
+                        onScroll={
+                            Animated.event([{
+                                nativeEvent: {
+                                    contentOffset: {
+                                        y: this.state.scrollAnim,
+                                    },
+                                },
+                            }])
+                        }
+                        onMomentumScrollBegin={this.handleMomentumScrollBegin}
+                        onMomentumScrollEnd={this.handleMomentumScrollEnd}
+                        onScrollEndDrag={this.handleScrollEndDrag}
+                        data={this.state.chapters}
+                        keyExtractor={item => item.key}
+                        renderItem={({ item, index }) => (
+                            <Chapter
+                                number={index + 1}
+                                chapterRef={this.refPb.child('chapters').child(item.key)}
+                                setNumQuestion={this.setNumQuestion}
+                                removeChapter={this.removeChapter}
+                                pbKey={this.props.pbKey}
+                                chapterKey={item.key}
+                                {...item}
                             />
-                        </View>
-                    )}
-                />
+                        )}
+                    />
+                </ScrollView>
                 <Header
                     numQuestions={this.state.numQuestions}
                     numChapters={this.state.chapters.length}

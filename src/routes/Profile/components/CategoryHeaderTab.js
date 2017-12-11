@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, View } from 'react-native';
-import SVGImage from 'react-native-svg-image';
+import { TouchableOpacity, View, Image } from 'react-native';
 import styles from '../styles';
 
 const CategoryHeaderTab = props => (
@@ -10,10 +9,10 @@ const CategoryHeaderTab = props => (
         style={[styles.containerItemHeaderTabs, props.style]}
     >
         <View style={styles.innerItemHeaderTabs}>
-            <SVGImage
+            <Image
                 style={styles.iconCategory}
-                scrollEnabled={false}
                 source={{ uri: props.icon }}
+                resizeMode="contain"
             />
         </View>
     </TouchableOpacity>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, TextInput, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import Emoji from 'react-native-emoji';
 import PropTypes from 'prop-types';
 import styles from '../styles';
@@ -40,9 +41,8 @@ class Answer extends Component {
                         Agrega un mensaje para mostrar cuando se marque la opción incorrecta
                     </Text>
                 </View>
-                <TextInput
+                <AutoGrowingTextInput
                     style={styles.inputErrorText}
-                    multiline
                     placeholder="Escribe aquí el texto de error"
                     onChangeText={value => this.props.setErrorText(value)}
                     value={this.state.errorText}
@@ -65,12 +65,12 @@ class Answer extends Component {
                             iconStyle={{ fontSize: 32 }}
                         />
                     </TouchableOpacity>
-                    <TextInput
+                    <AutoGrowingTextInput
                         style={styles.inputAnswer}
-                        multiline
                         placeholder="Respuesta"
                         value={this.state.text}
                         onChangeText={text => this.setText(text)}
+                        underlineColorAndroid="transparent"
                     />
                 </View>
                 {this.renderErrorText()}

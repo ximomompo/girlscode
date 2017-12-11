@@ -83,6 +83,7 @@ class Settings extends Component {
                         style={styles.textInput}
                         onChangeText={value => this.setState({ displayName: value })}
                         value={this.state.displayName}
+                        underlineColorAndroid="transparent"
                     />
                 </View>
                 <View style={styles.itemSettings}>
@@ -91,6 +92,7 @@ class Settings extends Component {
                         style={styles.textInput}
                         onChangeText={value => this.setState({ email: value })}
                         value={this.state.email}
+                        underlineColorAndroid="transparent"
                     />
                 </View>
                 <View style={styles.itemSettings}>
@@ -99,6 +101,7 @@ class Settings extends Component {
                         style={styles.textInput}
                         onChangeText={value => this.setState({ location: value })}
                         value={this.state.location}
+                        underlineColorAndroid="transparent"
                     />
                 </View>
                 <View style={styles.itemSettings}>
@@ -108,6 +111,7 @@ class Settings extends Component {
                         multiline
                         onChangeText={value => this.setState({ shortBio: value })}
                         value={this.state.shortBio}
+                        underlineColorAndroid="transparent"
                     />
                 </View>
                 <View style={styles.separatorSettings} />

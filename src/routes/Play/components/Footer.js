@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Image } from 'react-native';
 import Emoji from 'react-native-emoji';
-import SVGImage from 'react-native-svg-image';
 import { LOGO_SIN_TEXTO } from '../../../helpers/constants';
 import styles from '../styles';
 
 const Footer = props => (
     <View style={styles.containerFooter}>
         <View>
-            <SVGImage
+            <Image
                 style={styles.avatar}
                 source={{ uri: LOGO_SIN_TEXTO }}
+                resizeMode="contain"
             />
         </View>
         <View style={styles.containerTextFooter}>

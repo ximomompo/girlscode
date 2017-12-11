@@ -26,6 +26,8 @@ import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+
 public class MainApplication extends Application implements ReactApplication {
 
     private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -44,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+                new SplashScreenReactPackage(),
                 new PickerPackage(),
                 new FBSDKPackage(mCallbackManager),
                 new SvgPackage(),

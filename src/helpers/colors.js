@@ -12,4 +12,4 @@ export const orange = '#F7941E';
 export const green = '#80AD38';
 export const red = '#EA2B1F';
 export const yellow = '#FFCB47';
-export const moco = '#f7e8a9';
+export const moco = '#d6df22';

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
     Text,
     Image,
@@ -62,9 +63,10 @@ class Playbooks extends Component {
                 ref={(c) => { this.carousel = c; }}
                 data={this.state.cards}
                 keyExtractor={item => item.key}
-                renderItem={({ item }) => (
-                    <Playbook pbKey={item.key} {...item} />
+                renderItem={({ item, index }) => (
+                    <Playbook pbKey={item.key} indexCarousel={index} {...item} />
                 )}
+                firstItem={this.props.firstItem}
                 sliderWidth={Dimensions.get('window').width}
                 itemWidth={Dimensions.get('window').width - 48}
             />
@@ -142,5 +144,13 @@ class Playbooks extends Component {
         );
     }
 }
+
+Playbook.propTypes = {
+    firstItem: PropTypes.number,
+};
+
+Playbook.defaultProps = {
+    firstItem: 0,
+};
 
 export default Playbooks;

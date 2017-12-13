@@ -70,6 +70,7 @@ class Playbook extends Component {
                     pbKey: this.props.pbKey,
                     meta: this.props.meta,
                     completed: this.props.completed,
+                    indexCarousel: this.props.indexCarousel,
                 })}
             >
                 <View style={styles.cover}>
@@ -151,10 +152,12 @@ Playbook.propTypes = {
     }).isRequired,
     created_at: PropTypes.number.isRequired,
     completed: PropTypes.bool,
+    indexCarousel: PropTypes.number,
 };
 
 Playbook.defaultProps = {
     completed: false,
+    indexCarousel: 0,
 };
 
 export default Playbook;

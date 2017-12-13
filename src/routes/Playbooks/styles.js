@@ -155,7 +155,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
-        marginTop: isIOs ? 24 : 12,
+        marginTop: isIOs ? 32 : 12,
         marginBottom: isIOs ? 24 : 8,
     },
     containerAds: {

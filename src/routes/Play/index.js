@@ -20,6 +20,9 @@ const slideAnimation = new SlideAnimation({
 });
 
 class Play extends Component {
+    static defaultProps = {
+        indexCarousel: 0,
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -137,6 +140,9 @@ class Play extends Component {
             this.popupDialogRating.show();
         }, 600);
     }
+    onReturnMain = () => (
+        Actions.reset('playbooks', { firstItem: this.props.indexCarousel })
+    )
     render() {
         if (!this.state.loaded) {
             return (
@@ -182,7 +188,7 @@ class Play extends Component {
                     ) : null}
                 <TouchableOpacity
                     style={styles.containerLinkLastChapter}
-                    onPress={() => Actions.reset('playbooks')}
+                    onPress={() => this.onReturnMain()}
                 >
                     <Text
                         style={styles.textLinkLastChapter}
@@ -196,7 +202,7 @@ class Play extends Component {
             <View style={styles.container}>
                 <TouchableOpacity
                     style={styles.containerIconClose}
-                    onPress={() => Actions.reset('playbooks')}
+                    onPress={() => this.onReturnMain()}
                 >
                     <Icon
                         name="close"
@@ -235,7 +241,7 @@ class Play extends Component {
                     height={200}
                     ref={(popupDialog) => { this.popupDialogRating = popupDialog; }}
                     dialogAnimation={slideAnimation}
-                    onDismissed={() => Actions.reset('playbooks')}
+                    onDismissed={() => this.onReturnMain()}
                     actions={[
                         <DialogButton
                             text="Ver más historias"
@@ -259,7 +265,7 @@ class Play extends Component {
                     height={300}
                     ref={(popupDialog) => { this.popupDialogError = popupDialog; }}
                     dialogAnimation={slideAnimation}
-                    onDismissed={() => Actions.reset('playbooks')}
+                    onDismissed={() => this.onReturnMain()}
                     actions={[
                         <DialogButton
                             text="Volver a comenzar"
@@ -302,6 +308,8 @@ Play.propTypes = {
         }).isRequired,
     }).isRequired,
     completed: PropTypes.bool.isRequired,
+    indexCarousel: PropTypes.number,
 };
+
 
 export default Play;

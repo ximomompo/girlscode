@@ -51,6 +51,11 @@ class LoginForm extends Component {
                     onPress={this.props.handleSubmit(props => this.onSubmit(props))}
                     fullWidth
                 />
+                <TouchableOpacity
+                    onPress={() => Actions.forgotPassword()}
+                >
+                    <Text>¿Olvidaste tu contraseña?</Text>
+                </TouchableOpacity>
             </MainView>
         );
     }

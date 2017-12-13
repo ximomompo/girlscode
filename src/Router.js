@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
-import IconBadge from 'react-native-icon-badge';
-import { Scene, Router, Stack, Tabs, Modal, Actions } from 'react-native-router-flux';
+// import { View, Text, TouchableOpacity } from 'react-native';
+// import { Icon } from 'react-native-elements';
+// import IconBadge from 'react-native-icon-badge';
+import { Scene, Router, Stack, Modal } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { TabIcon } from './components/Commons';
 import LoginForm from './routes/Auth/LoginForm';
+import ForgotPassword from './routes/Auth/ForgotPassword';
 import RegisterForm from './routes/Auth/RegisterForm';
 import AuthMain from './routes/Auth';
 import Playbooks from './routes/Playbooks';
@@ -54,6 +55,12 @@ class RouterComponent extends Component {
                             component={RegisterForm}
                             backTitle=" "
                             title="Registro"
+                        />
+                        <Scene
+                            key="forgotPassword"
+                            component={ForgotPassword}
+                            backTitle=" "
+                            title="Recuperar contraseña"
                         />
                     </Stack>
 

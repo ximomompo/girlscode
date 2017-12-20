@@ -111,8 +111,11 @@ class Create extends Component {
                 <View style={styles.text}>
                     <Text style={styles.title}>Empezar a crear playbook</Text>
                     <Text style={styles.aux}>
-                        Bienvenid@ al creador de Playbooks de CodigoNiña
+                        Bienvenid@ al creador de Playbooks de CodigoNiña, una forma de contar historias cortas que ayuden a reflexionar a los lectores.
                     </Text>
+                    <TouchableOpacity onPress={() => Actions.recommendations()}>
+                        <Text style={styles.link}>Leer algunas recomendaciones antes de empezar</Text>
+                    </TouchableOpacity>
                 </View>
                 {this.renderFlatList()}
                 <Button

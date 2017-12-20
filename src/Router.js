@@ -16,6 +16,7 @@ import Profile from './routes/Profile';
 import Settings from './routes/Profile/settings';
 import OnboardingCreator from './routes/Creator/Main';
 import MainCreator from './routes/Creator/New';
+import Recommendations from './routes/Creator/Main/components/Recommendations';
 import Play from './routes/Play';
 import * as colors from './helpers/colors';
 import * as fonts from './helpers/fonts';
@@ -128,6 +129,12 @@ class RouterComponent extends Component {
                         key="play"
                         hideNavBar
                         component={Play}
+                        duration={0}
+                    />
+                    <Modal
+                        key="recommendations"
+                        hideNavBar
+                        component={Recommendations}
                         duration={0}
                     />
                 </Stack>

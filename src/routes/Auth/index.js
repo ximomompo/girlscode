@@ -69,7 +69,7 @@ class AuthMain extends Component {
                             resizeMode="contain"
                         />
                         <Text style={[styles.mainText, { textAlign: 'center' }]}>
-                            Cuéntanos con fotos y frases sobre tu diario vivir y gana puntos.
+                            Cuéntanos con fotos y frases una historia que inspire a los jóvenes a tomar mejores decisiones.
                         </Text>
                     </View>
                     <View style={styles.containerTip}>
@@ -79,7 +79,7 @@ class AuthMain extends Component {
                             resizeMode="contain"
                         />
                         <Text style={[styles.mainText, { textAlign: 'center' }]}>
-                            Disfruta y regala puntos a las historias de otras niñas
+                            Disfruta de otras historias y regala puntos a las que más te gusten
                         </Text>
                     </View>
                 </View>

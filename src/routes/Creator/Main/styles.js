@@ -21,13 +21,13 @@ export default StyleSheet.create({
     title: {
         textAlign: 'center',
         fontFamily: 'Roboto-Black',
-        fontSize: 28,
+        fontSize: 24,
         marginTop: 8,
         marginBottom: 8,
     },
     aux: {
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 14,
         marginTop: 8,
         marginBottom: 8,
     },
@@ -80,5 +80,47 @@ export default StyleSheet.create({
         top: 20,
         left: 0,
         padding: 12,
+    },
+    link: {
+        color: colors.primary,
+        fontFamily: fonts.regular,
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    recommendationsMain: {
+        paddingTop: 64,
+    },
+    recommendationsCont: {
+        flex: 0,
+        flexDirection: 'row',
+        width: '100%',
+        marginBottom: 16,
+    },
+    recommendationsTitle: {
+        fontFamily: fonts.bold,
+        fontSize: 18,
+        margin: 12,
+        marginBottom: 24,
+    },
+    recommendationsIndexCont: {
+        width: 24,
+        height: 24,
+        backgroundColor: colors.primary,
+        flex: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 12,
+        marginRight: 8,
+        marginLeft: 12,
+    },
+    recommendationsIndexText: {
+        color: colors.white,
+        fontFamily: fonts.bold,
+        fontSize: 16,
+    },
+    recommendationsText: {
+        fontFamily: fonts.regular,
+        fontSize: 14,
+        width: '80%',
     },
 });
